@@ -22,11 +22,15 @@ se manejan con el mando del Chromecast sin raton.
 
 ### En curso
 
-_Nada en curso. La siguiente fase es la 8._
+- [ ] **v0.8.0** - Fase 8 - Apariencia y más información
+  - Bloque 1: Sistema de temas combinables A+B, alineación Left/Center/Right, color de acento manual, Custom renombrable con slots.
+  - Bloque 2: Grupo 1 ON/OFF (próximas horas, amanecer/atardecer, viento, humedad/UV, tendencia vs 1h).
+  - Bloque 3: Integración con presets, ocultar elementos y pulido móvil estrecho.
+  - Descarta 3.2 (mover widgets libremente) y 3.4 (reordenar ficha con drag&drop).
 
 ### Siguiente
 
-- [ ] **v0.8.0** - Fase 8 - Extras
+- [ ] **v0.9.0** - Fase 9 - Extras
   - Funcionalidades adicionales según necesidades.
 
 ### Terminado
