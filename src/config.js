@@ -26,6 +26,14 @@ export const CONFIG = {
     minute: 60000,
   },
 
+  cities: {
+    /** Ciudades que caben en la fila de chips. */
+    max: 8,
+    /** Decimales con los que se redondean las coordenadas para el id. Dos
+     * decimales son ~1 km, de sobra para distinguir una ciudad de otra. */
+    idDecimals: 2,
+  },
+
   http: {
     /** Milisegundos maximos de espera de una peticion. */
     timeout: 10000,
@@ -60,8 +68,11 @@ export const CONFIG = {
   },
 
   wallpaper: {
-    /** Minutos entre cambios de imagen de fondo. */
+    /** Minutos entre cambios de imagen de fondo. Es el valor de fabrica: el
+     * que vale es `wallpaperInterval`, que se puede cambiar en los ajustes. */
     interval: 1,
+    /** Intervalos que se pueden elegir en los ajustes, en minutos. */
+    intervals: [1, 5, 10, 30],
     /** Sufijo de la version en alta resolucion en el CDN de fotos. */
     highResSuffix: "_1280",
     /** Patron que convierte una URL de baja resolucion en una de alta. */
@@ -98,10 +109,10 @@ export const CONFIG = {
     /** Prefijo de todas las claves de localStorage. */
     prefix: "weatherapp:v1:",
     keys: {
+      /** La lista de ciudades, con la activa dentro de los ajustes. */
       cities: "cities",
-      units: "units",
+      /** Un solo bloque con los ajustes y la ciudad activa. */
       settings: "settings",
-      activeCity: "activeCity",
     },
   },
 };

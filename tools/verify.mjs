@@ -196,7 +196,7 @@ try {
 console.log("\n7. Constantes del config sin usar");
 // Reservado para una fase que aun no ha llegado. Cada entrada de aqui deberia
 // desaparecer en cuanto la constante empiece a usarse.
-const RESERVED = new Set(["storage", "endpoints.geocoding"]);
+const RESERVED = new Set(["endpoints.geocoding"]);
 {
   const configSource = readFileSync(join(ROOT, "src/config.js"), "utf8");
   const codeSource = jsFiles

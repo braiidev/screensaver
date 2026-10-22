@@ -7,6 +7,7 @@
  */
 
 import { init as initStore } from "./core/store.js";
+import { loadPreferences, persist } from "./core/preferences.js";
 import { createScheduler } from "./core/scheduler.js";
 import { deviceTimeZone } from "./utils/time.js";
 import { createClock } from "./modules/clock/clock.js";
@@ -16,7 +17,17 @@ import { createWallpaper } from "./modules/wallpaper/wallpaper.js";
 const $ = (selector) => document.querySelector(selector);
 
 function bootstrap() {
-  const store = initStore({ timezone: deviceTimeZone() });
+  // Lo que se recuerda de la visita anterior. Si no hay nada, los valores de
+  // fabrica y la zona horaria del aparato.
+  const { cities, settings } = loadPreferences();
+
+  const store = initStore({
+    timezone: deviceTimeZone(),
+    cities,
+    ...settings,
+  });
+  persist(store);
+
   const scheduler = createScheduler({ onError: (error) => console.error(error) });
 
   const clock = createClock(

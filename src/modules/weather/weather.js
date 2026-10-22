@@ -1,8 +1,10 @@
 /**
  * weather.js - La ficha del clima.
  *
- * Pide la localizacion, luego el tiempo con su pronostico, y lo refresca cada
- * cierto rato.
+ * Pinta el tiempo de la ciudad activa del store y lo refresca cada cierto
+ * rato. Si no hay ninguna ciudad todavia (primer arranque), la localiza una
+ * vez y la guarda, de modo que a partir de ahi se abre directo en ella sin
+ * volver a pedir permiso.
  *
  * Tres reglas que se arreglaron aqui y conviene no romper:
  *
@@ -18,8 +20,10 @@
  *      mostrando la ultima lectura mientras el reintento va por detras. El
  *      aviso y el boton son para cuando no hay nada que enseñar.
  *
- * La zona horaria que devuelve la API se guarda en el store, de modo que el
- * reloj pasa a mostrar la hora del sitio del que se habla y no la del aparato.
+ * Cambiar de ciudad es una interrupcion, no un refresco: el intento que
+ * estuviera en vuelo se cancela y empieza otro. Por eso hay una `generation`
+ * y no un booleano de "ocupado": el intento viejo, al terminar, no puede
+ * pisar lo que esta pintando el nuevo.
  */
 
 import { CONFIG } from "../../config.js";
@@ -27,6 +31,7 @@ import { identify } from "../../data/wno.js";
 import { iconFor } from "../../ui/icons.js";
 import { formatPlace, locate } from "../../services/geo.js";
 import { fetchWeather } from "../../services/weatherApi.js";
+import { toCity } from "../../utils/city.js";
 import { createDayFormat } from "../../utils/time.js";
 
 /**
@@ -47,12 +52,13 @@ export function createWeather(
 ) {
   const refreshMs = CONFIG.weather.refreshInterval * CONFIG.time.minute;
 
-  /** Coordenadas y nombre ya resueltos, para no repetir la localizacion. */
-  let place = null;
+  /** La ciudad que se esta pintando. */
+  let city = null;
   /** Si hay una lectura buena en pantalla. Decide si un fallo puede callarse. */
   let hasData = false;
   let running = false;
-  let busy = false;
+  /** Sube con cada intento: solo el ultimo tiene derecho a pintar. */
+  let generation = 0;
   let refreshTimer = null;
   let retryTimer = null;
   let abort = null;
@@ -94,6 +100,35 @@ export function createWeather(
     refreshTimer = null;
     retryTimer?.();
     retryTimer = null;
+  }
+
+  function cities() {
+    return store.get("cities") ?? [];
+  }
+
+  /** La ciudad del store que toca pintar, o null si no hay ninguna. */
+  function activeCity() {
+    const list = cities();
+    if (list.length === 0) return null;
+    const id = store.get("activeCityId");
+    return list.find((item) => item.id === id) ?? list[0];
+  }
+
+  /**
+   * Guarda una ciudad y la deja activa. Si ya estaba no se duplica: buscar dos
+   * veces el mismo sitio no puede llenar la fila de chips de repetidos.
+   *
+   * @returns {Object} la ciudad que ha quedado activa
+   */
+  function addCity(next) {
+    if (!next) return null;
+
+    const list = cities();
+    const existing = list.find((item) => item.id === next.id);
+    if (!existing) store.set("cities", [...list, next].slice(0, CONFIG.cities.max));
+
+    store.set("activeCityId", next.id);
+    return existing ?? next;
   }
 
   function showError(error, { onLocation }) {
@@ -181,6 +216,26 @@ export function createWeather(
     });
   }
 
+  /**
+   * La zona horaria que devuelve la API se guarda en el store y tambien en la
+   * ciudad: asi el reloj cambia de hora al instante la proxima vez que se
+   * elija, sin esperar a que responda el clima.
+   */
+  function rememberTimezone(timezone) {
+    if (!city || !timezone) return;
+
+    if (city.timezone !== timezone) {
+      const updated = { ...city, timezone };
+      store.set(
+        "cities",
+        cities().map((item) => (item.id === city.id ? updated : item)),
+      );
+      city = updated;
+    }
+
+    store.set("timezone", timezone);
+  }
+
   function render({ current, daily, timezone }) {
     $weather.classList.remove("warning");
     $location.classList.remove("warning");
@@ -196,36 +251,74 @@ export function createWeather(
     renderForecast(daily ?? []);
 
     hasData = true;
-
-    if (timezone) store.set("timezone", timezone);
+    rememberTimezone(timezone);
   }
 
   /**
-   * Un intento completo: localizar si hace falta y pedir el tiempo.
+   * Deja la ficha lista para otra ciudad: el nombre nuevo ya, y el resto a la
+   * espera. Los grados de la ciudad anterior no se quedan bajo el nombre de la
+   * nueva, porque durante unos segundos serian una mentira.
+   */
+  function adopt(next) {
+    city = next;
+    hasData = false;
+
+    $weather.textContent = "";
+    $weather.classList.remove("warning");
+    $location.classList.remove("warning");
+    $condition.textContent = "";
+    $icon.innerHTML = "";
+    $icon.removeAttribute("data-tone");
+    $forecast.textContent = "";
+    $retry.hidden = true;
+    $location.textContent = next ? formatPlace(next) : "";
+
+    // Si la zona ya se conoce, el reloj cambia ahora y no cuando llegue el
+    // clima. No hay parpadeo: el reloj solo escucha la clave.
+    if (next?.timezone) store.set("timezone", next.timezone);
+  }
+
+  /**
+   * Un intento completo: localizar si no hay ciudad y pedir el tiempo.
    *
    * @param {{ silent?: boolean }} [options] silencioso: no borra lo que ya
    *   hay en pantalla mientras refresca
    */
   async function refresh({ silent = false } = {}) {
-    if (!running || busy) return;
+    if (!running) return;
 
-    busy = true;
+    const gen = ++generation;
     clearTimers();
     abort?.abort();
-    abort = new AbortController();
-    const { signal } = abort;
+
+    const controller = new AbortController();
+    abort = controller;
+    const { signal } = controller;
+    const interrupted = () => gen !== generation || signal.aborted;
 
     try {
-      if (!place) {
+      if (!city) {
         startDots($location);
-        place = await locate({ signal });
-        $location.textContent = formatPlace(place);
+        const place = await locate({ signal });
+        if (interrupted()) return;
         endDots();
+
+        addCity(toCity(place));
+        // Guardar la ciudad avisa a quien escucha, y ese aviso ya ha arrancado
+        // otro intento con la ciudad nueva. Este se retira.
+        if (interrupted()) return;
+        adopt(activeCity());
       }
 
       if (!silent) startDots($weather);
 
-      const weather = await fetchWeather({ ...place, signal });
+      const weather = await fetchWeather({
+        latitude: city.latitude,
+        longitude: city.longitude,
+        signal,
+      });
+      if (interrupted()) return;
+
       render(weather);
 
       refreshTimer = scheduler.after(refreshMs, () =>
@@ -233,24 +326,34 @@ export function createWeather(
       );
     } catch (error) {
       // Si lo que pasa es que nos han parado, no es un fallo.
-      if (!signal.aborted) {
-        showError(error, { onLocation: !place });
-        retryTimer = scheduler.after(CONFIG.weather.retryDelay, () =>
-          refresh(),
-        );
-      }
+      if (interrupted()) return;
+
+      showError(error, { onLocation: !city });
+      retryTimer = scheduler.after(CONFIG.weather.retryDelay, () => refresh());
     } finally {
-      endDots();
-      busy = false;
+      if (!interrupted()) endDots();
     }
   }
 
   /** Reintento manual, el del boton. */
   function retry() {
-    if (!running || busy) return;
-    clearTimers();
+    if (!running) return;
     refresh();
   }
+
+  /** Cambiar de ciudad interrumpe lo que hubiera en vuelo. */
+  function onCityChange() {
+    if (!running) return;
+
+    const next = activeCity();
+    if (next?.id === city?.id) return;
+
+    adopt(next);
+    refresh();
+  }
+
+  const offCity = store.subscribe("activeCityId", onCityChange);
+  const offCities = store.subscribe("cities", onCityChange);
 
   return {
     /** Arranca y devuelve la promesa del primer intento, como el fondo. */
@@ -260,18 +363,29 @@ export function createWeather(
       $retry.textContent = CONFIG.messages.retry;
       $retry.addEventListener("click", retry);
 
+      const stored = activeCity();
+      if (stored) adopt(stored);
+
       return refresh();
     },
 
     stop() {
       running = false;
+      generation++;
       clearTimers();
       abort?.abort();
       abort = null;
       endDots();
       $retry.removeEventListener("click", retry);
+      offCity();
+      offCities();
     },
 
     retry,
+
+    /** Para las pruebas: la ciudad que se esta pintando. */
+    get city() {
+      return city;
+    },
   };
 }
