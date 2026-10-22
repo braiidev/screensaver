@@ -114,6 +114,56 @@
         </header>
 
         <div class="settings__body">
+          <section class="settings__group" aria-labelledby="settings-appearance">
+            <h3 class="settings__legend" id="settings-appearance">Apariencia</h3>
+
+            <div class="settings__row">
+              <label class="settings__label" for="theme-a">Estructura (A)</label>
+              <select class="settings__select" id="theme-a">
+                <option value="minimal">Minimal</option>
+                <option value="clasico">Clásico</option>
+                <option value="compacto">Compacto</option>
+                <option value="tv">TV</option>
+              </select>
+            </div>
+
+            <div class="settings__row">
+              <label class="settings__label" for="theme-b">Tipografía/Estilo (B)</label>
+              <select class="settings__select" id="theme-b">
+                <option value="elegante">Elegante</option>
+                <option value="dev">Dev</option>
+                <option value="clasico">Clásico</option>
+                <option value="arial">Arial</option>
+              </select>
+            </div>
+
+            <div class="settings__row">
+              <label class="settings__label" for="theme-align">Alineación</label>
+              <select class="settings__select" id="theme-align">
+                <option value="left">Izquierda</option>
+                <option value="center">Centro</option>
+                <option value="right">Derecha</option>
+              </select>
+            </div>
+
+            <div class="settings__row">
+              <label class="settings__label" for="theme-accent">Color de acento</label>
+              <input class="settings__color" id="theme-accent" type="color" value="#4f9bff" />
+            </div>
+
+            <div class="settings__row">
+              <label class="settings__label" for="theme-slot">Tema guardado</label>
+              <select class="settings__select" id="theme-slot"></select>
+            </div>
+
+            <div class="settings__actions">
+              <button class="settings__btn" id="theme-save" type="button">Guardar como...</button>
+              <button class="settings__btn" id="theme-rename" type="button">Renombrar</button>
+              <button class="settings__btn" id="theme-duplicate" type="button">Duplicar</button>
+              <button class="settings__btn" id="theme-delete" type="button">Borrar</button>
+            </div>
+          </section>
+
           <section class="settings__group" aria-labelledby="settings-cities">
             <h3 class="settings__legend" id="settings-cities">Ciudades</h3>
 

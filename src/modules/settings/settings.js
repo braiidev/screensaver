@@ -25,6 +25,7 @@ import { searchPlaces } from "../../services/geocoding.js";
 import { formatPlace } from "../../services/geo.js";
 import { iconFor } from "../../ui/icons.js";
 import { toCity } from "../../utils/city.js";
+import { applySlot, duplicateSlot, initTheme, PRESETS_A, PRESETS_B, removeSlot, renameSlot, saveTheme, setTheme } from "../../core/theme.js";
 
 /**
  * @param {Object} elements
@@ -42,6 +43,15 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
   const $results = $panel.querySelector("#city-results");
   const $search = $panel.querySelector("#city-search");
   const $hint = $panel.querySelector("#city-hint");
+  const $themeA = $panel.querySelector("#theme-a");
+  const $themeB = $panel.querySelector("#theme-b");
+  const $themeAlign = $panel.querySelector("#theme-align");
+  const $themeAccent = $panel.querySelector("#theme-accent");
+  const $themeSlot = $panel.querySelector("#theme-slot");
+  const $themeSave = $panel.querySelector("#theme-save");
+  const $themeRename = $panel.querySelector("#theme-rename");
+  const $themeDuplicate = $panel.querySelector("#theme-duplicate");
+  const $themeDelete = $panel.querySelector("#theme-delete");
 
   /** Las bajas de todo lo que se suscribe, para el `stop()`. */
   const offs = [];
@@ -326,6 +336,40 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
     searchTimer = scheduler.after(CONFIG.geocoding.debounce, runSearch);
   }
 
+  /* ------------------------------------------------------------ Apariencia */
+
+  let themeState = null;
+  let themeData = null;
+
+  function refreshThemeUI() {
+    if (!$themeA) return;
+    themeState = initTheme();
+    themeData = themeState.all;
+    $themeA.value = themeState.state.themeA;
+    $themeB.value = themeState.state.themeB;
+    $themeAlign.value = themeState.state.align;
+    $themeAccent.value = themeState.state.accent;
+
+    if ($themeSlot) {
+      $themeSlot.innerHTML = "";
+      for (const slot of themeData.slots) {
+        const opt = document.createElement("option");
+        opt.value = slot.id;
+        opt.textContent = slot.name + (slot.custom ? " (Custom)" : "");
+        if (slot.id === themeData.activeId) opt.selected = true;
+        $themeSlot.append(opt);
+      }
+    }
+  }
+
+  function applyCurrent() {
+    if (!$themeA) return;
+    const res = setTheme($themeA.value, $themeB.value, $themeAlign.value, $themeAccent.value);
+    themeState = res;
+    themeData = res.all;
+    refreshThemeUI();
+  }
+
   /* ------------------------------------------------------- El engranaje */
 
   function cancelHide() {
@@ -423,6 +467,54 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       offs.push(store.subscribe("activeCityId", paintActive));
       renderCities();
       $search.addEventListener("input", onSearchInput);
+
+      refreshThemeUI();
+      $themeA?.addEventListener("change", applyCurrent);
+      $themeB?.addEventListener("change", applyCurrent);
+      $themeAlign?.addEventListener("change", applyCurrent);
+      $themeAccent?.addEventListener("input", applyCurrent);
+
+      $themeSlot?.addEventListener("change", () => {
+        const res = applySlot($themeSlot.value);
+        if (res) {
+          themeState = res;
+          themeData = res.all;
+          $themeA.value = res.state.themeA;
+          $themeB.value = res.state.themeB;
+          $themeAlign.value = res.state.align;
+          $themeAccent.value = res.state.accent;
+          refreshThemeUI();
+        }
+      });
+
+      $themeSave?.addEventListener("click", () => {
+        const name = prompt("Nombre del tema guardado:", "Mi tema");
+        if (!name) return;
+        const res = saveTheme({ ...themeState?.state, themeA: $themeA.value, themeB: $themeB.value, align: $themeAlign.value, accent: $themeAccent.value, name });
+        themeState = res;
+        themeData = res.all;
+        refreshThemeUI();
+      });
+
+      $themeRename?.addEventListener("click", () => {
+        if (!themeData?.activeId) return;
+        const name = prompt("Nuevo nombre:", themeData.slots.find(s=>s.id===themeData.activeId)?.name || "Tema");
+        if (!name) return;
+        const res = renameSlot(themeData.activeId, name);
+        if (res) { themeState = res; themeData = res.all; refreshThemeUI(); }
+      });
+
+      $themeDuplicate?.addEventListener("click", () => {
+        if (!themeData?.activeId) return;
+        const res = duplicateSlot(themeData.activeId);
+        if (res) { themeState = res; themeData = res.all; refreshThemeUI(); }
+      });
+
+      $themeDelete?.addEventListener("click", () => {
+        if (!themeData?.activeId) return;
+        const res = removeSlot(themeData.activeId);
+        if (res) { themeState = res; themeData = res.all; $themeA.value = res.state.themeA; $themeB.value = res.state.themeB; $themeAlign.value = res.state.align; $themeAccent.value = res.state.accent; refreshThemeUI(); }
+      });
 
       $toggle.addEventListener("click", showPanel);
       $close.addEventListener("click", hidePanel);

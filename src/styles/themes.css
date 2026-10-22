@@ -1,0 +1,129 @@
+/* themes.css - Sistema A+B combinable + alineación + acento */
+:root {
+  --color-accent: #4f9bff;
+  --theme-gap: 1rem;
+  --theme-pad-card: 1.25rem;
+  --theme-radius: 12px;
+  --theme-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  --theme-tracking: 0;
+  --theme-lh: 1.15;
+  --theme-fw: 400;
+  --theme-fw-bold: 600;
+}
+
+html {
+  font-family: var(--font-family, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif);
+}
+
+/* Eje A - Estructura */
+html[data-theme-a="minimal"],
+body[data-theme-a="minimal"] {
+  --theme-gap: 0.75rem;
+  --theme-pad-card: 1rem;
+  --theme-radius: 10px;
+  --theme-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+html[data-theme-a="clasico"],
+body[data-theme-a="clasico"] {
+  --theme-gap: 1rem;
+  --theme-pad-card: 1.25rem;
+  --theme-radius: 12px;
+  --theme-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+html[data-theme-a="compacto"],
+body[data-theme-a="compacto"] {
+  --theme-gap: 0.6rem;
+  --theme-pad-card: 0.9rem;
+  --theme-radius: 9px;
+  --theme-shadow: 0 12px 40px rgba(0, 0, 0, 0.38);
+}
+html[data-theme-a="tv"],
+body[data-theme-a="tv"] {
+  --theme-gap: 1.25rem;
+  --theme-pad-card: 1.5rem;
+  --theme-radius: 14px;
+  --theme-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+/* Eje B - Tipografía/Estilo */
+html[data-theme-b="elegante"],
+body[data-theme-b="elegante"] {
+  --font-family: "Inter", "Jost", "Satoshi", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --theme-tracking: 0.01em;
+  --theme-lh: 1.18;
+  --theme-fw: 400;
+  --theme-fw-bold: 600;
+}
+html[data-theme-b="dev"],
+body[data-theme-b="dev"] {
+  --font-family: "JetBrains Mono", "IBM Plex Mono", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --theme-tracking: 0.02em;
+  --theme-lh: 1.2;
+  --theme-fw: 400;
+  --theme-fw-bold: 600;
+}
+html[data-theme-b="clasico"],
+body[data-theme-b="clasico"] {
+  --font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --theme-tracking: 0;
+  --theme-lh: 1.15;
+  --theme-fw: 400;
+  --theme-fw-bold: 600;
+}
+html[data-theme-b="arial"],
+body[data-theme-b="arial"] {
+  --font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --theme-tracking: 0;
+  --theme-lh: 1.14;
+  --theme-fw: 400;
+  --theme-fw-bold: 700;
+}
+
+/* Alineación */
+html[data-align="left"],
+body[data-align="left"] {
+  text-align: left;
+}
+html[data-align="center"],
+body[data-align="center"] {
+  text-align: center;
+}
+html[data-align="right"],
+body[data-align="right"] {
+  text-align: right;
+}
+
+/* Aplicación a elementos clave */
+.dashboard {
+  gap: var(--theme-gap);
+}
+
+.card {
+  padding: var(--theme-pad-card);
+  border-radius: var(--theme-radius);
+  box-shadow: var(--theme-shadow);
+}
+
+.clock__time,
+.clock__period {
+  font-family: inherit;
+}
+
+.cities__button[aria-current="true"],
+.gear:focus-visible,
+.settings__close:focus-visible,
+.place__name:focus-visible,
+.place__add:focus-visible,
+.place__remove:focus-visible {
+  outline-color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .clock,
+  .cities,
+  .gear,
+  .settings {
+    transition: none;
+  }
+}
