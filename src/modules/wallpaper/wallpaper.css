@@ -1,0 +1,43 @@
+/* wallpaper.css - El fondo rotativo.
+ *
+ * Dos cintas superpuestas. La que esta activa se ve; la otra espera. Al
+ * cambiar de fondo, la cinta entrante aparece con un leve desplazamiento de
+ * escala y la saliente se aleja mientras se desvanece.
+ *
+ * La escala de la cinta oculta es mayor que 1 a proposito: si fuese menor, al
+ * encoger la cinta se veria el borde de la pantalla.
+ */
+
+.wallpaper {
+  position: absolute;
+  width: var(--board-width);
+  height: var(--board-height);
+  z-index: var(--z-background);
+}
+
+.wallpaper__tape {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: scale(var(--wallpaper-scale));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition:
+    opacity var(--duration-fade) ease,
+    transform var(--duration-fade) ease;
+  will-change: opacity, transform;
+}
+
+.wallpaper__tape.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Para el primer fondo, que aparece de golpe y no con un fundido. */
+.wallpaper__tape.no-transition {
+  transition: none;
+}
