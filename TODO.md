@@ -14,9 +14,9 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.3.3`
-- Fase en curso: 3 - Layout dashboard responsivo
-- Siguiente version reservada: `v0.4.0`
+- Version actual: `v0.4.0`
+- Fase en curso: ninguna
+- Siguiente version reservada: `v0.5.0`
 
 ## Tablero
 
