@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <link rel="manifest" href="./manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- Resource hints for faster loading -->
+    <link rel="preconnect" href="https://api.open-meteo.com" crossorigin />
+    <link rel="preconnect" href="https://geocoding-api.open-meteo.com" crossorigin />
+    <link rel="preconnect" href="https://freeipapi.com" crossorigin />
+    <link rel="preconnect" href="https://api.bigdatacloud.net" crossorigin />
+    <link rel="preconnect" href="https://cdn.pixabay.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.open-meteo.com" />
+    <link rel="dns-prefetch" href="https://cdn.pixabay.com" />
+
+    <link rel="preload" href="./assets/img/icon.png" as="image" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="WeatherApp" />
     <link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png" />

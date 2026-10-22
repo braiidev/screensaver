@@ -7,6 +7,13 @@
  */
 
 import { init as initStore } from "./core/store.js";
+
+// Indicador de conexión para posible uso futuro
+if (typeof navigator !== "undefined" && "onLine" in navigator) {
+  window.addEventListener("online", () => document.body.classList.remove("is-offline"));
+  window.addEventListener("offline", () => document.body.classList.add("is-offline"));
+  if (!navigator.onLine) document.body.classList.add("is-offline");
+}
 import { loadPreferences, persist } from "./core/preferences.js";
 import { createScheduler } from "./core/scheduler.js";
 import { deviceTimeZone } from "./utils/time.js";

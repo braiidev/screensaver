@@ -14,3 +14,37 @@
   font-weight: 600;
   line-height: 1.3;
 }
+
+/* Indicador offline */
+body.is-offline::after {
+  content: "Sin conexión";
+  position: fixed;
+  top: var(--space-2);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-1) var(--space-3);
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  border-radius: 999px;
+  font-size: clamp(0.875rem, 0.9vw, 1rem);
+  z-index: 100;
+  pointer-events: none;
+  animation: fade-in 0.3s ease-in;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.is-offline::after {
+    animation: none;
+  }
+}
