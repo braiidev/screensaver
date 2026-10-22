@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=6e7b5426-3ec0-4231-bc61-1692d51436eb
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/index.css" />
+    <link rel="shortcut icon" href="assets/img/icon.png" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Screensaver like Chromecast plus sheik."
+    />
+    <meta
+      name="keywords"
+      content="WeatherApp,Braiidev,clima,reloj,tiempo,geolocalizacion,screensaver"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5052094798057186"
+      crossorigin="anonymous"
+    ></script>
+    <title>WeatherApp - Braiidev</title>
+  </head>
+
+  <body>
+    <div class="board">
+      <div id="background" class="fullscreen item1">
+        <div id="tapeA" class="show"></div>
+        <div id="tapeB"></div>
+      </div>
+      <div class="item2">
+        <span class="item2-0" id="day"></span>
+        <div class="item2-1" id="time"></div>
+        <div class="item2-2">
+          <span class="item2-2-1" id="weather"></span>
+          <span class="item2-2-2" id="icon"></span>
+        </div>
+        <div class="item2-3" id="location"></div>
+      </div>
+    </div>
+    <script>
+      document.documentElement.requestFullscreen();
+    </script>
+    <script type="module" src="assets/js/main.js" defer></script>
+  </body>
+</html>
