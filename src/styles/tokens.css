@@ -26,6 +26,9 @@
   --color-surface: rgb(12 15 22 / 0.55);
   /** Color de los avisos. */
   --color-warning: rgb(250 154 28);
+  /** Anillo de foco. Distinto del texto para que se vea tambien sobre los
+   * chips claros, que ya son blancos. */
+  --color-focus: #fbbf24;
 
   /** Un color por familia de condicion meteorologica. */
   --icon-sun: #fbbf24;
@@ -52,6 +55,8 @@
   --fs-city: clamp(0.875rem, 1.4vw, 1.125rem);
   /** Condicion meteorologica. */
   --fs-condition: clamp(0.8125rem, 1.1vw, 1rem);
+  /** Chip de ciudad. */
+  --fs-chip: clamp(0.8125rem, 1vw, 0.9375rem);
   /** Pronostico: dia y maximas/minimas. */
   --fs-forecast: clamp(0.8125rem, 1vw, 0.9375rem);
   /** Icono de cada dia del pronostico. */
@@ -69,6 +74,8 @@
   --space-2: clamp(8px, 1.2vmin, 16px);
   --space-3: clamp(14px, 2vmin, 26px);
   --radius-card: clamp(14px, 1.6vmin, 22px);
+  /** Objetivo minimo de un control que se toca o se pulsa con el mando. */
+  --size-tap: 2.75rem;
 
   /* ---------------------------------------------------------------- Capas */
 
@@ -86,6 +93,8 @@
   /** Entrada del contenido, despues de que el fondo se asiente. */
   --duration-enter: 900ms;
   --delay-enter: 300ms;
+  /** Cambio de estado de un control: chip elegido, engranaje que aparece. */
+  --duration-control: 400ms;
 
   /* --------------------------------------------------------------- Lienzo */
 

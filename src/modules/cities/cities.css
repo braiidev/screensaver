@@ -1,0 +1,66 @@
+/* cities.css - La fila de ciudades.
+ *
+ * Arriba, en la fila que la rejilla del dashboard le tiene reservada. Los chips
+ * no se reparten el ancho: se ponen uno detras de otro y, si no caben, la fila
+ * se desplaza en horizontal. Con flechas el foco los va trayendo a la vista.
+ *
+ * El anillo del foco va por dentro (`outline-offset` negativo) porque la fila
+ * recorta lo que se sale, y un anillo por fuera no se veria.
+ */
+
+.cities {
+  grid-area: cities;
+  align-self: start;
+  /* Sin esto, un hijo que se desplaza estira la rejilla y rompe la columna. */
+  min-width: 0;
+  margin-bottom: var(--space-2);
+}
+
+/* El `hidden` del HTML tiene que ganar al `display` de arriba. */
+.cities[hidden] {
+  display: none;
+}
+
+.cities__list {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cities__list::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-tap);
+  padding: 0 1em;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: var(--fs-chip);
+  color: var(--color-text);
+  white-space: nowrap;
+  background: var(--color-surface);
+  transition:
+    color var(--duration-control) ease,
+    background-color var(--duration-control) ease,
+    border-color var(--duration-control) ease;
+}
+
+.chip:hover {
+  border-color: var(--color-text);
+}
+
+.chip.is-active {
+  border-color: var(--color-text);
+  font-weight: 600;
+  color: var(--bg-color);
+  background: var(--color-text);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -3px;
+}

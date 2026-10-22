@@ -11,6 +11,7 @@ import { loadPreferences, persist } from "./core/preferences.js";
 import { createScheduler } from "./core/scheduler.js";
 import { deviceTimeZone } from "./utils/time.js";
 import { createClock } from "./modules/clock/clock.js";
+import { createCities } from "./modules/cities/cities.js";
 import { createWeather } from "./modules/weather/weather.js";
 import { createWallpaper } from "./modules/wallpaper/wallpaper.js";
 
@@ -19,11 +20,11 @@ const $ = (selector) => document.querySelector(selector);
 function bootstrap() {
   // Lo que se recuerda de la visita anterior. Si no hay nada, los valores de
   // fabrica y la zona horaria del aparato.
-  const { cities, settings } = loadPreferences();
+  const { cities: storedCities, settings } = loadPreferences();
 
   const store = initStore({
     timezone: deviceTimeZone(),
-    cities,
+    cities: storedCities,
     ...settings,
   });
   persist(store);
@@ -33,6 +34,11 @@ function bootstrap() {
   const clock = createClock(
     { $clock: $("#time"), $day: $("#day") },
     { store, scheduler },
+  );
+
+  const cityChips = createCities(
+    { $cities: $("#cities"), $list: $("#cities-list") },
+    { store },
   );
 
   const weather = createWeather(
@@ -53,6 +59,7 @@ function bootstrap() {
   );
 
   clock.start();
+  cityChips.start();
   wallpaper.start().catch((error) => console.error(error));
   weather.start().catch((error) => console.error(error));
 
