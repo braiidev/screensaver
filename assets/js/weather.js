@@ -1,14 +1,15 @@
+import { CONFIG } from "../../src/config.js";
 import setIcon from "../img/weather/wno.js";
 
 function loading($element) {
-    $element.style.letterSpacing = "1rem";
+    $element.style.letterSpacing = CONFIG.loading.letterSpacing;
     $element.textContent = "";
     const interval = setInterval(() => {
         let dots = $element.textContent;
-        if (dots.length == 3) dots = "";
+        if (dots.length == CONFIG.loading.dots) dots = "";
         else dots += ".";
         $element.textContent = dots;
-    }, 250);
+    }, CONFIG.loading.interval);
     function destroy() {
         $element.style.letterSpacing = "normal";
         clearInterval(interval);
@@ -17,7 +18,7 @@ function loading($element) {
 }
 
 class Weather {
-    constructor(weatherContainer, iconContainer, locationContainer, refreshInterval = 10) {
+    constructor(weatherContainer, iconContainer, locationContainer, refreshInterval = CONFIG.weather.refreshInterval) {
         this.$weather = weatherContainer;
         this.$icon = iconContainer;
         this.$location = locationContainer;
@@ -28,7 +29,7 @@ class Weather {
         this.city = "";
         this.regionName = "";
         this.status = { geo: "unload", weather: "unload" };
-        this.statusMessage = "App is unload";
+        this.statusMessage = CONFIG.messages.appUnloaded;
         this.intervalId = null;
     }
 
@@ -36,7 +37,7 @@ class Weather {
         const destroy = loading(this.$location)
 
         try {
-            const resp = await fetch("https://free.freeipapi.com/api/json");
+            const resp = await fetch(CONFIG.geo.fallbackUrl);
             if (!resp.ok) throw new Error("HTTP Error");
             if (this.$location.classList.contains("warning")) this.$location.classList.remove("warning");
 
@@ -60,17 +61,17 @@ class Weather {
 
         } catch (e) {
             destroy()
-            this.$location.textContent = "No se pudo cargar localización";
+            this.$location.textContent = CONFIG.messages.locationError;
             this.$location.classList.add("warning");
 
             this.status.geo = "error";
-            this.statusMessage = "Could not obtain IP information";
+            this.statusMessage = CONFIG.messages.geoError;
             console.error(this.statusMessage);
         }
     }
 
     async fetchWeather(lat = this.lat, lon = this.lon) {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&timezone=auto&forecast_days=1`
+        const url = `${CONFIG.endpoints.forecast}?latitude=${lat}&longitude=${lon}&current=${CONFIG.weather.currentFields.join(",")}&timezone=${CONFIG.weather.timezone}&forecast_days=${CONFIG.weather.forecastDays}`
         const destroy = loading(this.$weather)
 
         try {
@@ -92,11 +93,11 @@ class Weather {
 
         } catch (e) {
             destroy();
-            this.$weather.textContent = "Not available, trying again in 10 minutes";
+            this.$weather.textContent = CONFIG.messages.weatherError;
             this.$weather.classList.add("warning");
 
             this.status.weather = "error";
-            this.statusMessage = "Could not obtain weather information";
+            this.statusMessage = CONFIG.messages.weatherUnavailable;
 
             console.error(this.statusMessage);
         }

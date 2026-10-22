@@ -1,3 +1,5 @@
+import { CONFIG } from "../../src/config.js";
+
 const DAYS = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
 const MONTH = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 class Clock {
@@ -20,7 +22,7 @@ class Clock {
             const _dayName_ = `${DAYS[_time_.getDay()]} ${day} de ${MONTH[_time_.getMonth()]}`;
             if (_dayName_ != this.day.textContent)
                 this.day.textContent = _dayName_;
-        }, 100);
+        }, CONFIG.clock.tickInterval);
     }
 }
 

@@ -1,28 +1,29 @@
+import { CONFIG } from "../../src/config.js";
 import { images } from "./listBg.js";
 
 const Temporizer = (e) => {
     const timeout = setTimeout(() => {
         e();
         clearTimeout(timeout);
-    }, 1000)
+    }, CONFIG.wallpaper.preloadDelay)
 }
 
 function getHighResImage(url) {
     if (typeof url !== "string") return null;
-    return url.replace(/_\d+\.(jpg|png|jpeg|webp)$/, "_1280.$1");
+    return url.replace(CONFIG.wallpaper.highResPattern, `${CONFIG.wallpaper.highResSuffix}.$1`);
     //   return url.replace("_150.jpg", "_1280.jpg");
 }
 
 class changeBackground {
-    constructor(element, time = 1) {
+    constructor(element, time = CONFIG.wallpaper.interval) {
         this.element = element;
         this.$tapeA = this.element.querySelector('#tapeA');
         this.$tapeB = this.element.querySelector('#tapeB');
         this.switching = 'init'
         this.time = time;
         this.running = false;
-        this.maxIndex = 195;
-        this.minIndex = 0;
+        this.maxIndex = CONFIG.wallpaper.maxIndex;
+        this.minIndex = CONFIG.wallpaper.minIndex;
         this.index = () => (Math.floor(Math.random() * (this.maxIndex - this.minIndex + 1)) + this.minIndex);
     }
     getImage(index) {

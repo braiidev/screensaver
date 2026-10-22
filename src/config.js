@@ -66,8 +66,6 @@ export const CONFIG = {
   icons: {
     /** Base de las imagenes de los iconos meteorologicos. */
     baseUrl: "https://rodrigokamada.github.io/openweathermap/images/",
-    /** Plantilla del nombre de archivo: codigo + d/n + sufijo. */
-    template: "{code}{period}_t.png",
   },
 
   loading: {
@@ -87,6 +85,7 @@ export const CONFIG = {
   messages: {
     appUnloaded: "App is unload",
     locationError: "No se pudo cargar localización",
+    geoError: "Could not obtain IP information",
     weatherError: "Not available, trying again in 10 minutes",
     weatherUnavailable: "Could not obtain weather information",
   },

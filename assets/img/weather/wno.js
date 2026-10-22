@@ -1,4 +1,6 @@
-const url = "https://rodrigokamada.github.io/openweathermap/images/"
+import { CONFIG } from "../../../src/config.js";
+
+const url = CONFIG.icons.baseUrl
 const wmoicons = {
     "0": {
         day: {
