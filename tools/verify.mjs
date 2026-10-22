@@ -104,7 +104,12 @@ console.log("\n4. Constantes sueltas en el codigo");
 // donde deben estar las URLs y los intervalos.
 const ALLOW_CONSTANTS = new Set(["src/config.js"]);
 // Listas de datos que se editan a mano: no son codigo.
-const ALLOW_DATA = new Set(["assets/js/listBg.js", "assets/img/weather/wno.js"]);
+const ALLOW_DATA = new Set([
+  "assets/js/listBg.js",
+  "assets/img/weather/wno.js",
+  "src/data/wallpapers.js",
+  "src/data/wno.js",
+]);
 const MAGIC = [
   { re: /set(?:Interval|Timeout)\([^)]*?,\s*\d+\s*\)/g, what: "intervalo con numero literal" },
   { re: /["'`]https?:\/\/[^"'`]+["'`]/g, what: "URL literal" },
@@ -147,23 +152,30 @@ for (const file of htmlFiles) {
 console.log("\n6. Invariantes del config");
 try {
   const { CONFIG } = await import(join(ROOT, "src/config.js"));
-  const { images } = await import(join(ROOT, "assets/js/listBg.js"));
+  const { wallpapers } = await import(join(ROOT, "src/data/wallpapers.js"));
 
-  if (CONFIG.wallpaper.maxIndex === images.length - 1)
-    ok(`maxIndex (${CONFIG.wallpaper.maxIndex}) coincide con la ultima imagen (${images.length - 1})`);
+  if (CONFIG.wallpaper.maxIndex === wallpapers.length - 1)
+    ok(`maxIndex (${CONFIG.wallpaper.maxIndex}) coincide con la ultima imagen (${wallpapers.length - 1})`);
   else
-    bad(`maxIndex (${CONFIG.wallpaper.maxIndex}) no coincide con la ultima imagen (${images.length - 1})`);
+    bad(`maxIndex (${CONFIG.wallpaper.maxIndex}) no coincide con la ultima imagen (${wallpapers.length - 1})`);
 
   if (CONFIG.wallpaper.minIndex === 0) ok("minIndex es 0");
   else bad(`minIndex es ${CONFIG.wallpaper.minIndex}, deberia ser 0`);
 
-  const everyImageHasUrl = images.every((i) => typeof i?.imageURL === "string" && i.imageURL.startsWith("https://"));
-  if (everyImageHasUrl) ok(`las ${images.length} imagenes tienen URL`);
-  else bad("hay imagenes sin URL valida");
+  const everyImageHasUrl = wallpapers.every((i) => typeof i?.url === "string" && i.url.startsWith("https://"));
+  if (everyImageHasUrl) ok(`los ${wallpapers.length} fondos tienen URL`);
+  else bad("hay fondos sin URL valida");
 
-  const wmo = readFileSync(join(ROOT, "assets/img/weather/wno.js"), "utf8");
+  const ids = new Set(wallpapers.map((i) => i.id));
+  if (ids.size === wallpapers.length) ok("no hay ids repetidos");
+  else bad(`hay ${wallpapers.length - ids.size} ids repetidos`);
+
+  const wmo = readFileSync(join(ROOT, "src/data/wno.js"), "utf8");
   const codes = [...wmo.matchAll(/^\s{4}"?(\d+)"?:\s*\{/gm)].map((m) => m[1]);
-  ok(`wno.js define ${codes.length} codigos de tiempo`);
+  const WMO = ["0","1","2","3","45","48","51","53","55","56","57","61","63","65","66","67","71","73","75","77","80","81","82","85","86","95","96","99"];
+  const missing = WMO.filter((c) => !codes.includes(c));
+  if (missing.length === 0) ok(`wno.js cubre los ${WMO.length} codigos WMO sin huecos`);
+  else bad(`wno.js no cubre los codigos: ${missing.join(", ")}`);
 } catch (e) {
   bad(`no se pudieron comprobar los invariantes: ${e.message}`);
 }

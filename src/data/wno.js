@@ -1,4 +1,14 @@
-import { CONFIG } from "../../../src/config.js";
+/**
+ * wno.js - Los codigos de tiempo de la WMO.
+ *
+ * Open-Meteo devuelve un codigo numerico con el estado del cielo. Cada codigo
+ * tiene aqui su icono de dia y de noche y su descripcion.
+ *
+ * Se cubren los 28 codigos que devuelve la API, sin huecos. Para anadir uno
+ * nuevo, basta con una entrada mas con la misma forma.
+ */
+
+import { CONFIG } from "../config.js";
 
 const url = CONFIG.icons.baseUrl
 const wmoicons = {

@@ -1,5 +1,5 @@
 import { CONFIG } from "../../src/config.js";
-import setIcon from "../img/weather/wno.js";
+import setIcon from "../../src/data/wno.js";
 
 function loading($element) {
     $element.style.letterSpacing = CONFIG.loading.letterSpacing;
