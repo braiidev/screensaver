@@ -14,7 +14,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.7.3`
+- Version actual: `v0.7.0`
 - Fase en curso: Fase 7 - Pulido y mejoras
 - Siguiente version reservada: `v0.6.0`
 
@@ -22,19 +22,25 @@ se manejan con el mando del Chromecast sin raton.
 
 ### En curso
 
-- [ ] **v0.7.0** - Fase 7 - Pulido y mejoras
-  - Añadir PWA (manifest.json, service worker) para instalación.
-  - Mejorar accesibilidad (focus management, ARIA, skip links).
-  - Optimizar rendimiento (lazy loading, prefetch, métricas).
-  - Pulir UX (transiciones, estados de carga, manejo de errores).
-  - Añadir modo offline básico con cache de recursos críticos.
+_Nada en curso. La siguiente fase es la 8._
 
 ### Siguiente
 
-- [ ] **v0.7.0** - Fase 6 - Despliegue y verificacion
-  - Desplegar en Netlify y verificar en el sitio real que el layout coincide en los
-    tres tamaños objetivo, que la consola esta limpia y que el cacheo y la CSP no
-    rompen la carga de imagenes ni los iconos.
+- [ ] **v0.8.0** - Fase 8 - Extras
+  - Funcionalidades adicionales según necesidades.
+
+### Terminado
+
+- [x] **v0.7.0** - Fase 7 - Pulido y mejoras
+  - PWA completa: manifest.json, service worker con cache, registro y
+    meta tags para iOS/Android.
+  - Resource hints: preconnect, dns-prefetch y preload para APIs, CDN y
+    recursos críticos.
+  - Accesibilidad: skip link, main landmark, aria-live en elementos dinámicos,
+    focus management.
+  - Indicador offline/online con estilos accesibles.
+  - Mejoras UX: transiciones suaves, SW actualizado con cache v1.1.0.
+  - Sitemap.xml añadido.
 
 ### Terminado
 
