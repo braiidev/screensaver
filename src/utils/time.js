@@ -51,3 +51,26 @@ export function createClockFormat(timeZone) {
     timeZone,
   };
 }
+
+/**
+ * Un formateador del dia de la semana, corto, para la tira del pronostico.
+ *
+ * La fecha llega como "2026-10-22", sin hora, y ya viene en la zona horaria de
+ * la ciudad. Por eso se formatea en UTC y no en la zona de la ciudad: no hay
+ * nada que convertir. Pasar esa fecha por una zona la moveria de dia —con
+ * `timeZone: "Pacific/Auckland"`, un jueves a las 12:00 UTC ya es viernes— y
+ * la tira mostraria el dia equivocado.
+ *
+ * @returns {(isoDate: string) => string} "jue"
+ */
+export function createDayFormat() {
+  const weekday = new Intl.DateTimeFormat(CONFIG.app.locale, {
+    timeZone: "UTC",
+    weekday: "short",
+  });
+
+  return (isoDate) => {
+    const [year, month, day] = isoDate.split("-").map(Number);
+    return weekday.format(new Date(Date.UTC(year, month - 1, day)));
+  };
+}

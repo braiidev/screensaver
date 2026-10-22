@@ -30,6 +30,7 @@ function bootstrap() {
       $icon: $("#icon"),
       $location: $("#location"),
       $condition: $("#condition"),
+      $forecast: $("#forecast"),
       $retry: $("#retry"),
     },
     { store, scheduler },

@@ -38,10 +38,16 @@
 
           <div class="card__now">
             <span class="card__temp" id="weather"></span>
-            <span class="card__icon" id="icon" aria-hidden="true"></span>
+            <span class="meteo-icon card__icon" id="icon" aria-hidden="true"></span>
           </div>
 
           <p class="card__condition" id="condition"></p>
+
+          <ol
+            class="forecast"
+            id="forecast"
+            aria-label="Pronóstico de los próximos días"
+          ></ol>
 
           <button class="retry" id="retry" type="button" hidden>
             Reintentar

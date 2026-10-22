@@ -42,8 +42,10 @@ export const CONFIG = {
     retries: 2,
     /** Campos del bloque `current` que se piden a la API. */
     currentFields: ["temperature_2m", "weather_code", "is_day"],
-    /** Dias de pronostico que se piden. */
-    forecastDays: 1,
+    /** Campos del bloque `daily` que se piden a la API. */
+    dailyFields: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
+    /** Dias de pronostico que se piden y se muestran. */
+    forecastDays: 5,
     /** Zona horaria: `auto` hace que la API use la de las coordenadas. */
     timezone: "auto",
   },
@@ -85,6 +87,11 @@ export const CONFIG = {
     locationError: "No se pudo cargar la localización",
     weatherError: "No se pudo cargar el clima",
     retry: "Reintentar",
+    /** Etiqueta del primer dia de la tira del pronostico. */
+    today: "Hoy",
+    /** Como se lee cada dia del pronostico en un lector de pantalla. */
+    forecastMax: "máxima",
+    forecastMin: "mínima",
   },
 
   storage: {

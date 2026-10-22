@@ -54,6 +54,8 @@
   --fs-condition: clamp(0.8125rem, 1.1vw, 1rem);
   /** Pronostico: dia y maximas/minimas. */
   --fs-forecast: clamp(0.8125rem, 1vw, 0.9375rem);
+  /** Icono de cada dia del pronostico. */
+  --fs-forecast-icon: clamp(1.125rem, 1.6vw, 1.375rem);
   /** Avisos de error. */
   --fs-warning: clamp(0.875rem, 1.2vw, 1.125rem);
   /** Boton de reintentar. */
