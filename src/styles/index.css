@@ -12,4 +12,5 @@
 @import "./tokens.css";
 @import "./layout.css";
 @import "../modules/clock/clock.css";
+@import "../modules/weather/weather.css";
 @import "./states.css";

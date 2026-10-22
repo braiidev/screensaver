@@ -13,8 +13,6 @@
 import { CONFIG } from "../../config.js";
 import { wallpapers } from "../../data/wallpapers.js";
 
-const MINUTE = 60000;
-
 /**
  * @param {Object} elements
  * @param {HTMLElement} elements.$tapeA primera cinta
@@ -126,7 +124,7 @@ export function createWallpaper({ $tapeA, $tapeB }, { scheduler }) {
       // este arranque ya no vale.
       if (gen !== generation) return;
 
-      stopTimer = scheduler.every(CONFIG.wallpaper.interval * MINUTE, () => show(pickIndex()));
+      stopTimer = scheduler.every(CONFIG.wallpaper.interval * CONFIG.time.minute, () => show(pickIndex()));
     },
 
     stop() {

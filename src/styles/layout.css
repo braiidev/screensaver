@@ -56,24 +56,6 @@
   align-items: flex-end;
 }
 
-.item2-2 {
-  font-size: var(--fs-weather);
-}
-
-.item2-2-2 {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.item2-3 {
-  font-size: var(--fs-location);
-  opacity: var(--opacity-muted);
-}
-
 @keyframes fadeItem {
   from {
     opacity: 0;

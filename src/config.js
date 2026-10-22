@@ -20,6 +20,11 @@ export const CONFIG = {
     tickInterval: 1000,
   },
 
+  time: {
+    /** Milisegundos en un minuto. */
+    minute: 60000,
+  },
+
   weather: {
     /** Minutos entre refrescos del clima. */
     refreshInterval: 10,
