@@ -24,3 +24,21 @@
   font-size: var(--fs-location);
   opacity: var(--opacity-muted);
 }
+
+/* El boton de reintentar, que solo aparece cuando algo ha fallado. */
+.retry {
+  font-family: var(--font-family);
+  font-size: var(--fs-warning);
+  color: var(--color-text);
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 0.25em;
+  padding: 0.25em 0.75em;
+  cursor: pointer;
+  opacity: var(--opacity-muted);
+}
+
+/* Sin esto, cualquier `display` de arriba pisaria al atributo `hidden`. */
+.retry[hidden] {
+  display: none;
+}

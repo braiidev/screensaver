@@ -25,8 +25,13 @@ function bootstrap() {
   );
 
   const weather = createWeather(
-    { $weather: $("#weather"), $icon: $("#icon"), $location: $("#location") },
-    { scheduler },
+    {
+      $weather: $("#weather"),
+      $icon: $("#icon"),
+      $location: $("#location"),
+      $retry: $("#retry"),
+    },
+    { store, scheduler },
   );
 
   const wallpaper = createWallpaper(

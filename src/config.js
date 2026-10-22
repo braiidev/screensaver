@@ -92,10 +92,6 @@ export const CONFIG = {
     locationError: "No se pudo cargar la localizacion",
     weatherError: "No se pudo cargar el clima",
     retry: "Reintentar",
-    // Las dos de abajo solo las usa el modulo antiguo. Desaparecen junto con
-    // el en el commit siguiente.
-    geoError: "No se pudo obtener la ubicacion",
-    weatherUnavailable: "No se pudo obtener el clima",
   },
 
   storage: {

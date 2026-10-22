@@ -3,180 +3,181 @@
  *
  * Pide la localizacion, luego el tiempo, y lo refresca cada cierto rato.
  *
- * Este modulo todavia no usa los servicios definitivos: eso llega en la
- * Fase 2, junto con la reparacion de los dos fallos que quedan aqui (el
- * reintento se calendariza dos veces y la localizacion no se vuelve a
- * intentar si falla). Por ahora la logica es la misma de siempre, solo
- * cambia de sitio y de forma: es un modulo con start y stop, y sus
- * temporizadores salen del scheduler para poder pararlos.
+ * Dos reglas que se arreglaron aqui y conviene no romper:
+ *
+ *   1. Un solo temporizador. Antes, si el tiempo fallaba, el reintento se
+ *      calendarizaba a mano y ademas seguia el refresco periodico: dos relojes
+ *      encadenando peticiones que se multiplicaban. Ahora `clearTimers()` se
+ *      llama antes de cada intento y siempre queda uno solo.
+ *   2. La localizacion se reintenta. Antes, si fallaba, `place` se quedaba a
+ *      null para siempre y la app no volvia a pedir ciudad nunca. Ahora el
+ *      fallo entra por el mismo camino que el del tiempo y se reintenta.
+ *
+ * La zona horaria que devuelve la API se guarda en el store, de modo que el
+ * reloj pasa a mostrar la hora del sitio del que se habla y no la del aparato.
  */
 
 import { CONFIG } from "../../config.js";
 import setIcon from "../../data/wno.js";
-
-/**
- * Escribe los puntos de "cargando" mientras se espera una respuesta.
- *
- * @param {HTMLElement} $element donde van los puntos
- * @param {import("../../core/scheduler.js")} scheduler
- * @returns {() => void} funcion para parar los puntos
- */
-function loading($element, scheduler) {
-  $element.style.letterSpacing = CONFIG.loading.letterSpacing;
-  $element.textContent = "";
-
-  const stop = scheduler.every(CONFIG.loading.interval, () => {
-    let dots = $element.textContent;
-    if (dots.length === CONFIG.loading.dots) dots = "";
-    else dots += ".";
-    $element.textContent = dots;
-  });
-
-  return () => {
-    $element.style.letterSpacing = "normal";
-    stop();
-  };
-}
+import { formatPlace, locate } from "../../services/geo.js";
+import { fetchCurrent } from "../../services/weatherApi.js";
 
 /**
  * @param {Object} elements
  * @param {HTMLElement} elements.$weather donde va la temperatura
  * @param {HTMLElement} elements.$icon donde va el icono
  * @param {HTMLElement} elements.$location donde va la localizacion
+ * @param {HTMLElement} elements.$retry boton de reintentar
  * @param {Object} deps
+ * @param {import("../../core/store.js")} deps.store
  * @param {import("../../core/scheduler.js")} deps.scheduler
  */
-export function createWeather({ $weather, $icon, $location }, { scheduler }) {
-  const status = { geo: "unload", weather: "unload" };
+export function createWeather(
+  { $weather, $icon, $location, $retry },
+  { store, scheduler },
+) {
   const refreshMs = CONFIG.weather.refreshInterval * CONFIG.time.minute;
 
-  let statusMessage = CONFIG.messages.appUnloaded;
-  let lat = 0;
-  let lon = 0;
-  let city = "";
-  let country = "";
-  let regionName = "";
-  let intervalId = null;
-  /** Reintentos pendientes de borrar al parar. */
-  const retries = new Set();
+  /** Coordenadas y nombre ya resueltos, para no repetir la localizacion. */
+  let place = null;
+  let running = false;
+  let busy = false;
+  let refreshTimer = null;
+  let retryTimer = null;
+  let abort = null;
+  let stopDots = null;
 
-  /**
-   * Localizacion por IP. Si falla, no se vuelve a intentar: eso se arregla
-   * en la Fase 2.
-   */
-  async function requestGeolocation() {
-    const destroy = loading($location, scheduler);
+  /** Puntos suspensivos mientras se espera una respuesta. */
+  function dots($element) {
+    $element.style.letterSpacing = CONFIG.loading.letterSpacing;
+    $element.textContent = "";
 
-    try {
-      const resp = await fetch(CONFIG.geo.fallbackUrl);
-      if (!resp.ok) throw new Error("HTTP Error");
-      if ($location.classList.contains("warning")) $location.classList.remove("warning");
+    const stop = scheduler.every(CONFIG.loading.interval, () => {
+      let text = $element.textContent;
+      if (text.length === CONFIG.loading.dots) text = "";
+      else text += ".";
+      $element.textContent = text;
+    });
 
-      const data = await resp.json();
-
-      const { latitude, longitude, cityName, countryName, regionName: region } = data;
-      lat = latitude;
-      lon = longitude;
-      city = cityName;
-      country = countryName;
-      regionName = region;
-
-      const location = `${city}, ${country}`;
-
-      destroy();
-      if (location !== $location.textContent) $location.textContent = location;
-
-      status.geo = "loaded";
-      statusMessage = null;
-    } catch (e) {
-      destroy();
-      $location.textContent = CONFIG.messages.locationError;
-      $location.classList.add("warning");
-
-      status.geo = "error";
-      statusMessage = CONFIG.messages.geoError;
-      console.error(statusMessage);
-    }
-  }
-
-  /**
-   * Pide el tiempo de una posicion.
-   */
-  async function fetchWeather(latitude = lat, longitude = lon) {
-    const url = `${CONFIG.endpoints.forecast}?latitude=${latitude}&longitude=${longitude}&current=${CONFIG.weather.currentFields.join(",")}&timezone=${CONFIG.weather.timezone}&forecast_days=${CONFIG.weather.forecastDays}`;
-    const destroy = loading($weather, scheduler);
-
-    try {
-      const resp = await fetch(url);
-      if (!resp.ok) throw new Error("HTTP Error");
-
-      if ($weather.classList.contains("warning")) $weather.classList.remove("warning");
-
-      const data = await resp.json();
-      const { temperature_2m, weather_code, is_day } = data.current;
-
-      destroy();
-      $weather.textContent = `${temperature_2m}˚`;
-      $icon.style.backgroundImage = setIcon(weather_code, is_day);
-
-      status.weather = "loaded";
-      statusMessage = null;
-    } catch (e) {
-      destroy();
-      $weather.textContent = CONFIG.messages.weatherError;
-      $weather.classList.add("warning");
-
-      status.weather = "error";
-      statusMessage = CONFIG.messages.weatherUnavailable;
-
-      console.error(statusMessage);
-    }
-  }
-
-  /**
-   * Refresca el tiempo cada cierto rato.
-   *
-   * Ojo: si el tiempo falla, el reintento se calendariza aqui y ademas
-   * sigue el refresco periodico, asi que hay dos relojes en marcha. Es un
-   * fallo conocido, se arregla en la Fase 2.
-   */
-  async function update() {
-    if (status.geo !== "loaded") return;
-    if (intervalId) return;
-
-    const run = async () => {
-      await fetchWeather(lat, lon);
-
-      if (status.weather !== "loaded") {
-        const cancel = scheduler.after(refreshMs, async () => {
-          retries.delete(cancel);
-          await run();
-        });
-        retries.add(cancel);
-        return;
-      }
+    return () => {
+      stop();
+      $element.style.letterSpacing = "normal";
     };
+  }
 
-    await run();
+  function startDots($element) {
+    stopDots?.();
+    stopDots = dots($element);
+  }
 
-    intervalId = scheduler.every(refreshMs, run);
+  function endDots() {
+    stopDots?.();
+    stopDots = null;
+  }
+
+  function clearTimers() {
+    refreshTimer?.();
+    refreshTimer = null;
+    retryTimer?.();
+    retryTimer = null;
+  }
+
+  function showError(error, { onLocation }) {
+    $retry.hidden = false;
+
+    const $target = onLocation ? $location : $weather;
+    $target.textContent = onLocation
+      ? CONFIG.messages.locationError
+      : CONFIG.messages.weatherError;
+    $target.classList.add("warning");
+
+    console.error(error?.message ?? error);
+  }
+
+  function render({ temperature, code, isDay, timezone }) {
+    $weather.classList.remove("warning");
+    $location.classList.remove("warning");
+    $retry.hidden = true;
+
+    const degrees = Number.isFinite(temperature) ? Math.round(temperature) : "--";
+    $weather.textContent = `${degrees}˚`;
+    $icon.style.backgroundImage = setIcon(code, isDay) ?? "";
+
+    if (timezone) store.set("timezone", timezone);
+  }
+
+  /**
+   * Un intento completo: localizar si hace falta y pedir el tiempo.
+   *
+   * @param {{ silent?: boolean }} [options] silencioso: no borra lo que ya
+   *   hay en pantalla mientras refresca
+   */
+  async function refresh({ silent = false } = {}) {
+    if (!running || busy) return;
+
+    busy = true;
+    clearTimers();
+    abort?.abort();
+    abort = new AbortController();
+    const { signal } = abort;
+
+    try {
+      if (!place) {
+        startDots($location);
+        place = await locate({ signal });
+        $location.textContent = formatPlace(place);
+        endDots();
+      }
+
+      if (!silent) startDots($weather);
+
+      const current = await fetchCurrent({ ...place, signal });
+      render(current);
+
+      refreshTimer = scheduler.after(refreshMs, () =>
+        refresh({ silent: true }),
+      );
+    } catch (error) {
+      // Si lo que pasa es que nos han parado, no es un fallo.
+      if (!signal.aborted) {
+        showError(error, { onLocation: !place });
+        retryTimer = scheduler.after(CONFIG.weather.retryDelay, () =>
+          refresh(),
+        );
+      }
+    } finally {
+      endDots();
+      busy = false;
+    }
+  }
+
+  /** Reintento manual, el del boton. */
+  function retry() {
+    if (!running || busy) return;
+    clearTimers();
+    refresh();
   }
 
   return {
-    async start() {
-      await requestGeolocation();
-      if (status.geo === "loaded") {
-        await update();
-      } else {
-        console.error(statusMessage);
-      }
+    /** Arranca y devuelve la promesa del primer intento, como el fondo. */
+    start() {
+      running = true;
+
+      $retry.textContent = CONFIG.messages.retry;
+      $retry.addEventListener("click", retry);
+
+      return refresh();
     },
 
     stop() {
-      intervalId?.();
-      intervalId = null;
-      for (const cancel of retries) cancel();
-      retries.clear();
+      running = false;
+      clearTimers();
+      abort?.abort();
+      abort = null;
+      endDots();
+      $retry.removeEventListener("click", retry);
     },
+
+    retry,
   };
 }
