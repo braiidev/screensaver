@@ -178,6 +178,46 @@ try {
   bad(`no se pudieron comprobar los invariantes: ${e.message}`);
 }
 
+/* -------------------------------- 7. Constantes del config sin usar */
+
+console.log("\n7. Constantes del config sin usar");
+// Reservado para una fase que aun no ha llegado. Cada entrada de aqui deberia
+// desaparecer en cuanto la constante empiece a usarse.
+const RESERVED = new Set(["storage", "endpoints.geocoding"]);
+{
+  const configSource = readFileSync(join(ROOT, "src/config.js"), "utf8");
+  const codeSource = jsFiles
+    .filter((f) => rel(f) !== "src/config.js")
+    .map((f) => readFileSync(f, "utf8"))
+    .join("\n");
+
+  // Recorre el objeto literal y saca las hojas con su ruta: "weather.retries".
+  const leaves = [];
+  const stack = [];
+  for (const line of configSource.split("\n")) {
+    if (/^\s*(?:\*|\/\*|\/\/)/.test(line)) continue;
+    const m = line.match(/^(\s+)(\w+):\s*(.*)$/);
+    if (!m) continue;
+    const indent = m[1].length;
+    while (stack.length && stack[stack.length - 1].indent >= indent) stack.pop();
+    if (m[3].startsWith("{")) {
+      stack.push({ key: m[2], indent });
+    } else {
+      leaves.push([...stack.map((s) => s.key), m[2]].join("."));
+    }
+  }
+
+  const unused = leaves.filter(
+    (path) =>
+      !RESERVED.has(path) &&
+      ![...RESERVED].some((r) => path.startsWith(`${r}.`)) &&
+      !new RegExp(`CONFIG\\.${path.replace(/\./g, "\\.")}\\b`).test(codeSource),
+  );
+
+  if (unused.length === 0) ok(`las ${leaves.length} constantes del config se leen en algun sitio`);
+  else bad(`nadie lee: ${unused.join(", ")}`);
+}
+
 /* ------------------------------------------------------------- Resultado */
 
 console.log(

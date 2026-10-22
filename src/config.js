@@ -11,7 +11,6 @@
 
 export const CONFIG = {
   app: {
-    name: "WeatherApp",
     locale: "es-ES",
     /** Idioma que se pide a los servicios que lo admiten. */
     language: "es",
@@ -88,7 +87,6 @@ export const CONFIG = {
   },
 
   messages: {
-    loading: "Cargando",
     locationError: "No se pudo cargar la localizacion",
     weatherError: "No se pudo cargar el clima",
     retry: "Reintentar",

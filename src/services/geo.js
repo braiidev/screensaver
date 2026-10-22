@@ -76,7 +76,11 @@ async function placeName(latitude, longitude, signal) {
       city: data.city || data.locality || data.principalSubdivision || "",
       country: data.countryName || "",
     };
-  } catch {
+  } catch (error) {
+    // Cancelar no es un fallo: se propaga para que nadie lo confunda con
+    // "hay coordenadas pero no nombre".
+    if (signal?.aborted) throw error;
+
     // Sin nombre se sigue: las coordenadas bastan para pedir el clima.
     return { city: "", country: "" };
   }

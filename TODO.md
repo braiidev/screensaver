@@ -14,25 +14,17 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.2.2`
+- Version actual: `v0.3.0`
 - Fase en curso: ninguna
-- Siguiente version reservada: `v0.3.0`
+- Siguiente version reservada: `v0.4.0`
 
 ## Tablero
 
 ### En curso
 
-_Nada en curso. La siguiente fase es la 2._
+_Nada en curso. La siguiente fase es la 3._
 
 ### Siguiente
-
-- [ ] **v0.3.0** - Fase 2 - Clima sobre servicios
-  - Reubicar la llamada a Open-Meteo en `services/weatherApi.js` y la de
-    localizacion en `services/geo.js`, con `http.js` aplicando tiempo limite,
-    `AbortController` y reintentos. Corregir el doble calendario de reintentos que
-    hoy encadena varios temporizadores si la peticion falla, y hacer que un fallo de
-    geolocalizacion se recupere solo en lugar de dejar la app sin ciudad para
-    siempre. Anadir esqueleto de carga y estado de error con boton de reintentar.
 
 - [ ] **v0.4.0** - Fase 3 - Layout dashboard responsivo
   - Sustituir el layout anclado en la esquina por la direccion Dashboard: reloj como
@@ -95,6 +87,35 @@ _Nada en curso. La siguiente fase es la 2._
     estados del HTML da una sola diferencia frente a la `v0.0.0`, el `tabular-nums`
     anadido al reloj. Los 21 recursos responden 200 por HTTP con el MIME correcto.
 
+- [x] **v0.3.0** - Fase 2 - Clima sobre servicios
+  - Aparece `src/services/`, la unica capa que habla con el exterior. `http.js`
+    resuelve cada intento a mano (respuesta, reloj o cancelacion) en vez de confiar
+    en que `fetch` obedezca la `AbortSignal` —una peticion colgada ya no puede colgar
+    la app—, reintenta con espera creciente y se cancela desde fuera. `geo.js`
+    pregunta primero al navegador y cae a la IP solo si no hay permiso, tarda
+    demasiado o el navegador no sabe, y devuelve siempre coordenadas y un nombre.
+    `weatherApi.js` normaliza Open-Meteo a cuatro datos y aprovecha que
+    `timezone=auto` trae la zona IANA de las coordenadas.
+  - Los dos fallos conocidos, arreglados. El doble calendario: cada intento empieza
+    por `clearTimers()`, asi que al acabar queda exactamente un temporizador, el del
+    refresco si fue bien o el del reintento si no. La localizacion terminal: un fallo
+    de ubicacion entra por el mismo camino que el del tiempo, se reintenta solo y la
+    app se recupera sin recargar.
+  - El modulo del clima pierde su ultima dependencia de red y gana estado de error con
+    un boton de reintentar de verdad, alcanzable con teclado y con mando. El refresco
+    periodico pasa a ser silencioso —ya no borra la temperatura cada diez minutos
+    para escribir puntos suspensivos— y la temperatura se redondea.
+  - La zona horaria que devuelve la API se guarda en el store, con lo que el reloj ya
+    da la hora de la ciudad localizada y no la del aparato, incluso antes de que
+    exista el selector de ciudades.
+  - Se verifico: 90 pruebas en Node sobre el doble calendario, la recuperacion de la
+    ubicacion, el boton, el contrato de `start()` y los servicios con `fetch` imitado;
+    los tres servicios contra las APIs reales; el calculo de estilos finales frente a
+    `v0.2.1` da solo los dos elementos nuevos del boton; los recursos nuevos responden
+    200 con el MIME correcto; `npm run verify` da 0 fallos. El verificador gana una
+    invariante: toda constante del config tiene que leerse en algun sitio, que es como
+    aparecieron `app.name` y `messages.loading` sin usar.
+
 ### Descartado
 
 - [ ] ~~Wallpaper segun la hora del dia~~ — el usuario edita la lista de imagenes a
@@ -112,18 +133,26 @@ _Nada en curso. La siguiente fase es la 2._
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
-- `free.freeipapi.com/api/json` responde 307 hacia `/api/v1/json`; `fetch` sigue la
-  redireccion y la respuesta llega bien, pero en la Fase 2 se fija la ruta directa
-  para no depender de la redireccion.
+- `free.freeipapi.com/api/json` respondia 307 hacia `/api/v1/json`; desde la `v0.2.1`
+  se pide la ruta directa para no depender de esa redireccion.
+- Cada modulo tiene como mucho un temporizador vivo. El clima lo cumple llamando a
+  `clearTimers()` al empezar cada intento: si se anade otra programacion, tiene que
+  pasar por ahi o volveran las peticiones que se multiplican.
+- Las peticiones no confian en que `fetch` obedezca la `AbortSignal`: `http.js`
+  resuelve cada intento contra el reloj, contra la cancelacion y contra la respuesta.
+  Asi una promesa que no se asentara nunca no deja la app esperando.
+- `npm run verify` comprueba que toda constante del config se lea en algun sitio. Lo
+  que este reservado para una fase futura vive en la lista `RESERVED` del verificador
+  y hay que sacarlo de ahi en cuanto se empiece a usar.
 - El geocoding de Open-Meteo devuelve el timezone IANA, asi que el reloj por ciudad no
   necesita ningun proveedor adicional.
 - `BigDataCloud /data/timezone` responde 403 sin clave; el timezone sale de la propia
   respuesta de Open-Meteo con `timezone=auto`.
 - La API de fotos de Pixabay se usa solo por CDN, sin credenciales.
 - `src/styles/states.css` se importa el ultimo a proposito: la clase `warning` se
-  aplica sobre `#location`, que es `.item2-3`, y los dos fijan `font-size` con la
-  misma especificidad. Si el aviso se importara antes, el mensaje de error pasaria
-  de 1rem a 0.1em y seria ilegible en movil.
+  aplica sobre `#location` y `#weather`, que fijan `font-size` con la misma
+  especificidad. Si el aviso se importara antes, el mensaje de error pasaria de 1rem
+  a la escala del hueco y seria ilegible en movil.
 - `assets/` ya solo tiene el icono de la pagina. Todo el codigo esta migrado a
   `src/`, y `assets/js/` se borro en el paso 6 de la Fase 1.
 - El cruce del fondo se mide con el calculo de estilos finales, no a ojo: se
@@ -134,7 +163,7 @@ _Nada en curso. La siguiente fase es la 2._
 ## Seguimiento
 
 El progreso de este proyecto se registra en el historial de commits de Git, no en
-este archivo. Cada commit lleva un prefijo de version `Vx.y.Z` y lista en el cuerpo
+este archivo. Cada commit lleva un prefijo de version `vx.y.z` y lista en el cuerpo
 los archivos que modifica, de modo que `git log` funciona como bitacora del proyecto
 y `git tag` marca el cierre de cada fase. La version vigente esta en el archivo
 `VERSION` de la raiz del repositorio.
