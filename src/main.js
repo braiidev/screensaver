@@ -101,3 +101,13 @@ if ("serviceWorker" in navigator) {
       .catch((err) => console.error("SW registration failed:", err));
   });
 }
+
+
+document.querySelector(".skip-link")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  const main = document.getElementById("main");
+  if (main) {
+    main.focus();
+    main.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});

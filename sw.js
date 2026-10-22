@@ -1,8 +1,9 @@
-const CACHE_NAME = "weatherapp-v1.0.0";
+const CACHE_NAME = "weatherapp-v1.1.0";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
+  "./sw.js",
   "./assets/img/icon.png",
   "./assets/img/icon-192.png",
   "./assets/img/icon-512.png",

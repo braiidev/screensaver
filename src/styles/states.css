@@ -48,3 +48,22 @@ body.is-offline::after {
     animation: none;
   }
 }
+
+/* Transiciones suaves para cambios de estado */
+.card,
+.clock,
+.cities,
+.gear,
+.settings {
+  transition: opacity 0.2s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .clock,
+  .cities,
+  .gear,
+  .settings {
+    transition: none;
+  }
+}
