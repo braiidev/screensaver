@@ -44,6 +44,7 @@
   </head>
 
   <body>
+    <a class="skip-link" href="#main">Saltar al contenido principal</a>
     <div class="board">
       <div id="background" class="wallpaper" aria-hidden="true">
         <div id="tapeA" class="wallpaper__tape"></div>
@@ -51,20 +52,20 @@
       </div>
       <div class="scrim" aria-hidden="true"></div>
 
-      <main class="dashboard">
+      <main class="dashboard" id="main" tabindex="-1">
         <nav class="cities" id="cities" aria-label="Ciudades" hidden>
           <ul class="cities__list" id="cities-list"></ul>
         </nav>
 
         <section class="card" aria-label="Clima actual">
-          <p class="card__city" id="location"></p>
+          <p class="card__city" id="location" aria-live="polite" aria-atomic="true"></p>
 
           <div class="card__now">
-            <span class="card__temp" id="weather"></span>
+            <span class="card__temp" id="weather" aria-live="polite" aria-atomic="true"></span>
             <span class="meteo-icon card__icon" id="icon" aria-hidden="true"></span>
           </div>
 
-          <p class="card__condition" id="condition"></p>
+          <p class="card__condition" id="condition" aria-live="polite" aria-atomic="true"></p>
 
           <p class="card__feels" id="feels" hidden></p>
 
@@ -80,10 +81,10 @@
         </section>
 
         <footer class="clock">
-          <p class="clock__date" id="day"></p>
+          <p class="clock__date" id="day" aria-live="polite" aria-atomic="true"></p>
           <div class="clock__time">
-            <span id="time"></span>
-            <span class="clock__period" id="period"></span>
+            <span id="time" aria-live="polite" aria-atomic="true"></span>
+            <span class="clock__period" id="period" aria-live="polite" aria-atomic="true"></span>
           </div>
         </footer>
       </main>

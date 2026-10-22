@@ -14,7 +14,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.7.1`
+- Version actual: `v0.7.2`
 - Fase en curso: Fase 7 - Pulido y mejoras
 - Siguiente version reservada: `v0.6.0`
 
