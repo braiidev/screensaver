@@ -84,3 +84,13 @@ function bootstrap() {
 }
 
 bootstrap();
+
+
+// Registro del Service Worker para PWA
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./sw.js", { scope: "./" })
+      .catch((err) => console.error("SW registration failed:", err));
+  });
+}

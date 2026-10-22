@@ -14,7 +14,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.6.0`
+- Version actual: `v0.6.1`
 - Fase en curso: ninguna
 - Siguiente version reservada: `v0.6.0`
 
@@ -22,16 +22,14 @@ se manejan con el mando del Chromecast sin raton.
 
 ### En curso
 
-_Nada en curso. La siguiente fase es la 5._
+- [ ] **v0.7.0** - Fase 7 - Pulido y mejoras
+  - Añadir PWA (manifest.json, service worker) para instalación.
+  - Mejorar accesibilidad (focus management, ARIA, skip links).
+  - Optimizar rendimiento (lazy loading, prefetch, métricas).
+  - Pulir UX (transiciones, estados de carga, manejo de errores).
+  - Añadir modo offline básico con cache de recursos críticos.
 
 ### Siguiente
-
-- [ ] **v0.6.0** - Fase 5 - Infraestructura y despliegue
-  - Anadir `netlify.toml` con directorio de publicacion y bloque de cabeceras,
-    `_headers` con CSP, `X-Frame-Options`, `Referrer-Policy` y cache larga para
-    `assets/`. Completar `package.json` con scripts de lint y format. Corregir el
-    README: quitar referencias rotas y aclarar los créditos (Pixabay / Lucide). Anadir
-    `.gitignore`, `.editorconfig` y `robots.txt`.
 
 - [ ] **v0.7.0** - Fase 6 - Despliegue y verificacion
   - Desplegar en Netlify y verificar en el sitio real que el layout coincide en los
@@ -39,6 +37,16 @@ _Nada en curso. La siguiente fase es la 5._
     rompen la carga de imagenes ni los iconos.
 
 ### Terminado
+
+- [x] **v0.6.0** - Fase 5 - Infraestructura y despliegue
+  - `netlify.toml` publica la raiz y añade cabeceras de seguridad. `_headers`
+    replica las cabeceras con reglas de cache por tipo: `assets/` inmutable,
+    `src/` y JS con 1h, HTML sin cache. CSP restringida a los dominios usados,
+    con AdSense en `script-src`.
+  - `package.json` gana `lint` y `format`. `.gitignore` cubre editores, `.editorconfig`
+    normaliza el formato, `robots.txt` permite todo y apunta a `sitemap.xml`.
+  - README con créditos (Open-Meteo, BigDataCloud, freeipapi, Pixabay, Lucide)
+    y sección de despliegue en Netlify.
 
 - [x] **v0.5.0** - Fase 4 - Multi-ciudad y panel de ajustes
   - La ciudad pasa a ser un dato del store: `{id, city, country, admin1, latitude,
