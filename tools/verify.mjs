@@ -168,12 +168,25 @@ try {
   if (ids.size === wallpapers.length) ok("no hay ids repetidos");
   else bad(`hay ${wallpapers.length - ids.size} ids repetidos`);
 
-  const wmo = readFileSync(join(ROOT, "src/data/wno.js"), "utf8");
-  const codes = [...wmo.matchAll(/^\s{4}"?(\d+)"?:\s*\{/gm)].map((m) => m[1]);
+  const { identify } = await import(join(ROOT, "src/data/wno.js"));
+  const { ICON_NAMES } = await import(join(ROOT, "src/ui/icons.js"));
   const WMO = ["0","1","2","3","45","48","51","53","55","56","57","61","63","65","66","67","71","73","75","77","80","81","82","85","86","95","96","99"];
-  const missing = WMO.filter((c) => !codes.includes(c));
-  if (missing.length === 0) ok(`wno.js cubre los ${WMO.length} codigos WMO sin huecos`);
-  else bad(`wno.js no cubre los codigos: ${missing.join(", ")}`);
+
+  // Se pregunta al propio modulo, no se lee el texto: asi el formato del
+  // fichero puede cambiar sin que la comprobacion mienta.
+  const missing = WMO.filter((code) => {
+    const entry = identify(Number(code));
+    return !entry?.label || !ICON_NAMES.includes(entry.icon);
+  });
+  if (missing.length === 0) ok(`wno.js cubre los ${WMO.length} codigos WMO con etiqueta e icono`);
+  else bad(`wno.js no cubre bien los codigos: ${missing.join(", ")}`);
+
+  const night = WMO.filter((code) => {
+    const entry = identify(Number(code), false);
+    return !entry?.label || !ICON_NAMES.includes(entry.icon);
+  });
+  if (night.length === 0) ok("y todos tienen variante de noche");
+  else bad(`sin variante de noche valida: ${night.join(", ")}`);
 } catch (e) {
   bad(`no se pudieron comprobar los invariantes: ${e.message}`);
 }
@@ -216,6 +229,62 @@ const RESERVED = new Set(["storage", "endpoints.geocoding"]);
 
   if (unused.length === 0) ok(`las ${leaves.length} constantes del config se leen en algun sitio`);
   else bad(`nadie lee: ${unused.join(", ")}`);
+}
+
+console.log("\n8. Ningun texto por debajo de 13px");
+// El suelo de cada `clamp()` es el tamano mas pequeno que ese texto puede
+// llegar a tener, en la pantalla mas estrecha posible. Si el suelo baja de
+// 13px, hay un tamano de pantalla donde ese texto no se lee. Se resuelven las
+// variables para poder juzgar el valor final, no el texto de la hoja.
+{
+  const MIN_PX = 13;
+  const tokensSource = readFileSync(join(ROOT, "src/styles/tokens.css"), "utf8");
+  const tokens = new Map();
+  for (const m of tokensSource.matchAll(/(--[\w-]+):\s*([^;]+);/g)) {
+    tokens.set(m[1], m[2].trim());
+  }
+
+  const resolve = (value) => {
+    let out = value;
+    for (let i = 0; i < 5; i += 1) {
+      const next = out.replace(/var\(\s*(--[\w-]+)\s*\)/g, (_, n) => tokens.get(n) ?? "desconocido");
+      if (next === out) break;
+      out = next;
+    }
+    return out;
+  };
+
+  const toPx = (text) => {
+    const m = text.trim().match(/^(-?[\d.]+)(px|rem)$/);
+    if (!m) return null;
+    return Number(m[1]) * (m[2] === "rem" ? 16 : 1);
+  };
+
+  // El primer argumento de un `clamp()` es su suelo.
+  const floorPx = (value) => {
+    const resolved = resolve(value);
+    const clamp = resolved.match(/clamp\(\s*([^,]+),/);
+    return toPx(clamp ? clamp[1] : resolved);
+  };
+
+  const rows = [];
+  for (const file of walk(join(ROOT, "src"), (f) => extname(f) === ".css")) {
+    const source = readFileSync(file, "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    source.split("\n").forEach((line, i) => {
+      const m = line.match(/font-size:\s*([^;]+);/);
+      if (m) rows.push({ where: `${rel(file)}:${i + 1}`, value: m[1].trim(), px: floorPx(m[1]) });
+    });
+  }
+
+  const small = rows.filter((r) => r.px === null || r.px < MIN_PX);
+  if (small.length === 0) {
+    const sizes = rows.map((r) => `${Math.round(r.px)}px`).join(", ");
+    ok(`los ${rows.length} tamanos de texto tienen suelo de 13px o mas (${sizes})`);
+  } else {
+    for (const r of small) {
+      bad(`${r.where}: ${r.value} baja a ${r.px === null ? "un valor no comprobable" : `${r.px}px`}`);
+    }
+  }
 }
 
 /* ------------------------------------------------------------- Resultado */

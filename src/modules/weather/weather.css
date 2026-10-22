@@ -1,41 +1,129 @@
-/* weather.css - El bloque del clima.
+/* weather.css - La tarjeta del clima.
  *
- * La temperatura con su icono y, debajo, la localizacion.
+ * Arriba a la derecha. Dentro van la ciudad, la temperatura con su icono, la
+ * condicion y, mas abajo, el pronostico.
+ *
+ * La superficie es oscura y semitransparente en vez de llevar desenfoque: el
+ * `backdrop-filter` se paga caro en un Chromecast y aqui no aporta.
  *
  * Los avisos van aparte, en states.css, que se importa el ultimo: `.warning`
- * fija el `font-size` del mismo elemento que `.item2-3` y los dos tienen la
- * misma especificidad, asi que gana el que aparece despues.
+ * fija el `font-size` de los mismos elementos que `.card__city` y
+ * `.card__temp`, con la misma especificidad. Si se importara antes, el aviso
+ * saldria al tamano de la temperatura o de la ciudad.
  */
 
-.item2-2 {
-  font-size: var(--fs-weather);
+.card {
+  grid-area: card;
+  align-self: start;
+  justify-self: stretch;
+  display: grid;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
 }
 
-.item2-2-2 {
-  display: inline-block;
+.card__city {
+  font-size: var(--fs-city);
+  font-weight: 600;
+}
+
+.card__now {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.card__temp {
+  font-size: var(--fs-temp);
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.card__icon {
+  flex: none;
   width: 1em;
   height: 1em;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  font-size: var(--fs-icon);
+  color: var(--icon-cloud);
 }
 
-.item2-3 {
-  font-size: var(--fs-location);
-  opacity: var(--opacity-muted);
+.card__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.card__condition {
+  font-size: var(--fs-condition);
+  color: var(--color-muted);
+}
+
+/* A partir de tablet ancha la tarjeta deja de ocupar todo el ancho y se va a
+ * su esquina. En el movil ocupa la pantalla porque no hay sitio para dos
+ * columnas. */
+@media (min-width: 48em) {
+  .card {
+    justify-self: end;
+    width: clamp(17rem, 26vw, 25rem);
+  }
+}
+
+/* Un color por familia de condicion. El nombre del icono es el del tono. */
+.card__icon[data-tone="sun"] {
+  color: var(--icon-sun);
+}
+
+.card__icon[data-tone="moon"] {
+  color: var(--icon-moon);
+}
+
+.card__icon[data-tone="sun-cloud"] {
+  color: var(--icon-sun);
+}
+
+.card__icon[data-tone="moon-cloud"] {
+  color: var(--icon-moon);
+}
+
+.card__icon[data-tone="cloud"] {
+  color: var(--icon-cloud);
+}
+
+.card__icon[data-tone="drizzle"],
+.card__icon[data-tone="rain"] {
+  color: var(--icon-rain);
+}
+
+.card__icon[data-tone="snow"] {
+  color: var(--icon-snow);
+}
+
+.card__icon[data-tone="storm"] {
+  color: var(--icon-storm);
+}
+
+.card__icon[data-tone="fog"] {
+  color: var(--icon-fog);
 }
 
 /* El boton de reintentar, que solo aparece cuando algo ha fallado. */
 .retry {
-  font-family: var(--font-family);
-  font-size: var(--fs-warning);
+  justify-self: start;
+  padding: 0.45em 0.9em;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: var(--fs-retry);
   color: var(--color-text);
-  background: none;
-  border: 1px solid currentColor;
-  border-radius: 0.25em;
-  padding: 0.25em 0.75em;
-  cursor: pointer;
-  opacity: var(--opacity-muted);
+}
+
+.retry:hover,
+.retry:focus-visible {
+  border-color: var(--color-text);
 }
 
 /* Sin esto, cualquier `display` de arriba pisaria al atributo `hidden`. */

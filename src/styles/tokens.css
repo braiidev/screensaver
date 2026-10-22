@@ -1,53 +1,78 @@
 /* tokens.css - Las variables del proyecto.
  *
  * Aqui vive todo valor que se repite o que habra que ajustar en algun momento.
- * Ningun modulo deberia escribir un color, un tamaño o un tiempo literal en su
+ * Ningun modulo deberia escribir un color, un tamano o un tiempo literal en su
  * propia hoja de estilos: si hace falta uno nuevo, se declara aqui primero.
  *
- * Los valores de este fichero son los que tiene la version que esta en
- * produccion. Cambiarlos es un cambio de aspecto y va en su propia version.
+ * La tipografia va por roles, no por tamanos sueltos. Cada `clamp()` tiene un
+ * suelo absoluto en su primer valor: ese suelo es la promesa de que ningun
+ * texto baja de 13px en ninguna pantalla.
  */
 
 :root {
   /* ---------------------------------------------------------------- Color */
 
   /** Fondo por defecto de la pagina, bajo el fondo fotografico. */
-  --bg-color: #101025;
+  --bg-color: #0b0e14;
   /** Color de texto principal. */
-  --color-text: #fff;
+  --color-text: #ffffff;
+  /** Texto secundario: fecha, condicion, unidades. */
+  --color-muted: rgb(255 255 255 / 0.72);
+  /** Bordes y separadores sobre la fotografia. */
+  --color-line: rgb(255 255 255 / 0.14);
+  /** Superficie de la tarjeta de clima. Oscura y semitransparente para que el
+   * fondo se intuya sin que el texto pierda contraste. Sin desenfoque: el
+   * Chromecast lo paga caro. */
+  --color-surface: rgb(12 15 22 / 0.55);
   /** Color de los avisos. */
-  --color-warning: rgb(250, 154, 28);
-  /** Opacidad del texto secundario. */
-  --opacity-muted: 0.7;
-  /** Velo oscuro que hace legible el texto sobre la fotografia. */
-  --scrim: linear-gradient(150deg, #00000000 55%, #000000);
+  --color-warning: rgb(250 154 28);
+
+  /** Un color por familia de condicion meteorologica. */
+  --icon-sun: #fbbf24;
+  --icon-moon: #dbe4ef;
+  --icon-cloud: #cbd5e1;
+  --icon-rain: #7dd3fc;
+  --icon-snow: #bfe3ff;
+  --icon-storm: #c4b5fd;
+  --icon-fog: #94a3b8;
 
   /* ---------------------------------------------------------- Tipografia */
 
   --font-family: sans-serif;
-  /** Escala base del lienzo. Todo lo demas se expresa en `em` sobre ella. */
-  --font-size-hero: clamp(24px, 14vw, 240px);
-  /** Reloj: la escala base. */
-  --fs-hero: 1em;
-  /** Dia de la semana. */
-  --fs-day: 0.3em;
+
+  /** Reloj. El heroe de la pantalla. */
+  --fs-clock: clamp(3.25rem, 12vw, 10rem);
+  /** Fecha bajo el reloj. */
+  --fs-date: clamp(0.875rem, 1.3vw, 1.125rem);
+  /** Temperatura actual. */
+  --fs-temp: clamp(2rem, 5.5vw, 4rem);
+  /** Icono de la condicion. Acompana a la temperatura, algo mas pequeno. */
+  --fs-icon: clamp(1.75rem, 4.6vw, 3.4rem);
+  /** Ciudad. */
+  --fs-city: clamp(0.875rem, 1.4vw, 1.125rem);
   /** Condicion meteorologica. */
-  --fs-weather: 0.5em;
-  /** Localizacion. 0.1em baja de 13px en movil: se corrige en la Fase 3. */
-  --fs-location: 0.1em;
-  /** Avisos, a tamano fijo del navegador. */
-  --fs-warning: 1rem;
+  --fs-condition: clamp(0.8125rem, 1.1vw, 1rem);
+  /** Pronostico: dia y maximas/minimas. */
+  --fs-forecast: clamp(0.8125rem, 1vw, 0.9375rem);
+  /** Avisos de error. */
+  --fs-warning: clamp(0.875rem, 1.2vw, 1.125rem);
+  /** Boton de reintentar. */
+  --fs-retry: clamp(0.875rem, 1.1vw, 1rem);
 
   /* ------------------------------------------------------------ Espaciado */
 
-  /** Separacion entre el texto y el borde derecho del lienzo. */
-  --space-inline-end: 0.3em;
+  /** Margen del lienzo. Se suma al area segura del aparato. */
+  --space-edge: clamp(16px, 2.6vmin, 40px);
+  --space-1: clamp(4px, 0.6vmin, 8px);
+  --space-2: clamp(8px, 1.2vmin, 16px);
+  --space-3: clamp(14px, 2vmin, 26px);
+  --radius-card: clamp(14px, 1.6vmin, 22px);
 
   /* ---------------------------------------------------------------- Capas */
 
-  --z-background: -1;
-  --z-board: 0;
-  --z-content: 10;
+  --z-background: 0;
+  --z-scrim: 1;
+  --z-content: 2;
 
   /* ------------------------------------------------------------ Movimiento */
 
@@ -56,15 +81,15 @@
   /** Escala de la cinta de fondo que espera. Mayor que 1 para que no se vea
    * el borde de la pantalla al encoger la cinta. */
   --wallpaper-scale: 1.06;
-  /** Duracion de la entrada de la pantalla. */
-  --duration-screen: 1s;
-  /** Espera antes de que aparezca el contenido. */
-  --duration-item-delay: 1s;
-  /** Duracion de la entrada del contenido. */
-  --duration-item: 2s;
+  /** Entrada del contenido, despues de que el fondo se asiente. */
+  --duration-enter: 900ms;
+  --delay-enter: 300ms;
 
   /* --------------------------------------------------------------- Lienzo */
 
   --board-width: 100vw;
+  /* `100dvh` es la altura que de verdad se ve en movil, descontando la barra
+   * del navegador. La linea anterior es el respaldo para quien no la tenga. */
   --board-height: 100vh;
+  --board-height: 100dvh;
 }

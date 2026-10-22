@@ -1,66 +1,69 @@
 /* layout.css - La composicion de la pantalla.
  *
- * Donde cae cada pieza y cuanto mide. El lienzo es un solo bloque a pantalla
- * completa con el fondo detras y el contenido encima, alineado a la derecha.
+ * Una sola rejilla para los tres tamanos objetivo, de 390px a 1920px:
+ *
+ *   ciudades   <- arriba, llegan en la Fase 4
+ *   tarjeta    <- a la derecha, arriba
+ *   reloj      <- abajo a la izquierda, el heroe
+ *
+ * La fila de ciudades queda declarada y vacia: cuando lleguen los chips solo
+ * hay que meterlos en su area, sin tocar la rejilla.
  */
 
 body {
   /* Sin esto, hasta que llega el fondo se ve un destello blanco. */
   background: var(--bg-color);
+  overflow: hidden;
 }
 
 .board {
+  position: relative;
+  /* Crea un contexto de apilado propio: las capas de dentro no se escapan. */
+  z-index: 0;
   width: var(--board-width);
   height: var(--board-height);
-  font-size: var(--font-size-hero);
+  overflow: hidden;
   font-family: var(--font-family);
   color: var(--color-text);
-  position: relative;
-  z-index: var(--z-board);
-  overflow: hidden;
-  animation: var(--duration-screen) fadeScreen;
 }
 
-.item2 {
+/* Dos velos, uno por esquina: la tarjeta arriba a la derecha y el reloj abajo
+ * a la izquierda. Oscurecer solo esas dos zonas deja respirar la fotografia,
+ * cosa que un velo plano sobre todo el lienzo no hace. */
+.scrim {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: var(--z-content);
-  text-align: right;
-  background: var(--scrim);
-  opacity: 1;
-  animation-delay: var(--duration-item-delay);
-  animation-duration: var(--duration-item);
-  animation-name: fadeItem;
-  animation-fill-mode: backwards;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
+  inset: 0;
+  z-index: var(--z-scrim);
+  pointer-events: none;
+  background:
+    radial-gradient(120% 85% at 100% 0%, rgb(0 0 0 / 0.55), transparent 62%),
+    radial-gradient(120% 85% at 0% 100%, rgb(0 0 0 / 0.72), transparent 62%);
 }
 
-@keyframes fadeItem {
+.dashboard {
+  position: relative;
+  z-index: var(--z-content);
+  display: grid;
+  grid-template-areas:
+    "cities"
+    "card"
+    "clock";
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  padding:
+    calc(var(--space-edge) + env(safe-area-inset-top, 0px))
+    calc(var(--space-edge) + env(safe-area-inset-right, 0px))
+    calc(var(--space-edge) + env(safe-area-inset-bottom, 0px))
+    calc(var(--space-edge) + env(safe-area-inset-left, 0px));
+  animation: enter var(--duration-enter) ease-out var(--delay-enter) backwards;
+}
+
+@keyframes enter {
   from {
     opacity: 0;
   }
 
   to {
     opacity: 1;
-  }
-}
-
-@keyframes fadeScreen {
-  from {
-    filter: opacity(0) blur(10px);
-  }
-
-  25% {
-    filter: blur(0);
-  }
-
-  to {
-    filter: opacity(100%) blur(0);
   }
 }

@@ -1,335 +1,61 @@
 /**
- * wno.js - Los codigos de tiempo de la WMO.
+ * wno.js - Los 28 codigos WMO, en espanol.
  *
- * Open-Meteo devuelve un codigo numerico con el estado del cielo. Cada codigo
- * tiene aqui su icono de dia y de noche y su descripcion.
+ * Open-Meteo devuelve un numero por estado del cielo. Aqui se traduce a dos
+ * cosas: la etiqueta que se lee en pantalla y el nombre del icono que hay que
+ * dibujar. El dibujo y su color viven en `ui/icons.js`.
  *
- * Se cubren los 28 codigos que devuelve la API, sin huecos. Para anadir uno
- * nuevo, basta con una entrada mas con la misma forma.
+ * `day` y `night` solo cambian el dibujo: despejado no es lo mismo de dia que
+ * de noche, pero se llama igual.
+ *
+ * Este fichero se edita a mano. Si la API cambia un codigo, se cambia aqui.
  */
 
-import { CONFIG } from "../config.js";
-
-const url = CONFIG.icons.baseUrl
-const wmoicons = {
-    "0": {
-        day: {
-            description: "Sunny",
-            image: `${url}01d_t.png`,
-        },
-        night: {
-            description: "Clear",
-            image: `${url}01n_t.png`,
-        },
-    },
-    "1": {
-        day: {
-            description: "Mainly Sunny",
-            image: `${url}01d_t.png`,
-        },
-        night: {
-            description: "Mainly Clear",
-            image: `${url}01n_t.png`,
-        },
-    },
-    "2": {
-        day: {
-            description: "Partly Cloudy",
-            image: `${url}02d_t.png`,
-        },
-        night: {
-            description: "Partly Cloudy",
-            image: `${url}02n_t.png`,
-        },
-    },
-    "3": {
-        day: {
-            description: "Cloudy",
-            image: `${url}03d_t.png`,
-        },
-        night: {
-            description: "Cloudy",
-            image: `${url}03n_t.png`,
-        },
-    },
-    "45": {
-        day: {
-            description: "Foggy",
-            image: `${url}50d_t.png`,
-        },
-        night: {
-            description: "Foggy",
-            image: `${url}50n_t.png`,
-        },
-    },
-    "48": {
-        day: {
-            description: "Rime Fog",
-            image: `${url}50d_t.png`,
-        },
-        night: {
-            description: "Rime Fog",
-            image: `${url}50n_t.png`,
-        },
-    },
-    "51": {
-        day: {
-            description: "Light Drizzle",
-            image: `${url}09d_t.png`,
-        },
-        night: {
-            description: "Light Drizzle",
-            image: `${url}09n_t.png`,
-        },
-    },
-    "53": {
-        day: {
-            description: "Drizzle",
-            image: `${url}09d_t.png`,
-        },
-        night: {
-            description: "Drizzle",
-            image: `${url}09n_t.png`,
-        },
-    },
-    "55": {
-        day: {
-            description: "Heavy Drizzle",
-            image: `${url}09d_t.png`,
-        },
-        night: {
-            description: "Heavy Drizzle",
-            image: `${url}09n_t.png`,
-        },
-    },
-    "56": {
-        day: {
-            description: "Light Freezing Drizzle",
-            image: `${url}09d_t.png`,
-        },
-        night: {
-            description: "Light Freezing Drizzle",
-            image: `${url}09n_t.png`,
-        },
-    },
-    "57": {
-        day: {
-            description: "Freezing Drizzle",
-            image: `${url}09d_t.png`,
-        },
-        night: {
-            description: "Freezing Drizzle",
-            image: `${url}09n_t.png`,
-        },
-    },
-    "61": {
-        day: {
-            description: "Light Rain",
-            image: `${url}10d_t.png`,
-        },
-        night: {
-            description: "Light Rain",
-            image: `${url}10n_t.png`,
-        },
-    },
-    "63": {
-        day: {
-            description: "Rain",
-            image: `${url}10d_t.png`,
-        },
-        night: {
-            description: "Rain",
-            image: `${url}10n_t.png`,
-        },
-    },
-    "65": {
-        day: {
-            description: "Heavy Rain",
-            image: `${url}10d_t.png`,
-        },
-        night: {
-            description: "Heavy Rain",
-            image: `${url}10n_t.png`,
-        },
-    },
-    "66": {
-        day: {
-            description: "Light Freezing Rain",
-            image: `${url}10d_t.png`,
-        },
-        night: {
-            description: "Light Freezing Rain",
-            image: `${url}10n_t.png`,
-        },
-    },
-    "67": {
-        day: {
-            description: "Freezing Rain",
-            image: `${url}10d_t.png`,
-        },
-        night: {
-            description: "Freezing Rain",
-            image: `${url}10n_t.png`,
-        },
-    },
-    "71": {
-        day: {
-            description: "Light Snow",
-            image: `${url}13d_t.png`,
-        },
-        night: {
-            description: "Light Snow",
-            image: `${url}13n_t.png`,
-        },
-    },
-    "73": {
-        day: {
-            description: "Snow",
-            image: `${url}13d_t.png`,
-        },
-        night: {
-            description: "Snow",
-            image: `${url}13n_t.png`,
-        },
-    },
-    "75": {
-        day: {
-            description: "Heavy Snow",
-            image: `${url}13d_t.png`,
-        },
-        night: {
-            description: "Heavy Snow",
-            image: `${url}13n_t.png`,
-        },
-    },
-    "77": {
-        day: {
-            description: "Snow Grains",
-            image: `${url}13d_t.png`,
-        },
-        night: {
-            description: "Snow Grains",
-            image: `${url}13n_t.png`,
-        },
-    },
-    "80": {
-        day: {
-            description: "Light Showers",
-            image: `${url}09d_t.png`,
-        },
-        night: {
-            description: "Light Showers",
-            image: `${url}09n_t.png`,
-        },
-    },
-    "81": {
-        day: {
-            description: "Showers",
-            image: `${url}09d_t.png`,
-        },
-        night: {
-            description: "Showers",
-            image: `${url}09n_t.png`,
-        },
-    },
-    "82": {
-        day: {
-            description: "Heavy Showers",
-            image: `${url}09d_t.png`,
-        },
-        night: {
-            description: "Heavy Showers",
-            image: `${url}09n_t.png`,
-        },
-    },
-    "85": {
-        day: {
-            description: "Light Snow Showers",
-            image: `${url}13d_t.png`,
-        },
-        night: {
-            description: "Light Snow Showers",
-            image: `${url}13n_t.png`,
-        },
-    },
-    "86": {
-        day: {
-            description: "Snow Showers",
-            image: `${url}13d_t.png`,
-        },
-        night: {
-            description: "Snow Showers",
-            image: `${url}13n_t.png`,
-        },
-    },
-    "95": {
-        day: {
-            description: "Thunderstorm",
-            image: `${url}11d_t.png`,
-        },
-        night: {
-            description: "Thunderstorm",
-            image: `${url}11n_t.png`,
-        },
-    },
-    "96": {
-        day: {
-            description: "Light Thunderstorms With Hail",
-            image: `${url}11d_t.png`,
-        },
-        night: {
-            description: "Light Thunderstorms With Hail",
-            image: `${url}11n_t.png`,
-        },
-    },
-    "99": {
-        day: {
-            description: "Thunderstorm With Hail",
-            image: `${url}11d_t.png`,
-        },
-        night: {
-            description: "Thunderstorm With Hail",
-            image: `${url}11n_t.png`,
-        },
-    },
+const WMO = {
+  "0": { label: "Despejado", day: "sun", night: "moon" },
+  "1": { label: "Mayormente despejado", day: "sun-cloud", night: "moon-cloud" },
+  "2": { label: "Parcialmente nublado", day: "sun-cloud", night: "moon-cloud" },
+  "3": { label: "Nublado", day: "cloud", night: "cloud" },
+  "45": { label: "Niebla", day: "fog", night: "fog" },
+  "48": { label: "Niebla con escarcha", day: "fog", night: "fog" },
+  "51": { label: "Llovizna débil", day: "drizzle", night: "drizzle" },
+  "53": { label: "Llovizna", day: "drizzle", night: "drizzle" },
+  "55": { label: "Llovizna fuerte", day: "drizzle", night: "drizzle" },
+  "56": { label: "Llovizna helada", day: "drizzle", night: "drizzle" },
+  "57": { label: "Llovizna helada fuerte", day: "drizzle", night: "drizzle" },
+  "61": { label: "Lluvia débil", day: "rain", night: "rain" },
+  "63": { label: "Lluvia", day: "rain", night: "rain" },
+  "65": { label: "Lluvia fuerte", day: "rain", night: "rain" },
+  "66": { label: "Lluvia helada", day: "rain", night: "rain" },
+  "67": { label: "Lluvia helada fuerte", day: "rain", night: "rain" },
+  "71": { label: "Nieve débil", day: "snow", night: "snow" },
+  "73": { label: "Nieve", day: "snow", night: "snow" },
+  "75": { label: "Nieve fuerte", day: "snow", night: "snow" },
+  "77": { label: "Granos de nieve", day: "snow", night: "snow" },
+  "80": { label: "Chubascos débiles", day: "rain", night: "rain" },
+  "81": { label: "Chubascos", day: "rain", night: "rain" },
+  "82": { label: "Chubascos fuertes", day: "rain", night: "rain" },
+  "85": { label: "Chubascos de nieve", day: "snow", night: "snow" },
+  "86": { label: "Chubascos de nieve fuertes", day: "snow", night: "snow" },
+  "95": { label: "Tormenta", day: "storm", night: "storm" },
+  "96": { label: "Tormenta con granizo", day: "storm", night: "storm" },
+  "99": { label: "Tormenta con granizo fuerte", day: "storm", night: "storm" },
 };
-function setIcon(code, isDay) {
-    const weather = wmoicons[code];
-    if (!weather) return
-    const timeOfDay = isDay ? "day" : "night";
-    const { description, image } = weather[timeOfDay];
-    
-    return `url('${image}')`;
+
+/**
+ * La etiqueta y el icono de un codigo WMO.
+ *
+ * Un codigo desconocido no rompe la pantalla: se trata como nublado.
+ *
+ * @param {number} code codigo WMO
+ * @param {boolean} [isDay]
+ * @returns {{ label: string, icon: string }}
+ */
+export function identify(code, isDay = true) {
+  const entry = WMO[code] ?? WMO["3"];
+
+  return {
+    label: entry.label,
+    icon: isDay ? entry.day : entry.night,
+  };
 }
-
-export default setIcon;
-
-// Day/Night codes
-// 0 - Clear sky
-// 1 - Mainly clear
-// 2 - Partly cloudy
-// 3 - Overcast
-// 45 - Fog
-// 48 - Depositing rime fog
-// 51 - Light drizzle
-// 53 - Moderate drizzle
-// 55 - Dense intensity drizzle
-// 56 - Light freezing drizzle
-// 57 - Dense intensity freezing drizzle
-// 61 - Slight rain
-// 63 - Moderate rain
-// 65 - Heavy intensity rain
-// 66 - Light freezing rain
-// 67 - Heavy intensity freezing rain
-// 71 - Slight snow fall
-// 73 - Moderate snow fall
-// 75 - Heavy intensity snow fall
-// 77 - Snow grains
-// 80 - Slight rain showers
-// 81 - Moderate rain showers
-// 82 - Violent rain showers
-// 85 - Slight snow showers
-// 86 - Heavy snow showers
-// 95 - Thunderstorm
-// 96 - Thunderstorm with slight hail
-// 99 - Thunderstorm with heavy hail

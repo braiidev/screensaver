@@ -66,11 +66,6 @@ export const CONFIG = {
     highResPattern: /_\d+\.(jpg|png|jpeg|webp)$/,
   },
 
-  icons: {
-    /** Base de las imagenes de los iconos meteorologicos. */
-    baseUrl: "https://rodrigokamada.github.io/openweathermap/images/",
-  },
-
   loading: {
     /** Numero maximo de puntos de la animacion de carga. */
     dots: 3,
@@ -87,7 +82,7 @@ export const CONFIG = {
   },
 
   messages: {
-    locationError: "No se pudo cargar la localizacion",
+    locationError: "No se pudo cargar la localización",
     weatherError: "No se pudo cargar el clima",
     retry: "Reintentar",
   },

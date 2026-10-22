@@ -1,16 +1,34 @@
 /* clock.css - El reloj y la fecha.
  *
- * La escala sale de los tokens: el reloj es el heroe de la pantalla y la
- * fecha es texto secundario.
+ * Abajo a la izquierda. La hora es lo mas grande de la pantalla; la fecha va
+ * encima, en segundo plano, como una etiqueta del numero.
+ *
+ * `tabular-nums` mantiene todas las cifras del mismo ancho: sin eso la hora
+ * baila de lado cada vez que cambia un digito.
  */
 
-.item2-0 {
-  font-size: var(--fs-day);
-  padding-right: var(--space-inline-end);
+.clock {
+  grid-area: clock;
+  align-self: end;
+  justify-self: start;
 }
 
-.item2-1 {
-  font-size: var(--fs-hero);
-  /* Cifras de ancho fijo: la hora no baila de lado al cambiar de minuto. */
+.clock__date {
+  font-size: var(--fs-date);
+  color: var(--color-muted);
+  margin-bottom: var(--space-1);
+}
+
+/* `Intl` devuelve "jueves, 22 de octubre" en minuscula. Solo la primera
+ * letra se pone en mayuscula; `capitalize` pondria tambien "De Octubre". */
+.clock__date::first-letter {
+  text-transform: uppercase;
+}
+
+.clock__time {
+  font-size: var(--fs-clock);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }

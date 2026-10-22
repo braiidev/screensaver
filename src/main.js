@@ -29,6 +29,7 @@ function bootstrap() {
       $weather: $("#weather"),
       $icon: $("#icon"),
       $location: $("#location"),
+      $condition: $("#condition"),
       $retry: $("#retry"),
     },
     { store, scheduler },

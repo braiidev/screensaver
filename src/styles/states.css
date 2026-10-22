@@ -1,13 +1,16 @@
 /* states.css - Los estados de aviso.
  *
  * Estas reglas se superponen al contenido normal, asi que se importan al
- * final. El orden importa: `.warning` fija el `font-size` del mismo elemento
- * que `.item2-3`, y los dos selectores tienen la misma especificidad, de modo
- * que gana el que aparece despues. Si este fichero se moviera antes, el
- * mensaje de error pasaria de 1rem a 0.1em y en movil se veria ilegible.
+ * final. El orden importa de verdad: `.warning` fija el `font-size` de los
+ * mismos elementos que `.card__city` y `.card__temp`, y los tres selectores
+ * tienen la misma especificidad. Gana el que aparece despues, y este es el
+ * ultimo. Si moviera antes, un aviso saldria al tamano de la temperatura
+ * (hasta 64px) o al de la ciudad, y desbordaria la tarjeta.
  */
 
 .warning {
   color: var(--color-warning);
   font-size: var(--fs-warning);
+  font-weight: 600;
+  line-height: 1.3;
 }

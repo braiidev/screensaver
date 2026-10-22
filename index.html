@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="assets/img/icon.png" type="image/x-icon" />
     <meta
       name="description"
-      content="Screensaver like Chromecast plus sheik."
+      content="Reloj y clima de una ciudad sobre un fondo de pantalla rotativo, para dejar en el televisor o en el movil."
     />
     <meta
       name="keywords"
@@ -26,20 +26,33 @@
 
   <body>
     <div class="board">
-      <div id="background" class="wallpaper">
+      <div id="background" class="wallpaper" aria-hidden="true">
         <div id="tapeA" class="wallpaper__tape"></div>
         <div id="tapeB" class="wallpaper__tape"></div>
       </div>
-      <div class="item2">
-        <span class="item2-0" id="day"></span>
-        <div class="item2-1" id="time"></div>
-        <div class="item2-2">
-          <span class="item2-2-1" id="weather"></span>
-          <span class="item2-2-2" id="icon"></span>
-        </div>
-        <div class="item2-3" id="location"></div>
-        <button class="retry" id="retry" type="button" hidden>Reintentar</button>
-      </div>
+      <div class="scrim" aria-hidden="true"></div>
+
+      <main class="dashboard">
+        <section class="card" aria-label="Clima actual">
+          <p class="card__city" id="location"></p>
+
+          <div class="card__now">
+            <span class="card__temp" id="weather"></span>
+            <span class="card__icon" id="icon" aria-hidden="true"></span>
+          </div>
+
+          <p class="card__condition" id="condition"></p>
+
+          <button class="retry" id="retry" type="button" hidden>
+            Reintentar
+          </button>
+        </section>
+
+        <footer class="clock">
+          <p class="clock__date" id="day"></p>
+          <div class="clock__time" id="time"></div>
+        </footer>
+      </main>
     </div>
     <script type="module" src="src/main.js"></script>
   </body>

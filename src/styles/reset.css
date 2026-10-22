@@ -1,8 +1,10 @@
 /* reset.css - Reinicio minimo del navegador.
  *
- * Solo se anula lo que estorba en un lienzo a pantalla completa. No se
- * reinicia el tipado del navegador mas alla de los margenes: el sitio tiene
- * que parecerse al que hay en produccion.
+ * Solo se anula lo que estorba en un lienzo a pantalla completa.
+ *
+ * `border-box` es obligatorio con el layout nuevo: la tarjeta y los chips
+ * llevan relleno y borde, y tienen que caber dentro del ancho que se les da,
+ * no sumarse a el.
  */
 
 *,
@@ -10,9 +12,21 @@
 *::after {
   padding: 0;
   margin: 0;
-  /* content-box: la version actual usa content-box. Se cambia a border-box
-   * en la Fase 3, cuando el layout nuevo necesita que el ancho del bloque
-   * incluya su relleno. */
-  box-sizing: content-box;
+  box-sizing: border-box;
   user-select: none;
+}
+
+/* La lista del pronostico es una lista, pero no se numera. */
+ol,
+ul {
+  list-style: none;
+}
+
+/* Un boton no deberia heredar la tipografia del navegador. */
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
 }

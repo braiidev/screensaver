@@ -18,7 +18,8 @@
  */
 
 import { CONFIG } from "../../config.js";
-import setIcon from "../../data/wno.js";
+import { identify } from "../../data/wno.js";
+import { iconFor } from "../../ui/icons.js";
 import { formatPlace, locate } from "../../services/geo.js";
 import { fetchCurrent } from "../../services/weatherApi.js";
 
@@ -27,13 +28,14 @@ import { fetchCurrent } from "../../services/weatherApi.js";
  * @param {HTMLElement} elements.$weather donde va la temperatura
  * @param {HTMLElement} elements.$icon donde va el icono
  * @param {HTMLElement} elements.$location donde va la localizacion
+ * @param {HTMLElement} elements.$condition donde va la condicion del cielo
  * @param {HTMLElement} elements.$retry boton de reintentar
  * @param {Object} deps
  * @param {import("../../core/store.js")} deps.store
  * @param {import("../../core/scheduler.js")} deps.scheduler
  */
 export function createWeather(
-  { $weather, $icon, $location, $retry },
+  { $weather, $icon, $location, $condition, $retry },
   { store, scheduler },
 ) {
   const refreshMs = CONFIG.weather.refreshInterval * CONFIG.time.minute;
@@ -91,6 +93,14 @@ export function createWeather(
       : CONFIG.messages.weatherError;
     $target.classList.add("warning");
 
+    // Si lo que falta es el tiempo, el icono y la condicion de antes ya no
+    // valen: se quedarian mintiendo al lado del aviso.
+    if (!onLocation) {
+      $condition.textContent = "";
+      $icon.innerHTML = "";
+      $icon.removeAttribute("data-tone");
+    }
+
     console.error(error?.message ?? error);
   }
 
@@ -99,9 +109,13 @@ export function createWeather(
     $location.classList.remove("warning");
     $retry.hidden = true;
 
+    const { label, icon } = identify(code, isDay);
     const degrees = Number.isFinite(temperature) ? Math.round(temperature) : "--";
-    $weather.textContent = `${degrees}˚`;
-    $icon.style.backgroundImage = setIcon(code, isDay) ?? "";
+
+    $weather.textContent = `${degrees}°`;
+    $condition.textContent = label;
+    $icon.dataset.tone = icon;
+    $icon.innerHTML = iconFor(icon);
 
     if (timezone) store.set("timezone", timezone);
   }

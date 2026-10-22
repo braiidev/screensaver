@@ -14,17 +14,13 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.3.0`
-- Fase en curso: ninguna
+- Version actual: `v0.3.1`
+- Fase en curso: 3 - Layout dashboard responsivo
 - Siguiente version reservada: `v0.4.0`
 
 ## Tablero
 
 ### En curso
-
-_Nada en curso. La siguiente fase es la 3._
-
-### Siguiente
 
 - [ ] **v0.4.0** - Fase 3 - Layout dashboard responsivo
   - Sustituir el layout anclado en la esquina por la direccion Dashboard: reloj como
@@ -32,6 +28,8 @@ _Nada en curso. La siguiente fase es la 3._
     Escala tipografica por rol con minimos absolutos, iconos SVG inline coloreables
     por condicion, scrim vertical escalable y `100dvh` con `safe-area-inset`. Ningun
     texto por debajo de 13px en ningun breakpoint.
+
+### Siguiente
 
 - [ ] **v0.5.0** - Fase 4 - Multi-ciudad y panel de ajustes
   - Anadir selector de ciudad con chips navegables por flechas y persistencia en
@@ -127,9 +125,10 @@ _Nada en curso. La siguiente fase es la 3._
 
 ## Notas
 
-- El repositorio remoto `braiidev/weatherapp` es privado. Mientras no se conecte,
-  el trabajo vive en `/data/data/com.termux/files/home/weatherapp` con su propio
-  historial.
+- El repositorio remoto `braiidev/weatherapp` es privado. Por decision del usuario,
+  de momento todo el trabajo vive solo en local, en
+  `/data/data/com.termux/files/home/weatherapp`, con su propio historial. Nada se
+  publica hasta que se decida lo contrario.
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
@@ -150,9 +149,15 @@ _Nada en curso. La siguiente fase es la 3._
   respuesta de Open-Meteo con `timezone=auto`.
 - La API de fotos de Pixabay se usa solo por CDN, sin credenciales.
 - `src/styles/states.css` se importa el ultimo a proposito: la clase `warning` se
-  aplica sobre `#location` y `#weather`, que fijan `font-size` con la misma
-  especificidad. Si el aviso se importara antes, el mensaje de error pasaria de 1rem
-  a la escala del hueco y seria ilegible en movil.
+  aplica sobre `#location` y `#weather`, que fijan `font-size` en `.card__city` y
+  `.card__temp` con la misma especificidad. Si el aviso se importara antes, el mensaje
+  de error saldria al tamano de la temperatura (hasta 64px) y desbordaria la tarjeta.
+- Los iconos del clima son SVG en linea de `src/ui/icons.js`, con trazos de Lucide
+  (ISC). No se descarga ninguno: `src/data/wno.js` solo dice el nombre del dibujo y el
+  color sale de un token por familia de condicion.
+- La escala tipografica va por roles y el primer valor de cada `clamp()` es el minimo
+  absoluto de ese rol. `npm run verify` resuelve las variables y falla si algun
+  `font-size` baja de 13px, asi que la promesa no depende de mirar capturas.
 - `assets/` ya solo tiene el icono de la pagina. Todo el codigo esta migrado a
   `src/`, y `assets/js/` se borro en el paso 6 de la Fase 1.
 - El cruce del fondo se mide con el calculo de estilos finales, no a ojo: se
