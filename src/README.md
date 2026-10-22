@@ -18,6 +18,11 @@ src/
 │   ├── weather/     Clima actual
 │   └── wallpaper/   Fondo rotativo
 │
+├── services/        Las APIs de fuera. Sin DOM y sin estado
+│   ├── http.js      Peticiones: tiempo limite, reintentos, cancelacion
+│   ├── geo.js       Donde estamos: navegador, IP de respaldo, nombre del sitio
+│   └── weatherApi.js El tiempo de Open-Meteo, ya normalizado
+│
 ├── data/            Datos estaticos editables a mano
 │   ├── wno.js       Codigos de tiempo: icono y etiqueta
 │   └── wallpapers.js Lista de imagenes de fondo
@@ -38,8 +43,6 @@ src/
 Estas carpetas estan planeadas pero todavia no existen. Se anaden en la fase
 que les toca:
 
-- `services/` - una capa por API externa, sin DOM: `http.js`, `geo.js`,
-  `weatherApi.js`, `photos.js`.
 - `ui/` - presentacion sin logica: `icons.js` (SVG inline), `dom.js`,
   `format.js`.
 - `core/storage.js` - wrapper de `localStorage` con versionado.
@@ -49,9 +52,8 @@ que les toca:
 
 ## Reglas
 
-1. **Los modulos no hacen `fetch`.** Piden datos a `services/`. Todavia no es
-   asi: el modulo del clima hace sus peticiones directamente hasta que llegue
-   `services/` en la Fase 2.
+1. **Los modulos no hacen `fetch`.** Piden datos a `services/`, que es el unico
+   sitio que habla con el exterior.
 2. **`services/` no toca el DOM.** Devuelve datos puros.
 3. **`core/store.js` es el unico que guarda estado.** Los modulos se suscriben.
 4. **Cada modulo expone `start()` y `stop()`.** Sin `stop()`, los temporizadores

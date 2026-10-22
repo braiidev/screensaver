@@ -13,6 +13,8 @@ export const CONFIG = {
   app: {
     name: "WeatherApp",
     locale: "es-ES",
+    /** Idioma que se pide a los servicios que lo admiten. */
+    language: "es",
   },
 
   clock: {
@@ -25,13 +27,20 @@ export const CONFIG = {
     minute: 60000,
   },
 
+  http: {
+    /** Milisegundos maximos de espera de una peticion. */
+    timeout: 10000,
+    /** Milisegundos de espera antes de reintentar. Se duplica en cada intento. */
+    backoff: 500,
+  },
+
   weather: {
     /** Minutos entre refrescos del clima. */
     refreshInterval: 10,
-    /** Milisegundos maximos de espera de una peticion. */
-    timeout: 10000,
     /** Milisegundos antes de reintentar tras un fallo. */
     retryDelay: 60000,
+    /** Reintentos por peticion antes de darse por vencido. */
+    retries: 2,
     /** Campos del bloque `current` que se piden a la API. */
     currentFields: ["temperature_2m", "weather_code", "is_day"],
     /** Dias de pronostico que se piden. */
@@ -41,12 +50,12 @@ export const CONFIG = {
   },
 
   geo: {
-    /** Milisegundos maximos de espera de la localizacion. */
+    /** Milisegundos maximos de espera de la geolocalizacion del navegador. */
     timeout: 8000,
-    /** Precisa maxima en metros de la geolocalizacion del navegador. */
+    /** Antiguedad maxima en milisegundos de una posicion ya conocida. */
     maximumAge: 600000,
-    /** Localizacion aproximada por IP, usada como respaldo. */
-    fallbackUrl: "https://free.freeipapi.com/api/json",
+    /** Localizacion aproximada por IP, usada como respaldo del navegador. */
+    fallbackUrl: "https://free.freeipapi.com/api/v1/json",
   },
 
   wallpaper: {
@@ -75,14 +84,18 @@ export const CONFIG = {
   endpoints: {
     forecast: "https://api.open-meteo.com/v1/forecast",
     geocoding: "https://geocoding-api.open-meteo.com/v1/search",
+    reverseGeocode: "https://api.bigdatacloud.net/data/reverse-geocode-client",
   },
 
   messages: {
-    appUnloaded: "App is unload",
-    locationError: "No se pudo cargar localización",
-    geoError: "Could not obtain IP information",
-    weatherError: "Not available, trying again in 10 minutes",
-    weatherUnavailable: "Could not obtain weather information",
+    loading: "Cargando",
+    locationError: "No se pudo cargar la localizacion",
+    weatherError: "No se pudo cargar el clima",
+    retry: "Reintentar",
+    // Las dos de abajo solo las usa el modulo antiguo. Desaparecen junto con
+    // el en el commit siguiente.
+    geoError: "No se pudo obtener la ubicacion",
+    weatherUnavailable: "No se pudo obtener el clima",
   },
 
   storage: {
