@@ -56,15 +56,6 @@
   align-items: flex-end;
 }
 
-.item2-0 {
-  font-size: var(--fs-day);
-  padding-right: var(--space-inline-end);
-}
-
-.item2-1 {
-  font-size: var(--fs-hero);
-}
-
 .item2-2 {
   font-size: var(--fs-weather);
 }

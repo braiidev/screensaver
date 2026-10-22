@@ -17,9 +17,7 @@ export const CONFIG = {
 
   clock: {
     /** Milisegundos entre actualizaciones del reloj. */
-    tickInterval: 100,
-    /** Rellena las horas con cero para que el ancho del texto no cambie. */
-    padHours: true,
+    tickInterval: 1000,
   },
 
   weather: {

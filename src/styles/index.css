@@ -4,10 +4,12 @@
  *   1. reset   - estado conocido antes de aplicar nada.
  *   2. tokens  - las variables, antes de que las hojas que las usan.
  *   3. layout  - la composicion de la pantalla.
- *   4. states  - los avisos, al final para que ganen al contenido normal.
+ *   4. modulos - el CSS de cada modulo, junto a su codigo.
+ *   5. states  - los avisos, al final para que ganen al contenido normal.
  */
 
 @import "./reset.css";
 @import "./tokens.css";
 @import "./layout.css";
+@import "../modules/clock/clock.css";
 @import "./states.css";
