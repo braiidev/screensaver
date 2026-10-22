@@ -14,24 +14,17 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.4.4`
+- Version actual: `v0.6.0`
 - Fase en curso: ninguna
-- Siguiente version reservada: `v0.5.0`
+- Siguiente version reservada: `v0.6.0`
 
 ## Tablero
 
 ### En curso
 
-_Nada en curso. La siguiente fase es la 4._
+_Nada en curso. La siguiente fase es la 5._
 
 ### Siguiente
-
-- [ ] **v0.5.0** - Fase 4 - Multi-ciudad y panel de ajustes
-  - Anadir selector de ciudad con chips navegables por flechas y persistencia en
-    `localStorage`, usando el geocoding de Open-Meteo para buscar y el reverse
-    geocoding para las coordenadas del navegador. El reloj muestra la hora de la
-    ciudad activa. Panel de ajustes con unidades C/F, fondo on-off, intervalo,
-    pronostico y sensacion termica, navegable con el mando y con raton.
 
 - [ ] **v0.6.0** - Fase 5 - Infraestructura y despliegue
   - Anadir `netlify.toml` con directorio de publicacion y bloque de cabeceras,
@@ -47,6 +40,45 @@ _Nada en curso. La siguiente fase es la 4._
     rompen la carga de imagenes ni los iconos.
 
 ### Terminado
+
+- [x] **v0.5.0** - Fase 4 - Multi-ciudad y panel de ajustes
+  - La ciudad pasa a ser un dato del store: `{id, city, country, admin1, latitude,
+    longitude, timezone}`, como mucho ocho, con la activa aparte. El id sale de las
+    coordenadas redondeadas a dos decimales, no del nombre, asi que dos "Buenos
+    Aires" en paises distintos conviven sin pisarse. La zona horaria que devuelve
+    la API se guarda dentro de la propia ciudad y el reloj la lee de ahi.
+  - La app arranca en la ciudad recordada sin volver a localizar: la ubicacion del
+    aparato se pide solo cuando no hay ninguna guardada. El clima y la zona horaria
+    no se guardan; se piden al abrir, de modo que nunca se ve el tiempo de ayer.
+  - Dos claves en `localStorage`, `weatherapp:v1:cities` y `weatherapp:v1:settings`,
+    con validacion al leer: lo que no encaja con el contrato se descarta y vuelve
+    al valor de fabrica en vez de romper el arranque.
+  - La fila de chips vive arriba y solo aparece con dos o mas ciudades. Es un
+    `<nav>` con un `<ul>` de botones, un solo tabulador dentro (roving tabindex) y
+    `aria-current` en la activa; las flechas mueven el foco y eligen a la vez,
+    Home y End van a los extremos, y Tab no se intercepta. El foco se dibuja por
+    dentro porque la fila recorta.
+  - El engranaje de ajustes vive abajo a la derecha, discreto, y se apaga a los
+    cinco segundos sin actividad; cualquier movimiento del raton, del dedo o del
+    teclado lo devuelve, sin rearmar el temporizador mas de una vez por segundo.
+    Mientras el panel esta abierto no se esconde, y al cerrar el foco vuelve a el.
+  - El panel es un `<dialog>` modal: velo, foco encerrado y Escape los pone el
+    navegador. Dentro: unidades C/F, formato 12/24, pronostico, sensacion termica,
+    fondo y su intervalo, y la seccion de ciudades. La conversion de unidades se
+    hace al pintar y no vuelve a pedir el tiempo.
+  - La seccion de ciudades ofrece dos caminos: buscar en el geocoding de Open-Meteo
+    (desde dos letras, con rebote de 350 ms y `AbortController` para descartar la
+    respuesta que llega tarde) o elegir de una lista de catorce populares, que es
+    lo que se ve sin escribir. En un televisor no hay teclado: el panel entero se
+    monta con las flechas del mando.
+  - Quitar una ciudad avisa antes a la activa que a la lista y anadir lo hace al
+    reves, para que el clima no apunte ni un instante a una ciudad que no esta. Si
+    se quita la ultima, el clima vuelve a localizar.
+  - Se verifico: 308 pruebas en Node, entre ellas el arranque entero de la app con
+    un DOM de mentira y una segunda visita con memoria (sin volver a localizar, en
+    fahrenheit, en 12 horas y con los ajustes del panel sincronizados); los
+    servicios contra las APIs reales; los recursos nuevos responden 200 con el MIME
+    correcto; `npm run verify` da 0 fallos.
 
 - [x] **v0.1.0** - Fase 0 - Andamiaje
   - Esqueleto `src/` con `core/`, `modules/`, `services/`, `data/`, `ui/`, `styles/` y
@@ -174,7 +206,20 @@ _Nada en curso. La siguiente fase es la 4._
   que este reservado para una fase futura vive en la lista `RESERVED` del verificador
   y hay que sacarlo de ahi en cuanto se empiece a usar.
 - El geocoding de Open-Meteo devuelve el timezone IANA, asi que el reloj por ciudad no
-  necesita ningun proveedor adicional.
+  necesita ningun proveedor adicional. Ese es el motivo de que la busqueda de ciudades
+  no use el reverse geocoding: con las coordenadas y el nombre de una ciudad se tiene
+  ya todo lo que hace falta.
+- La lista de populares vive a mano en `src/data/popular.js`, catorce ciudades. Es lo
+  que permite montar la pantalla entera sin teclado desde el mando; si algun dia se
+  quiere ampliar, se anade ahi y el panel la recoge sola.
+- El id de una ciudad son sus coordenadas con dos decimales, no su nombre: el mismo
+  nombre puede existir en dos paises y dos barrios de la misma ciudad compartir nombre.
+  Dos decimales son unos 1,1 km, de sobra para distinguir ciudades y poco para que dos
+  barrios se pisen.
+- El buscador no busca con una letra y espera 350 ms desde la ultima tecla. Con una
+  letra el servicio devuelve medio mundo; sin el rebote, cada tecla seria una peticion
+  a la red, y la mayoria llegaria cuando ya no sirve.
+- `verify.mjs` ya no tiene ninguna constante reservada: la ultima era el geocoding.
 - `BigDataCloud /data/timezone` responde 403 sin clave; el timezone sale de la propia
   respuesta de Open-Meteo con `timezone=auto`.
 - La API de fotos de Pixabay se usa solo por CDN, sin credenciales.
