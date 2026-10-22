@@ -13,6 +13,14 @@
   width: var(--board-width);
   height: var(--board-height);
   z-index: var(--z-background);
+  opacity: 1;
+  transition: opacity var(--duration-control) ease;
+}
+
+/* Apagado desde los ajustes: se ve el color de fondo del lienzo, sin
+ * fotografias y sin descargar ninguna. */
+.wallpaper.is-off {
+  opacity: 0;
 }
 
 .wallpaper__tape {

@@ -8,6 +8,10 @@
  * El movimiento es sutil: la cinta que entra se asienta mientras aparece y la
  * que sale se aleja mientras desaparece. Las dos cosas van en el CSS, con los
  * tokens `--duration-fade` y `--wallpaper-scale`.
+ *
+ * El fondo se puede apagar desde los ajustes. Apagado no se descarga nada y el
+ * lienzo queda en el color de fondo; encendido, si no habia ninguna imagen
+ * (se apago antes de la primera), se pide una en ese momento.
  */
 
 import { CONFIG } from "../../config.js";
@@ -15,16 +19,19 @@ import { wallpapers } from "../../data/wallpapers.js";
 
 /**
  * @param {Object} elements
+ * @param {HTMLElement} elements.$wallpaper la caja del fondo
  * @param {HTMLElement} elements.$tapeA primera cinta
  * @param {HTMLElement} elements.$tapeB segunda cinta
  * @param {Object} deps
  * @param {import("../../core/scheduler.js")} deps.scheduler
+ * @param {import("../../core/store.js")} deps.store
  */
-export function createWallpaper({ $tapeA, $tapeB }, { scheduler }) {
+export function createWallpaper({ $wallpaper, $tapeA, $tapeB }, { scheduler, store }) {
   const tapes = [$tapeA, $tapeB];
   let visible = -1; // indice de la cinta que se ve
   let current = -1; // indice del fondo actual
   let stopTimer = null;
+  let running = false;
   let generation = 0; // sube con cada arranque o parada
 
   /**
@@ -111,26 +118,65 @@ export function createWallpaper({ $tapeA, $tapeB }, { scheduler }) {
     current = index;
   }
 
+  /** Si el fondo esta encendido en los ajustes. */
+  function enabled() {
+    return store.get("wallpaper") !== false;
+  }
+
+  /** Los minutos entre cambios, que se pueden elegir en los ajustes. */
+  function interval() {
+    return store.get("wallpaperInterval") ?? CONFIG.wallpaper.interval;
+  }
+
+  /** Deja el fondo a la vista o en el color de fondo, sin descargar nada. */
+  function paint() {
+    $wallpaper.classList.toggle("is-off", !enabled());
+  }
+
+  /** Rehace el temporizador con el intervalo que valga ahora. */
+  function schedule() {
+    stopTimer?.();
+    stopTimer = null;
+    if (!running || !enabled()) return;
+
+    stopTimer = scheduler.every(interval() * CONFIG.time.minute, () =>
+      show(pickIndex()),
+    );
+  }
+
+  function onToggle() {
+    paint();
+    if (!running) return;
+    if (enabled() && current === -1) show(pickIndex());
+    schedule();
+  }
+
+  const offToggle = store.subscribe("wallpaper", onToggle);
+  const offInterval = store.subscribe("wallpaperInterval", schedule);
+
   return {
     async start() {
-      const gen = ++generation;
-      // Si se arranca otra vez, el temporizador anterior se cancela: no puede
-      // haber dos temporizadores cambiando el fondo a la vez.
-      stopTimer?.();
-      stopTimer = null;
+      running = true;
+      paint();
 
-      await show(pickIndex());
-      // Si mientras se descargaba la imagen se paro o se arranco otra vez,
-      // este arranque ya no vale.
-      if (gen !== generation) return;
+      if (enabled() && current === -1) {
+        const gen = ++generation;
+        await show(pickIndex());
+        // Si mientras se descargaba la imagen se paro o se encendio otra vez,
+        // este arranque ya no vale.
+        if (gen !== generation) return;
+      }
 
-      stopTimer = scheduler.every(CONFIG.wallpaper.interval * CONFIG.time.minute, () => show(pickIndex()));
+      schedule();
     },
 
     stop() {
+      running = false;
       generation++;
       stopTimer?.();
       stopTimer = null;
+      offToggle();
+      offInterval();
     },
   };
 }

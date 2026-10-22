@@ -33,6 +33,7 @@ import { formatPlace, locate } from "../../services/geo.js";
 import { fetchWeather } from "../../services/weatherApi.js";
 import { toCity } from "../../utils/city.js";
 import { createDayFormat } from "../../utils/time.js";
+import { formatTemperature } from "../../utils/units.js";
 
 /**
  * @param {Object} elements
@@ -40,6 +41,7 @@ import { createDayFormat } from "../../utils/time.js";
  * @param {HTMLElement} elements.$icon donde va el icono
  * @param {HTMLElement} elements.$location donde va la localizacion
  * @param {HTMLElement} elements.$condition donde va la condicion del cielo
+ * @param {HTMLElement} elements.$feels donde va la sensacion termica
  * @param {HTMLElement} elements.$forecast donde va la tira del pronostico
  * @param {HTMLElement} elements.$retry boton de reintentar
  * @param {Object} deps
@@ -47,13 +49,15 @@ import { createDayFormat } from "../../utils/time.js";
  * @param {import("../../core/scheduler.js")} deps.scheduler
  */
 export function createWeather(
-  { $weather, $icon, $location, $condition, $forecast, $retry },
+  { $weather, $icon, $location, $condition, $feels, $forecast, $retry },
   { store, scheduler },
 ) {
   const refreshMs = CONFIG.weather.refreshInterval * CONFIG.time.minute;
 
   /** La ciudad que se esta pintando. */
   let city = null;
+  /** La ultima lectura buena, para repintarla si cambia un ajuste. */
+  let last = null;
   /** Si hay una lectura buena en pantalla. Decide si un fallo puede callarse. */
   let hasData = false;
   let running = false;
@@ -158,9 +162,9 @@ export function createWeather(
     console.error(error?.message ?? error);
   }
 
-  /** "21°", o "--" si la API no mando el dato. */
+  /** "21°" en la unidad elegida, o "--" si la API no mando el dato. */
   function degrees(value) {
-    return Number.isFinite(value) ? `${Math.round(value)}°` : "--";
+    return formatTemperature(value, store.get("units"));
   }
 
   /** "jue" -> "Jue". `Intl` los devuelve en minuscula. */
@@ -236,7 +240,10 @@ export function createWeather(
     store.set("timezone", timezone);
   }
 
-  function render({ current, daily, timezone }) {
+  function render(weather) {
+    const { current, daily, timezone } = weather;
+    last = weather;
+
     $weather.classList.remove("warning");
     $location.classList.remove("warning");
     $retry.hidden = true;
@@ -245,13 +252,25 @@ export function createWeather(
 
     $weather.textContent = degrees(current.temperature);
     $condition.textContent = label;
+
+    // La sensacion termica se puede apagar, y ademas la API puede no mandarla.
+    const feels = degrees(current.apparentTemperature);
+    $feels.textContent = `${CONFIG.messages.feelsLike} ${feels}`;
+    $feels.hidden = !store.get("feelsLike") || feels === "--";
+
     $icon.dataset.tone = icon;
     $icon.innerHTML = iconFor(icon);
 
+    $forecast.hidden = store.get("forecast") === false;
     renderForecast(daily ?? []);
 
     hasData = true;
     rememberTimezone(timezone);
+  }
+
+  /** Cambiar un ajuste no vuelve a pedir el tiempo: se repinta lo que hay. */
+  function repaint() {
+    if (last) render(last);
   }
 
   /**
@@ -266,7 +285,10 @@ export function createWeather(
     $weather.textContent = "";
     $weather.classList.remove("warning");
     $location.classList.remove("warning");
+    last = null;
     $condition.textContent = "";
+    $feels.textContent = "";
+    $feels.hidden = true;
     $icon.innerHTML = "";
     $icon.removeAttribute("data-tone");
     $forecast.textContent = "";
@@ -354,6 +376,9 @@ export function createWeather(
 
   const offCity = store.subscribe("activeCityId", onCityChange);
   const offCities = store.subscribe("cities", onCityChange);
+  const offUnits = store.subscribe("units", repaint);
+  const offForecast = store.subscribe("forecast", repaint);
+  const offFeels = store.subscribe("feelsLike", repaint);
 
   return {
     /** Arranca y devuelve la promesa del primer intento, como el fondo. */
@@ -379,6 +404,9 @@ export function createWeather(
       $retry.removeEventListener("click", retry);
       offCity();
       offCities();
+      offUnits();
+      offForecast();
+      offFeels();
     },
 
     retry,

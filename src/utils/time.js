@@ -23,16 +23,21 @@ export function deviceTimeZone() {
  * Crea un formateador para una zona horaria concreta.
  *
  * Los formateadores se crean una vez y se reutilizan: `Intl.DateTimeFormat`
- * es comparatively caro de construir.
+ * es comparativamente caro de construir.
+ *
+ * En 12 horas la hora y el periodo (`a. m.`) llegan en piezas separadas. Se
+ * piden asi y no con `format()`, que los devuelve ya pegados: el reloj pinta
+ * el periodo mas pequeno y alineado abajo, y para eso tiene que ser otro nodo.
  *
  * @param {string} timeZone zona IANA, por ejemplo "Europe/Madrid"
+ * @param {string} [hourCycle] "h23" para 24 horas, "h12" para 12
  */
-export function createClockFormat(timeZone) {
-  const time = new Intl.DateTimeFormat(CONFIG.app.locale, {
+export function createClockFormat(timeZone, hourCycle = "h23") {
+  const clock = new Intl.DateTimeFormat(CONFIG.app.locale, {
     timeZone,
     hour: "2-digit",
     minute: "2-digit",
-    hourCycle: "h23",
+    hourCycle,
   });
 
   const date = new Intl.DateTimeFormat(CONFIG.app.locale, {
@@ -42,13 +47,30 @@ export function createClockFormat(timeZone) {
     month: "long",
   });
 
+  /** La pieza de un tipo, o "" si ese formato no la tiene. */
+  const pick = (parts, type) => parts.find((part) => part.type === type)?.value ?? "";
+
+  /** "09:05" y, en 12 horas, "a. m."; en 24 horas el periodo viene vacio. */
+  const read = (moment) => {
+    const parts = clock.formatToParts(moment);
+    return {
+      time: `${pick(parts, "hour")}:${pick(parts, "minute")}`,
+      period: pick(parts, "dayPeriod"),
+    };
+  };
+
   return {
+    /** Las dos piezas a la vez, que es lo que usa el reloj. */
+    now: (moment = new Date()) => read(moment),
     /** "09:05" */
-    time: (moment = new Date()) => time.format(moment),
+    time: (moment = new Date()) => read(moment).time,
+    /** "a. m." o "" */
+    period: (moment = new Date()) => read(moment).period,
     /** "jueves, 22 de octubre" */
     date: (moment = new Date()) => date.format(moment),
     /** La zona horaria que usa este formateador. */
     timeZone,
+    hourCycle,
   };
 }
 

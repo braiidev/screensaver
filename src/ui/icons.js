@@ -50,12 +50,16 @@ const ICONS = {
   /** Niebla. */
   fog: `<path d="M4 14.9A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.24"/>
     <path d="M16 17H7M16 21H9"/>`,
+
+  /** Ajustes. No es un icono del clima: es el del engranaje de la esquina. */
+  settings: `<path d="M20 7h-9M14 17H5"/>
+    <circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>`,
 };
 
 /**
  * El dibujo de un icono.
  *
- * @param {string} name uno de los nombres de `data/wno.js`
+ * @param {string} name uno de los nombres de `data/wno.js`, o "settings"
  * @returns {string} el SVG completo. Si el nombre no existe, devuelve nubes:
  *   es preferible un icono generico a un hueco.
  */

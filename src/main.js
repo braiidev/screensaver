@@ -14,6 +14,7 @@ import { createClock } from "./modules/clock/clock.js";
 import { createCities } from "./modules/cities/cities.js";
 import { createWeather } from "./modules/weather/weather.js";
 import { createWallpaper } from "./modules/wallpaper/wallpaper.js";
+import { createSettings } from "./modules/settings/settings.js";
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -32,7 +33,7 @@ function bootstrap() {
   const scheduler = createScheduler({ onError: (error) => console.error(error) });
 
   const clock = createClock(
-    { $clock: $("#time"), $day: $("#day") },
+    { $clock: $("#time"), $period: $("#period"), $day: $("#day") },
     { store, scheduler },
   );
 
@@ -47,6 +48,7 @@ function bootstrap() {
       $icon: $("#icon"),
       $location: $("#location"),
       $condition: $("#condition"),
+      $feels: $("#feels"),
       $forecast: $("#forecast"),
       $retry: $("#retry"),
     },
@@ -54,12 +56,18 @@ function bootstrap() {
   );
 
   const wallpaper = createWallpaper(
-    { $tapeA: $("#tapeA"), $tapeB: $("#tapeB") },
-    { scheduler },
+    { $wallpaper: $("#background"), $tapeA: $("#tapeA"), $tapeB: $("#tapeB") },
+    { scheduler, store },
+  );
+
+  const settingsPanel = createSettings(
+    { $toggle: $("#gear"), $panel: $("#settings") },
+    { store, scheduler },
   );
 
   clock.start();
   cityChips.start();
+  settingsPanel.start();
   wallpaper.start().catch((error) => console.error(error));
   weather.start().catch((error) => console.error(error));
 

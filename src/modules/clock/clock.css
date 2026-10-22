@@ -26,9 +26,25 @@
 }
 
 .clock__time {
+  display: flex;
+  align-items: baseline;
+  gap: 0.12em;
   font-size: var(--fs-clock);
   font-weight: 600;
   line-height: 0.9;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
+}
+
+/* El periodo de las 12 horas. Se alinea por la base con la hora y se queda
+ * pequeno: si fuera del mismo tamano, "9:05 p. m." no cabria en un movil. */
+.clock__period {
+  font-size: var(--fs-period);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--color-muted);
+}
+
+.clock__period:empty {
+  display: none;
 }

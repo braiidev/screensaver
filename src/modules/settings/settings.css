@@ -1,0 +1,281 @@
+/* settings.css - El engranaje y el panel de ajustes.
+ *
+ * El engranaje es lo unico que se ve cuando no se esta usando: un circulo
+ * discreto abajo a la derecha que se desvanece a los cinco segundos. Vuelve
+ * con cualquier movimiento, asi que no se pierde, y mientras el panel esta
+ * abierto no se esconde nunca.
+ *
+ * El panel es un `<dialog>`: el velo, el foco encerrado y el cierre con Escape
+ * los pone el navegador. Aqui solo se pinta.
+ *
+ * Los controles son nativos (`radio`, `checkbox`, `select`) con la caja
+ * escondida a la vista pero no al teclado: asi las flechas y el tabulador
+ * funcionan de verdad, y el anillo de foco se dibuja en la etiqueta visible
+ * con el selector hermano.
+ */
+
+/* ------------------------------------------------------------ El engranaje */
+
+.gear {
+  position: absolute;
+  right: calc(var(--space-edge) + env(safe-area-inset-right, 0px));
+  bottom: calc(var(--space-edge) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-content);
+  display: grid;
+  place-items: center;
+  width: var(--size-tap);
+  height: var(--size-tap);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  opacity: 1;
+  transition: opacity var(--duration-control) ease;
+}
+
+/* Se desvanece, pero no se queda pinchando a ciegas: sin clics y sin foco. */
+.gear.is-idle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Si alguien llega con el tabulador mientras esta escondido, se enciende. */
+.gear.is-idle:focus-visible {
+  opacity: 1;
+}
+
+.gear:hover {
+  border-color: var(--color-text);
+}
+
+.gear:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.gear__icon {
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
+  font-size: var(--fs-panel);
+}
+
+.gear__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------- El panel */
+
+.settings {
+  position: fixed;
+  inset: 0;
+  width: min(34rem, calc(100vw - 2 * var(--space-3)));
+  max-height: min(85vh, 48rem);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  color: var(--color-text);
+  background: var(--color-panel);
+  overflow: hidden;
+}
+
+.settings[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings::backdrop {
+  background: rgb(0 0 0 / 0.66);
+}
+
+.settings__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.settings__title {
+  font-size: var(--fs-panel-title);
+  font-weight: 600;
+}
+
+.settings__close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--size-tap);
+  height: var(--size-tap);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: var(--fs-panel-title);
+  line-height: 1;
+}
+
+.settings__close:hover {
+  border-color: var(--color-text);
+}
+
+.settings__close:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.settings__body {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  overflow-y: auto;
+}
+
+/* Un `fieldset` mide lo que su contenido pida y no menos; en el panel eso
+ * empuja el ancho. Se le deja ocupar el suyo. */
+.settings__group {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  border: 0;
+}
+
+.settings__legend {
+  padding: 0;
+  font-size: var(--fs-panel);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.settings__label {
+  font-size: var(--fs-panel);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ------------------------------------------------- Controles segmentados */
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* El radio se ve por su etiqueta, pero sigue ahi para el teclado. */
+.segmented__input,
+.switch__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.segmented__text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5rem;
+  min-height: var(--size-tap);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: var(--fs-panel);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    color var(--duration-control) ease,
+    background-color var(--duration-control) ease,
+    border-color var(--duration-control) ease;
+}
+
+.segmented__input:checked + .segmented__text {
+  border-color: var(--color-text);
+  font-weight: 600;
+  color: var(--bg-color);
+  background: var(--color-text);
+}
+
+.segmented__input:focus-visible + .segmented__text {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ----------------------------------------------------------- Interruptores */
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--size-tap);
+  font-size: var(--fs-panel);
+  cursor: pointer;
+}
+
+.switch__track {
+  position: relative;
+  flex: none;
+  width: 2.75rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: var(--color-line);
+  transition: background-color var(--duration-control) ease;
+}
+
+.switch__track::after {
+  content: "";
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--color-text);
+  transition:
+    transform var(--duration-control) ease,
+    background-color var(--duration-control) ease;
+}
+
+.switch__input:checked + .switch__track {
+  background: var(--color-text);
+}
+
+.switch__input:checked + .switch__track::after {
+  background: var(--bg-color);
+  transform: translateX(1.25rem);
+}
+
+.switch__input:focus-visible + .switch__track {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------- Intervalo */
+
+.settings__select {
+  justify-self: start;
+  min-height: var(--size-tap);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: var(--fs-panel);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.settings__select:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* El desplegable lo pinta el sistema; las opciones, al menos, en el tema
+ * oscuro del panel y no en blanco. */
+.settings__select option {
+  color: var(--color-text);
+  background: var(--bg-color);
+}

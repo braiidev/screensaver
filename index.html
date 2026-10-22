@@ -49,6 +49,8 @@
 
           <p class="card__condition" id="condition"></p>
 
+          <p class="card__feels" id="feels" hidden></p>
+
           <ol
             class="forecast"
             id="forecast"
@@ -62,9 +64,94 @@
 
         <footer class="clock">
           <p class="clock__date" id="day"></p>
-          <div class="clock__time" id="time"></div>
+          <div class="clock__time">
+            <span id="time"></span>
+            <span class="clock__period" id="period"></span>
+          </div>
         </footer>
       </main>
+
+      <button
+        class="gear"
+        id="gear"
+        type="button"
+        aria-label="Ajustes"
+        aria-controls="settings"
+        aria-expanded="false"
+      >
+        <span class="gear__icon" data-icon aria-hidden="true"></span>
+      </button>
+
+      <dialog class="settings" id="settings" aria-labelledby="settings-title">
+        <header class="settings__head">
+          <h2 class="settings__title" id="settings-title">Ajustes</h2>
+          <button
+            class="settings__close"
+            id="settings-close"
+            type="button"
+            aria-label="Cerrar ajustes"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </header>
+
+        <div class="settings__body">
+          <fieldset class="settings__group">
+            <legend class="settings__legend">Unidades</legend>
+            <div class="segmented">
+              <label class="segmented__item">
+                <input class="segmented__input" type="radio" name="units" value="celsius" />
+                <span class="segmented__text">°C</span>
+              </label>
+              <label class="segmented__item">
+                <input class="segmented__input" type="radio" name="units" value="fahrenheit" />
+                <span class="segmented__text">°F</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="settings__group">
+            <legend class="settings__legend">Formato de hora</legend>
+            <div class="segmented">
+              <label class="segmented__item">
+                <input class="segmented__input" type="radio" name="hourCycle" value="h23" />
+                <span class="segmented__text">24 h</span>
+              </label>
+              <label class="segmented__item">
+                <input class="segmented__input" type="radio" name="hourCycle" value="h12" />
+                <span class="segmented__text">12 h</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="settings__group">
+            <legend class="settings__legend">Pantalla</legend>
+
+            <label class="switch">
+              <input class="switch__input" id="setting-forecast" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Pronóstico de 5 días</span>
+            </label>
+
+            <label class="switch">
+              <input class="switch__input" id="setting-feels" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Sensación térmica</span>
+            </label>
+
+            <label class="switch">
+              <input class="switch__input" id="setting-wallpaper" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Fondo fotográfico</span>
+            </label>
+          </fieldset>
+
+          <div class="settings__group">
+            <label class="settings__label" for="setting-interval">Cambiar el fondo cada</label>
+            <select class="settings__select" id="setting-interval"></select>
+          </div>
+        </div>
+      </dialog>
     </div>
     <script type="module" src="src/main.js"></script>
   </body>

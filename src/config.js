@@ -26,6 +26,15 @@ export const CONFIG = {
     minute: 60000,
   },
 
+  ui: {
+    /** Milisegundos sin actividad tras los que el engranaje se desvanece. */
+    idle: 5000,
+    /** Cada cuanto, como mucho, un movimiento rearma ese temporizador. Sin
+     * esto, un `pointermove` supondria cancelar y crear un reloj 60 veces por
+     * segundo. */
+    activityThrottle: 1000,
+  },
+
   cities: {
     /** Ciudades que caben en la fila de chips. */
     max: 8,
@@ -49,7 +58,7 @@ export const CONFIG = {
     /** Reintentos por peticion antes de darse por vencido. */
     retries: 2,
     /** Campos del bloque `current` que se piden a la API. */
-    currentFields: ["temperature_2m", "weather_code", "is_day"],
+    currentFields: ["temperature_2m", "apparent_temperature", "weather_code", "is_day"],
     /** Campos del bloque `daily` que se piden a la API. */
     dailyFields: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
     /** Dias de pronostico que se piden y se muestran. */
@@ -103,6 +112,8 @@ export const CONFIG = {
     /** Como se lee cada dia del pronostico en un lector de pantalla. */
     forecastMax: "máxima",
     forecastMin: "mínima",
+    /** Delante de la temperatura que se siente. */
+    feelsLike: "Sensación de",
   },
 
   storage: {

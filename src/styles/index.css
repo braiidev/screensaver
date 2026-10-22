@@ -15,4 +15,5 @@
 @import "../modules/clock/clock.css";
 @import "../modules/cities/cities.css";
 @import "../modules/weather/weather.css";
+@import "../modules/settings/settings.css";
 @import "./states.css";

@@ -69,6 +69,17 @@
   color: var(--color-muted);
 }
 
+/* La sensacion termica, debajo de la condicion y en el mismo tono. */
+.card__feels {
+  font-size: var(--fs-condition);
+  color: var(--color-muted);
+}
+
+/* Un ajuste apagado tiene que poder ganarle al `display` de arriba. */
+.card__feels[hidden] {
+  display: none;
+}
+
 /* A partir de tablet ancha la tarjeta deja de ocupar todo el ancho y se va a
  * su esquina. En el movil ocupa la pantalla porque no hay sitio para dos
  * columnas. */
@@ -154,6 +165,11 @@
 
 /* Una tira vacia no debe dejar la linea separadora colgando. */
 .forecast:empty {
+  display: none;
+}
+
+/* Y apagada desde los ajustes tampoco, aunque tenga dias dentro. */
+.forecast[hidden] {
   display: none;
 }
 

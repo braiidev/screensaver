@@ -18,7 +18,7 @@ import { getJSON } from "./http.js";
  * @param {number} options.longitude
  * @param {AbortSignal} [options.signal]
  * @returns {Promise<{
- *   current: {temperature: number, code: number, isDay: boolean},
+ *   current: {temperature: number, apparentTemperature: number, code: number, isDay: boolean},
  *   daily: Array<{date: string, code: number, max: number, min: number}>,
  *   timezone: string,
  * }>}
@@ -32,11 +32,13 @@ export async function fetchWeather({ latitude, longitude, signal }) {
     `&forecast_days=${CONFIG.weather.forecastDays}`;
 
   const data = await getJSON(url, { signal, retries: CONFIG.weather.retries });
-  const { temperature_2m, weather_code, is_day } = data.current;
+  const { temperature_2m, apparent_temperature, weather_code, is_day } =
+    data.current;
 
   return {
     current: {
       temperature: temperature_2m,
+      apparentTemperature: apparent_temperature,
       code: weather_code,
       isDay: is_day === 1,
     },
