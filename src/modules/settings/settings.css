@@ -279,3 +279,122 @@
   color: var(--color-text);
   background: var(--bg-color);
 }
+
+/* --------------------------------------------------------------- Ciudades */
+
+.settings__search {
+  width: 100%;
+  min-height: var(--size-tap);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: var(--fs-field);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.settings__search::placeholder {
+  color: var(--color-muted);
+}
+
+.settings__search:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.settings__hint {
+  font-size: var(--fs-panel);
+  color: var(--color-muted);
+}
+
+/* Un aviso vacio no debe dejar un hueco de mas. */
+.settings__hint:empty {
+  display: none;
+}
+
+.places {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.place {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* El nombre se come el ancho que sobre y se corta con puntos suspensivos: una
+ * ciudad con un nombre largo no puede empujar el boton de quitar fuera. */
+.place__name {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--size-tap);
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: var(--fs-panel);
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.place__name:hover {
+  border-color: var(--color-line);
+}
+
+.place__name[aria-current="true"] {
+  border-color: var(--color-text);
+  font-weight: 600;
+}
+
+.place__name:focus-visible,
+.place__remove:focus-visible,
+.place__add:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.place__remove {
+  flex: none;
+  min-height: var(--size-tap);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: var(--fs-panel);
+  color: var(--color-muted);
+}
+
+.place__remove:hover {
+  border-color: var(--color-text);
+  color: var(--color-text);
+}
+
+.place__add {
+  width: 100%;
+  min-height: var(--size-tap);
+  padding: 0 var(--space-2);
+  border: 1px dashed var(--color-line);
+  border-radius: 999px;
+  font-size: var(--fs-panel);
+  text-align: left;
+}
+
+/* El signo de anadir es decoracion: no viaja en el texto del boton. */
+.place__add::before {
+  content: "+";
+  margin-right: 0.6em;
+  color: var(--color-muted);
+}
+
+.place__add:hover:enabled {
+  border-color: var(--color-text);
+  border-style: solid;
+}
+
+/* Lo que ya esta guardado se ve, pero no invita a pulsarlo. */
+.place__add:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

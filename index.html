@@ -96,6 +96,29 @@
         </header>
 
         <div class="settings__body">
+          <section class="settings__group" aria-labelledby="settings-cities">
+            <h3 class="settings__legend" id="settings-cities">Ciudades</h3>
+
+            <ul class="places" id="city-list" aria-label="Ciudades guardadas"></ul>
+
+            <label class="settings__label" for="city-search">Buscar y añadir</label>
+            <input
+              class="settings__search"
+              id="city-search"
+              type="search"
+              placeholder="Nombre de la ciudad"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <p class="settings__hint" id="city-hint" role="status"></p>
+
+            <ul
+              class="places places--results"
+              id="city-results"
+              aria-label="Ciudades para añadir"
+            ></ul>
+          </section>
+
           <fieldset class="settings__group">
             <legend class="settings__legend">Unidades</legend>
             <div class="segmented">

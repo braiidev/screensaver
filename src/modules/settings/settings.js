@@ -12,10 +12,19 @@
  * todo lo demas. Los controles son `<input>` nativos, escondidos y con su
  * etiqueta dibujada al lado, de modo que las flechas, el tabulador y el lector
  * de pantalla funcionan sin inventar nada.
+ *
+ * La seccion de ciudades tiene dos caminos. Escribiendo, se busca en el
+ * geocoding de Open-Meteo y se anade el resultado. Sin escribir, se ofrece una
+ * lista corta de ciudades conocidas: en un televisor no hay teclado, y la
+ * pantalla se tiene que poder montar entera con el mando.
  */
 
 import { CONFIG } from "../../config.js";
+import { POPULAR } from "../../data/popular.js";
+import { searchPlaces } from "../../services/geocoding.js";
+import { formatPlace } from "../../services/geo.js";
 import { iconFor } from "../../ui/icons.js";
+import { toCity } from "../../utils/city.js";
 
 /**
  * @param {Object} elements
@@ -29,6 +38,10 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
   const $icon = $toggle.querySelector("[data-icon]");
   const $close = $panel.querySelector(".settings__close");
   const $interval = $panel.querySelector("#setting-interval");
+  const $cityList = $panel.querySelector("#city-list");
+  const $results = $panel.querySelector("#city-results");
+  const $search = $panel.querySelector("#city-search");
+  const $hint = $panel.querySelector("#city-hint");
 
   /** Las bajas de todo lo que se suscribe, para el `stop()`. */
   const offs = [];
@@ -38,6 +51,20 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
   let lastActivity = 0;
   /** Si el panel esta abierto. */
   let open = false;
+
+  /** Las ciudades que se ofrecen sin escribir, ya con su id. */
+  const popular = POPULAR.map(toCity).filter(Boolean);
+  /** Lo que se esta viendo en la lista de resultados. */
+  let results = popular;
+  /** Que decir en el aviso de debajo del buscador. */
+  let mode = "popular";
+  /** Los botones de las ciudades guardadas, por id, para marcarlos sin
+   * reconstruir la lista y no perder el foco. */
+  let cityButtons = new Map();
+  /** Temporizador del rebote del buscador. */
+  let searchTimer = null;
+  /** La busqueda en vuelo, para poder cancelarla. */
+  let searchAbort = null;
 
   /* ------------------------------------------------------------ Ajustes */
 
@@ -101,6 +128,202 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
 
     offs.push(store.subscribe("wallpaperInterval", sync));
     sync();
+  }
+
+  /* ------------------------------------------------------------ Ciudades */
+
+  function cities() {
+    return store.get("cities") ?? [];
+  }
+
+  /** Si ya no cabe ninguna mas. */
+  function isFull() {
+    return cities().length >= CONFIG.cities.max;
+  }
+
+  /**
+   * Guarda una ciudad y la deja activa. Si ya estaba, solo la activa.
+   *
+   * La lista se cambia antes que la ciudad activa: al reves, el clima
+   * intentaria ir a una ciudad que todavia no esta guardada.
+   *
+   * @param {Object} city
+   */
+  function addCity(city) {
+    const list = cities();
+
+    if (!list.some((item) => item.id === city.id)) {
+      if (isFull()) return;
+      store.set("cities", [...list, city]);
+    }
+
+    store.set("activeCityId", city.id);
+  }
+
+  /**
+   * Quita una ciudad. Si era la activa, la activa pasa a ser la primera que
+   * quede; si no queda ninguna, el clima volvera a localizar.
+   *
+   * @param {string} id
+   */
+  function removeCity(id) {
+    // Al contrario que al anadir: primero se deja de apuntar a ella y despues
+    // se quita, para que el clima no se quede un instante sin destino.
+    if (store.get("activeCityId") === id) {
+      const left = cities().filter((city) => city.id !== id);
+      store.set("activeCityId", left[0]?.id ?? null);
+    }
+
+    store.set("cities", cities().filter((city) => city.id !== id));
+  }
+
+  /** Marca la ciudad activa sin reconstruir la lista. */
+  function paintActive() {
+    const activeId = store.get("activeCityId");
+
+    for (const [id, $button] of cityButtons) {
+      if (id === activeId) $button.setAttribute("aria-current", "true");
+      else $button.removeAttribute("aria-current");
+    }
+  }
+
+  /** La lista de ciudades guardadas, con su boton de quitar. */
+  function renderCities() {
+    $cityList.textContent = "";
+    cityButtons = new Map();
+
+    for (const city of cities()) {
+      const label = formatPlace(city);
+
+      const $item = document.createElement("li");
+      $item.className = "place";
+
+      const $name = document.createElement("button");
+      $name.type = "button";
+      $name.className = "place__name";
+      $name.textContent = label;
+      $name.addEventListener("click", () => store.set("activeCityId", city.id));
+
+      const $remove = document.createElement("button");
+      $remove.type = "button";
+      $remove.className = "place__remove";
+      $remove.textContent = CONFIG.messages.remove;
+      $remove.setAttribute("aria-label", `${CONFIG.messages.remove} ${label}`);
+      $remove.addEventListener("click", () => removeCity(city.id));
+
+      $item.append($name, $remove);
+      $cityList.append($item);
+      cityButtons.set(city.id, $name);
+    }
+
+    paintActive();
+    renderResults();
+  }
+
+  /** El aviso bajo el buscador: que se esta viendo o por que no hay nada. */
+  function hintText() {
+    if (isFull()) return CONFIG.messages.citiesFull;
+
+    switch (mode) {
+      case "popular":
+        return CONFIG.messages.popular;
+      case "searching":
+        return CONFIG.messages.searching;
+      case "empty":
+        return CONFIG.messages.noResults;
+      case "error":
+        return CONFIG.messages.searchError;
+      default:
+        return "";
+    }
+  }
+
+  /**
+   * Pinta los resultados actuales: los populares al principio, los de la
+   * busqueda despues. Lo que ya esta guardado (o lo que no cabe) no se puede
+   * pulsar, pero se sigue viendo: asi se sabe que existe.
+   */
+  function renderResults() {
+    const saved = new Set(cities().map((city) => city.id));
+    const full = isFull();
+
+    $results.textContent = "";
+
+    for (const city of results) {
+      const label = formatPlace(city);
+      const added = saved.has(city.id);
+
+      const $item = document.createElement("li");
+      const $button = document.createElement("button");
+      $button.type = "button";
+      $button.className = "place__add";
+      $button.textContent = label;
+      $button.disabled = added || full;
+      if (added) {
+        $button.setAttribute(
+          "aria-label",
+          `${label}: ${CONFIG.messages.alreadySaved}`,
+        );
+      }
+      $button.addEventListener("click", () => addCity(city));
+
+      $item.append($button);
+      $results.append($item);
+    }
+
+    $hint.textContent = hintText();
+  }
+
+  /** Vuelve a los populares, que es lo que se ve sin escribir nada. */
+  function resetSearch() {
+    searchAbort?.abort();
+    searchAbort = null;
+    searchTimer?.();
+    searchTimer = null;
+
+    mode = "popular";
+    results = popular;
+    renderResults();
+  }
+
+  function runSearch() {
+    searchTimer = null;
+
+    const query = $search.value.trim();
+    if (query.length < CONFIG.geocoding.minQuery) {
+      resetSearch();
+      return;
+    }
+
+    // Una busqueda que llega tarde no puede pisar a la siguiente.
+    searchAbort?.abort();
+    const controller = new AbortController();
+    searchAbort = controller;
+
+    mode = "searching";
+    results = [];
+    renderResults();
+
+    searchPlaces(query, { signal: controller.signal })
+      .then((found) => {
+        if (controller.signal.aborted) return;
+        results = found;
+        mode = found.length > 0 ? "results" : "empty";
+        renderResults();
+      })
+      .catch((error) => {
+        if (controller.signal.aborted) return;
+        results = [];
+        mode = "error";
+        renderResults();
+        console.error(error);
+      });
+  }
+
+  /** Se busca cuando el usuario deja de escribir, no en cada letra. */
+  function onSearchInput() {
+    searchTimer?.();
+    searchTimer = scheduler.after(CONFIG.geocoding.debounce, runSearch);
   }
 
   /* ------------------------------------------------------- El engranaje */
@@ -196,6 +419,11 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       bindSwitch($panel.querySelector("#setting-wallpaper"), "wallpaper");
       buildIntervals();
 
+      offs.push(store.subscribe("cities", renderCities));
+      offs.push(store.subscribe("activeCityId", paintActive));
+      renderCities();
+      $search.addEventListener("input", onSearchInput);
+
       $toggle.addEventListener("click", showPanel);
       $close.addEventListener("click", hidePanel);
       $panel.addEventListener("click", onBackdrop);
@@ -217,6 +445,11 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       $close.removeEventListener("click", hidePanel);
       $panel.removeEventListener("click", onBackdrop);
       $panel.removeEventListener("close", onClose);
+      $search.removeEventListener("input", onSearchInput);
+      searchTimer?.();
+      searchTimer = null;
+      searchAbort?.abort();
+      searchAbort = null;
       if ($panel.open) $panel.close();
       offs.forEach((off) => off());
     },

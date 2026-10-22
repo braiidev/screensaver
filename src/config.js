@@ -26,6 +26,18 @@ export const CONFIG = {
     minute: 60000,
   },
 
+  geocoding: {
+    /** Resultados que se piden en cada busqueda. Con ocho cabe la lista en el
+     * panel sin tener que desplazarla demasiado. */
+    count: 8,
+    /** Letras minimas antes de buscar. Con una sola, el servicio devuelve
+     * medio mundo y ninguna es la que se busca. */
+    minQuery: 2,
+    /** Milisegundos de espera desde la ultima tecla. Buscar en cada letra
+     * llenaria la red de peticiones que ya no sirven. */
+    debounce: 350,
+  },
+
   ui: {
     /** Milisegundos sin actividad tras los que el engranaje se desvanece. */
     idle: 5000,
@@ -114,6 +126,20 @@ export const CONFIG = {
     forecastMin: "mínima",
     /** Delante de la temperatura que se siente. */
     feelsLike: "Sensación de",
+    /** Encabezado de la lista de ciudades del panel. */
+    popular: "Ciudades populares",
+    /** Mientras se espera la respuesta del geocoding. */
+    searching: "Buscando…",
+    /** La busqueda no encontro nada. */
+    noResults: "Ninguna ciudad con ese nombre",
+    /** La busqueda no pudo hacerse. */
+    searchError: "No se pudo buscar. Inténtalo otra vez.",
+    /** Se ha llegado al limite de ciudades guardadas. */
+    citiesFull: "Ya tienes todas las ciudades que caben. Quita alguna para añadir otra.",
+    /** Texto del boton de quitar una ciudad. */
+    remove: "Quitar",
+    /** Aviso de una ciudad que ya esta guardada. */
+    alreadySaved: "ya está",
   },
 
   storage: {

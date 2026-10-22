@@ -73,6 +73,9 @@
   --fs-panel: clamp(0.875rem, 1.1vw, 1rem);
   /** Titulo del panel de ajustes. */
   --fs-panel-title: clamp(1.125rem, 1.5vw, 1.375rem);
+  /** Campo de texto del panel. El suelo es 16px a proposito: por debajo, iOS
+   * hace zoom al enfocar y el panel se descoloca. */
+  --fs-field: clamp(1rem, 1.2vw, 1.125rem);
 
   /* ------------------------------------------------------------ Espaciado */
 
