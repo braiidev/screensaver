@@ -60,3 +60,16 @@ suya. El numero de fondos se deduce solo de la longitud del array.
 
 El trabajo sigue el metodo de fases de Project Flow: cada fase se cierra con
 un tag y el estado vive en [`TODO.md`](TODO.md) y en el historial de commits.
+
+## Créditos
+
+- [Open-Meteo](https://open-meteo.com/) - Datos meteorológicos y geocodificación.
+- [BigDataCloud](https://www.bigdatacloud.com/) - Geocodificación inversa de respaldo.
+- [freeipapi.com](https://freeipapi.com/) - Localización por IP como último recurso.
+- [Pixabay](https://pixabay.com/) - Fondos de pantalla usados en la galería rotativa.
+- [Lucide](https://lucide.dev/) - Iconos del tiempo, en SVG inline bajo licencia ISC.
+
+## Despliegue
+
+El sitio es estático. Se publica en [Netlify](https://www.netlify.com/) con
+`netlify.toml` y `_headers` en la raíz.

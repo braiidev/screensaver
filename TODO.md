@@ -30,9 +30,8 @@ _Nada en curso. La siguiente fase es la 5._
   - Anadir `netlify.toml` con directorio de publicacion y bloque de cabeceras,
     `_headers` con CSP, `X-Frame-Options`, `Referrer-Policy` y cache larga para
     `assets/`. Completar `package.json` con scripts de lint y format. Corregir el
-    README: el enlace a GitHub Pages esta roto y la lista de herramientas atribuye
-    IconExpress cuando los iconos vienen de otro sitio. Anadir `.gitignore`,
-    `.editorconfig` y `robots.txt`.
+    README: quitar referencias rotas y aclarar los créditos (Pixabay / Lucide). Anadir
+    `.gitignore`, `.editorconfig` y `robots.txt`.
 
 - [ ] **v0.7.0** - Fase 6 - Despliegue y verificacion
   - Desplegar en Netlify y verificar en el sitio real que el layout coincide en los
