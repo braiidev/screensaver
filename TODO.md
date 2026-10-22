@@ -14,22 +14,15 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.0.6`
-- Fase en curso: Fase 0 - Andamiaje
-- Siguiente version reservada: `v0.1.0`
+- Version actual: `v0.1.0`
+- Fase en curso: ninguna
+- Siguiente version reservada: `v0.2.0`
 
 ## Tablero
 
 ### En curso
 
-- [ ] **v0.1.0** - Fase 0 - Andamiaje
-  - Crear el esqueleto `src/` con `core/`, `modules/`, `services/`, `data/`, `ui/`,
-    `styles/` y `utils/`, mas `src/config.js` con todas las constantes hoy magicas
-    (`10` minutos, `195` indices, `1000` ms, URLs de las APIs) y los tokens CSS de
-    color, espaciado y escala tipografica. El codigo existente pasa a leer de
-    `config.js` sin cambiar ningun valor, y el CSS actual se traslada a
-    `src/styles/`. La app debe verse y funcionar exactamente igual que ahora:
-    mismo aspecto, mismos datos, sin regresiones.
+_Nada en curso. La siguiente fase es la 1._
 
 ### Siguiente
 
@@ -78,7 +71,17 @@ se manejan con el mando del Chromecast sin raton.
 
 ### Terminado
 
-_Nada terminado todavia._
+- [x] **v0.1.0** - Fase 0 - Andamiaje
+  - Esqueleto `src/` con `core/`, `modules/`, `services/`, `data/`, `ui/`, `styles/` y
+    `utils/`, mas `src/config.js` con las constantes que estaban magicas y los tokens
+    CSS de color, espaciado y escala tipografica. El codigo existente pasa a leer de
+    `config.js` sin cambiar ningun valor, y el CSS se traslada a `src/styles/`.
+  - Se verifico que no hay regresiones: las 63 reglas del CSS resueltas son identicas
+    a las de la `v0.0.0` con la misma cascada, los valores del config coinciden
+    caracter a caracter con los originales, el grafo de imports resuelve y
+    `npm run verify` da 0 fallos.
+  - De paso: servidor estatico propio (`npm run dev`) y verificador de integridad del
+    repo (`npm run verify`) para que cada fase siguiente se pueda medir igual.
 
 ### Descartado
 
@@ -97,13 +100,20 @@ _Nada terminado todavia._
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
-- `free.freeipapi.com` responde 307 a `/api/v1/json`; `fetch` sigue las
-  redirecciones, pero conviene fijar la ruta nueva en `config.js`.
+- `free.freeipapi.com/api/json` responde 307 hacia `/api/v1/json`; `fetch` sigue la
+  redireccion y la respuesta llega bien, pero en la Fase 2 se fija la ruta directa
+  para no depender de la redireccion.
 - El geocoding de Open-Meteo devuelve el timezone IANA, asi que el reloj por ciudad no
   necesita ningun proveedor adicional.
 - `BigDataCloud /data/timezone` responde 403 sin clave; el timezone sale de la propia
   respuesta de Open-Meteo con `timezone=auto`.
 - La API de fotos de Pixabay se usa solo por CDN, sin credenciales.
+- `src/styles/states.css` se importa el ultimo a proposito: la clase `warning` se
+  aplica sobre `#location`, que es `.item2-3`, y los dos fijan `font-size` con la
+  misma especificidad. Si el aviso se importara antes, el mensaje de error pasaria
+  de 1rem a 0.1em y seria ilegible en movil.
+- `assets/` es codigo heredado del proyecto original, todavia sin migrar. En la
+  Fase 1 y la Fase 2 sus ficheros se mudan a `src/modules/` y a `src/services/`.
 
 ## Seguimiento
 
