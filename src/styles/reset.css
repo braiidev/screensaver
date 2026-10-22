@@ -1,0 +1,18 @@
+/* reset.css - Reinicio minimo del navegador.
+ *
+ * Solo se anula lo que estorba en un lienzo a pantalla completa. No se
+ * reinicia el tipado del navegador mas alla de los margenes: el sitio tiene
+ * que parecerse al que hay en produccion.
+ */
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  /* content-box: la version actual usa content-box. Se cambia a border-box
+   * en la Fase 3, cuando el layout nuevo necesita que el ancho del bloque
+   * incluya su relleno. */
+  box-sizing: content-box;
+  user-select: none;
+}

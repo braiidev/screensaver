@@ -1,0 +1,67 @@
+/* tokens.css - Las variables del proyecto.
+ *
+ * Aqui vive todo valor que se repite o que habra que ajustar en algun momento.
+ * Ningun modulo deberia escribir un color, un tamaño o un tiempo literal en su
+ * propia hoja de estilos: si hace falta uno nuevo, se declara aqui primero.
+ *
+ * Los valores de este fichero son los que tiene la version que esta en
+ * produccion. Cambiarlos es un cambio de aspecto y va en su propia version.
+ */
+
+:root {
+  /* ---------------------------------------------------------------- Color */
+
+  /** Fondo por defecto de la pagina, bajo el fondo fotografico. */
+  --bg-color: #101025;
+  /** Color de texto principal. */
+  --color-text: #fff;
+  /** Color de los avisos. */
+  --color-warning: rgb(250, 154, 28);
+  /** Opacidad del texto secundario. */
+  --opacity-muted: 0.7;
+  /** Velo oscuro que hace legible el texto sobre la fotografia. */
+  --scrim: linear-gradient(150deg, #00000000 55%, #000000);
+
+  /* ---------------------------------------------------------- Tipografia */
+
+  --font-family: sans-serif;
+  /** Escala base del lienzo. Todo lo demas se expresa en `em` sobre ella. */
+  --font-size-hero: clamp(24px, 14vw, 240px);
+  /** Reloj: la escala base. */
+  --fs-hero: 1em;
+  /** Dia de la semana. */
+  --fs-day: 0.3em;
+  /** Condicion meteorologica. */
+  --fs-weather: 0.5em;
+  /** Localizacion. 0.1em baja de 13px en movil: se corrige en la Fase 3. */
+  --fs-location: 0.1em;
+  /** Avisos, a tamano fijo del navegador. */
+  --fs-warning: 1rem;
+
+  /* ------------------------------------------------------------ Espaciado */
+
+  /** Separacion entre el texto y el borde derecho del lienzo. */
+  --space-inline-end: 0.3em;
+
+  /* ---------------------------------------------------------------- Capas */
+
+  --z-background: -1;
+  --z-board: 0;
+  --z-content: 10;
+
+  /* ------------------------------------------------------------ Movimiento */
+
+  /** Duracion del fundido entre imagenes de fondo. */
+  --duration-fade: 1s;
+  /** Duracion de la entrada de la pantalla. */
+  --duration-screen: 1s;
+  /** Espera antes de que aparezca el contenido. */
+  --duration-item-delay: 1s;
+  /** Duracion de la entrada del contenido. */
+  --duration-item: 2s;
+
+  /* --------------------------------------------------------------- Lienzo */
+
+  --board-width: 100vw;
+  --board-height: 100vh;
+}

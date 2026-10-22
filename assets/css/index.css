@@ -1,27 +1,16 @@
-*,
-*:before,
-*:after {
-  padding: 0;
-  margin: 0;
-  box-sizing: content-box;
-  user-select: none;
-}
-
-:root {
-  --bg-color: #101025;
-  --font-size: clamp(24px, 14vw, 240px);
-}
+@import "../../src/styles/tokens.css";
+@import "../../src/styles/reset.css";
 
 .board {
-  width: 100vw;
-  height: 100vh;
-  font-size: var(--font-size);
+  width: var(--board-width);
+  height: var(--board-height);
+  font-size: var(--font-size-hero);
   position: relative;
-  z-index: 0;
-  font-family: sans-serif;
+  z-index: var(--z-board);
+  font-family: var(--font-family);
   overflow: hidden;
-  color: #fff;
-  animation: 1s fadeScreen;
+  color: var(--color-text);
+  animation: var(--duration-screen) fadeScreen;
 }
 
 .fullscreen div{
@@ -34,15 +23,15 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  transition: opacity 1s;
+  transition: opacity var(--duration-fade);
 }
 
 
 .item1 {
   position: absolute;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
+  width: var(--board-width);
+  height: var(--board-height);
+  z-index: var(--z-background);
 }
 
 .item2 {
@@ -51,12 +40,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 10;
+  z-index: var(--z-content);
   text-align: right;
-  background: linear-gradient(150deg, #00000000 55%, #000000);
+  background: var(--scrim);
   opacity: 1;
-  animation-delay: 1s;
-  animation-duration: 2s;
+  animation-delay: var(--duration-item-delay);
+  animation-duration: var(--duration-item);
   animation-name: fadeItem;
   animation-fill-mode: backwards;
   display: flex;
@@ -66,15 +55,15 @@
 }
 
 .item2-0 {
-  font-size: 0.3em;
-  padding-right: 0.3em;
+  font-size: var(--fs-day);
+  padding-right: var(--space-inline-end);
 }
 .item2-1 {
-  font-size: 1em;
+  font-size: var(--fs-hero);
 }
 
 .item2-2 {
-  font-size: 0.5em;
+  font-size: var(--fs-weather);
 }
 
 .item2-2-2 {
@@ -87,8 +76,8 @@
 }
 
 .item2-3 {
-  font-size: 0.1em;
-  opacity: 0.7;
+  font-size: var(--fs-location);
+  opacity: var(--opacity-muted);
 }
 
 @keyframes fadeItem {
@@ -116,6 +105,6 @@
 }
 
 .warning{
-  color: rgb(250, 154, 28);
-  font-size: 1rem;
+  color: var(--color-warning);
+  font-size: var(--fs-warning);
 }
