@@ -1,0 +1,15 @@
+{
+  "name": "weatherapp",
+  "version": "0.0.6",
+  "private": true,
+  "type": "module",
+  "description": "Screensaver web con reloj y clima sobre fondo rotativo",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "verify": "node tools/verify.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
