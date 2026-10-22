@@ -52,16 +52,6 @@ export const CONFIG = {
   wallpaper: {
     /** Minutos entre cambios de imagen de fondo. */
     interval: 1,
-    /* Los cuatro siguientes son del fondo antiguo, que sigue en marcha hasta
-     * que se intercambie por el modulo nuevo. Se van en el paso 6. */
-    /** Primer indice valido de la lista de imagenes. */
-    minIndex: 0,
-    /** Ultimo indice valido de la lista de imagenes. */
-    maxIndex: 195,
-    /** Milisegundos que dura el fundido entre imagenes. */
-    transition: 1000,
-    /** Milisegundos de espera antes de cargar la imagen que entra. */
-    preloadDelay: 1000,
     /** Sufijo de la version en alta resolucion en el CDN de fotos. */
     highResSuffix: "_1280",
     /** Patron que convierte una URL de baja resolucion en una de alta. */

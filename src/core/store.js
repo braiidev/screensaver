@@ -53,11 +53,14 @@ export function subscribe(key, fn) {
 
 /**
  * Carga el estado inicial. Notifica como un `set` normal.
+ *
+ * Devuelve la fachada del store, que es lo que se le pasa a los modulos.
+ *
  * @param {Record<string, *>} initial
  */
 export function init(initial) {
   for (const [key, value] of Object.entries(initial)) set(key, value);
-  return state;
+  return { get, set, subscribe, snapshot };
 }
 
 /**

@@ -105,8 +105,6 @@ console.log("\n4. Constantes sueltas en el codigo");
 const ALLOW_CONSTANTS = new Set(["src/config.js"]);
 // Listas de datos que se editan a mano: no son codigo.
 const ALLOW_DATA = new Set([
-  "assets/js/listBg.js",
-  "assets/img/weather/wno.js",
   "src/data/wallpapers.js",
   "src/data/wno.js",
 ]);
@@ -154,13 +152,13 @@ try {
   const { CONFIG } = await import(join(ROOT, "src/config.js"));
   const { wallpapers } = await import(join(ROOT, "src/data/wallpapers.js"));
 
-  if (CONFIG.wallpaper.maxIndex === wallpapers.length - 1)
-    ok(`maxIndex (${CONFIG.wallpaper.maxIndex}) coincide con la ultima imagen (${wallpapers.length - 1})`);
-  else
-    bad(`maxIndex (${CONFIG.wallpaper.maxIndex}) no coincide con la ultima imagen (${wallpapers.length - 1})`);
+  if (wallpapers.length > 0) ok(`la lista de fondos tiene ${wallpapers.length} entradas`);
+  else bad("la lista de fondos esta vacia");
 
-  if (CONFIG.wallpaper.minIndex === 0) ok("minIndex es 0");
-  else bad(`minIndex es ${CONFIG.wallpaper.minIndex}, deberia ser 0`);
+  if (CONFIG.wallpaper.maxIndex === undefined)
+    ok("el ultimo indice se deduce de la lista, no esta escrito a mano");
+  else
+    bad(`el config tiene maxIndex (${CONFIG.wallpaper.maxIndex}): el indice se deduce de la lista`);
 
   const everyImageHasUrl = wallpapers.every((i) => typeof i?.url === "string" && i.url.startsWith("https://"));
   if (everyImageHasUrl) ok(`los ${wallpapers.length} fondos tienen URL`);

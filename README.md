@@ -30,19 +30,31 @@ Comprueba, sin navegador y sin red, que:
 3. Toda variable CSS usada esta declarada.
 4. No quedan numeros magicos ni URLs sueltas fuera de `src/config.js`.
 5. Las referencias del HTML apuntan a ficheros que existen.
-6. Los invariantes del config se cumplen (el indice del fondo coincide con
-   el numero de imagenes, por ejemplo).
+6. Los invariantes del config se cumplen (por ejemplo, que el ultimo indice
+   del fondo se deduzca de la lista y no este escrito a mano).
 
 ## Estructura
 
 ```
 index.html          La pagina: solo el esqueleto del lienzo
-assets/             Lo heredado del proyecto original, pendiente de migrar
 src/                La aplicacion. El mapa esta en src/README.md
+assets/             Solo el icono de la pagina
 tools/              Servidor de desarrollo y verificador
 ```
 
 El detalle de como se relacionan las capas esta en [`src/README.md`](src/README.md).
+
+## Editar los fondos
+
+La lista esta en [`src/data/wallpapers.js`](src/data/wallpapers.js). Cada linea
+es un fondo:
+
+```js
+  { id: 7373484, url: "https://cdn.pixabay.com/photo/2022/08/08/19/36/landscape-7373484_150.jpg" },
+```
+
+Para anadir uno, copia una linea al final del array. Para quitarlo, borra la
+suya. El numero de fondos se deduce solo de la longitud del array.
 
 ## Estado
 

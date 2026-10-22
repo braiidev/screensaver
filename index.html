@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
 <!-- This site is hosted on Netlify. Anyone can build and deploy a site
@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="src/styles/index.css" />
     <link rel="shortcut icon" href="assets/img/icon.png" type="image/x-icon" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="Screensaver like Chromecast plus sheik."
@@ -27,9 +26,9 @@
 
   <body>
     <div class="board">
-      <div id="background" class="fullscreen item1">
-        <div id="tapeA" class="show"></div>
-        <div id="tapeB"></div>
+      <div id="background" class="wallpaper">
+        <div id="tapeA" class="wallpaper__tape"></div>
+        <div id="tapeB" class="wallpaper__tape"></div>
       </div>
       <div class="item2">
         <span class="item2-0" id="day"></span>
@@ -41,9 +40,6 @@
         <div class="item2-3" id="location"></div>
       </div>
     </div>
-    <script>
-      document.documentElement.requestFullscreen();
-    </script>
-    <script type="module" src="assets/js/main.js" defer></script>
+    <script type="module" src="src/main.js"></script>
   </body>
 </html>

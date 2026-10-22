@@ -52,7 +52,7 @@
   /* ------------------------------------------------------------ Movimiento */
 
   /** Duracion del fundido entre imagenes de fondo. */
-  --duration-fade: 1s;
+  --duration-fade: 1.6s;
   /** Escala de la cinta de fondo que espera. Mayor que 1 para que no se vea
    * el borde de la pantalla al encoger la cinta. */
   --wallpaper-scale: 1.06;

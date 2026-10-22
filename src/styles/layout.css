@@ -4,6 +4,11 @@
  * completa con el fondo detras y el contenido encima, alineado a la derecha.
  */
 
+body {
+  /* Sin esto, hasta que llega el fondo se ve un destello blanco. */
+  background: var(--bg-color);
+}
+
 .board {
   width: var(--board-width);
   height: var(--board-height);
@@ -14,26 +19,6 @@
   z-index: var(--z-board);
   overflow: hidden;
   animation: var(--duration-screen) fadeScreen;
-}
-
-.fullscreen div {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  transition: opacity var(--duration-fade);
-}
-
-.item1 {
-  position: absolute;
-  width: var(--board-width);
-  height: var(--board-height);
-  z-index: var(--z-background);
 }
 
 .item2 {
