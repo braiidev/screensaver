@@ -14,25 +14,17 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.1.6`
+- Version actual: `v0.2.0`
 - Fase en curso: ninguna
-- Siguiente version reservada: `v0.2.0`
+- Siguiente version reservada: `v0.3.0`
 
 ## Tablero
 
 ### En curso
 
-_Nada en curso. La siguiente fase es la 1._
+_Nada en curso. La siguiente fase es la 2._
 
 ### Siguiente
-
-- [ ] **v0.2.0** - Fase 1 - Reloj y fondo migrados
-  - Portar `clock` y `wallpaper` al patron `modulo + store + servicio`. El reloj pasa
-    de 100 ms a 1 s de polling, rellena las horas con cero y usa
-    `Intl.DateTimeFormat` con la zona horaria de la ciudad activa en lugar de los
-    arrays `DAYS`/`MONTH` en espanol. El fondo precarga la siguiente imagen para
-    eliminar el flash y su lista pasa a `src/data/wallpapers.js` con el mismo formato
-    de array para que siga siendo editable a mano.
 
 - [ ] **v0.3.0** - Fase 2 - Clima sobre servicios
   - Reubicar la llamada a Open-Meteo en `services/weatherApi.js` y la de
@@ -83,6 +75,26 @@ _Nada en curso. La siguiente fase es la 1._
   - De paso: servidor estatico propio (`npm run dev`) y verificador de integridad del
     repo (`npm run verify`) para que cada fase siguiente se pueda medir igual.
 
+- [x] **v0.2.0** - Fase 1 - Reloj y fondo migrados
+  - El reloj pasa a `src/modules/clock/`: un modulo con `start` y `stop` que lee la
+    zona horaria del store y se suscribe a ella, de modo que en la Fase 4 cambien
+    solos al cambiar de ciudad. El polling baja de 100 ms a 1 s, la hora sale siempre
+    con dos digitos y la fecha con el formato de `Intl` en espanol.
+  - El fondo pasa a `src/modules/wallpaper/`: precarga la imagen antes de revelarla,
+    asi que no hay flash, no repite el mismo fondo dos veces seguidas y cruza con un
+    leve movimiento en vez de un fundido a pelo. La lista de 196 fondos pasa a
+    `src/data/wallpapers.js`, con una linea por fondo y editable a mano.
+  - El clima se muda a `src/modules/weather/` sin cambiar su logica. Los dos fallos
+    conocidos, el reintento calendarizado dos veces y la localizacion que no se
+    reintenta, quedan intactos para la Fase 2, que es donde se arreglan.
+  - `src/main.js` sustituye al arranque suelto y `assets/js/` desaparece. El fondo
+    pasa a tener las clases que le pertenecen, se quita la llamada a pantalla
+    completa que estaba fuera de ningun clic y el documento deja de dar un
+    destello blanco mientras llega la imagen.
+  - Se verifico que no hay regresiones: el calculo de estilos finales de los 16
+    estados del HTML da una sola diferencia frente a la `v0.0.0`, el `tabular-nums`
+    anadido al reloj. Los 21 recursos responden 200 por HTTP con el MIME correcto.
+
 ### Descartado
 
 - [ ] ~~Wallpaper segun la hora del dia~~ — el usuario edita la lista de imagenes a
@@ -112,8 +124,12 @@ _Nada en curso. La siguiente fase es la 1._
   aplica sobre `#location`, que es `.item2-3`, y los dos fijan `font-size` con la
   misma especificidad. Si el aviso se importara antes, el mensaje de error pasaria
   de 1rem a 0.1em y seria ilegible en movil.
-- `assets/` es codigo heredado del proyecto original, todavia sin migrar. En la
-  Fase 1 y la Fase 2 sus ficheros se mudan a `src/modules/` y a `src/services/`.
+- `assets/` ya solo tiene el icono de la pagina. Todo el codigo esta migrado a
+  `src/`, y `assets/js/` se borro en el paso 6 de la Fase 1.
+- El cruce del fondo se mide con el calculo de estilos finales, no a ojo: se
+  resuelven las reglas del CSS como haria el navegador para cada elemento del
+  HTML y se comparan los resultados. Asi se detecto que el aviso de error
+  passaria de 1rem a 0.1em si `states.css` se importara antes.
 
 ## Seguimiento
 
