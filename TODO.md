@@ -14,7 +14,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.3.2`
+- Version actual: `v0.3.3`
 - Fase en curso: 3 - Layout dashboard responsivo
 - Siguiente version reservada: `v0.4.0`
 
@@ -22,12 +22,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ### En curso
 
-- [ ] **v0.4.0** - Fase 3 - Layout dashboard responsivo
-  - Sustituir el layout anclado en la esquina por la direccion Dashboard: reloj como
-    heroe abajo a la izquierda, ficha de clima arriba a la derecha, forecast en tira.
-    Escala tipografica por rol con minimos absolutos, iconos SVG inline coloreables
-    por condicion, scrim vertical escalable y `100dvh` con `safe-area-inset`. Ningun
-    texto por debajo de 13px en ningun breakpoint.
+_Nada en curso. La siguiente fase es la 4._
 
 ### Siguiente
 
@@ -114,6 +109,41 @@ se manejan con el mando del Chromecast sin raton.
     invariante: toda constante del config tiene que leerse en algun sitio, que es como
     aparecieron `app.name` y `messages.loading` sin usar.
 
+- [x] **v0.4.0** - Fase 3 - Layout dashboard responsivo
+  - La pantalla deja de estar anclada a una esquina y pasa a una rejilla de tres
+    filas: ciudades arriba (vacias hasta la Fase 4), la ficha del clima arriba a la
+    derecha y el reloj abajo a la izquierda, que pasa a ser el heroe. En movil la
+    ficha ocupa el ancho y el reloj queda debajo; desde 768px la ficha se va a su
+    esquina con ancho propio y el reloj crece hasta 160px.
+  - La tipografia abandona los tamanos sueltos y pasa a una escala por roles, cada
+    una con un `clamp()` cuyo primer valor es el minimo absoluto de ese rol: reloj
+    52px en movil y 160px en TV, temperatura 32/64, y ningun texto por debajo de
+    13px. El verificador resuelve las variables y falla si alguien perfora el suelo,
+    asi que la promesa ya no depende de mirar capturas.
+  - El lienzo pasa a `100dvh` con respaldo `100vh` y el margen suma
+    `safe-area-inset`, para que el reloj no caiga bajo la barra del gesto. El reset
+    pasa a `border-box`, que es lo que necesita una tarjeta con relleno y borde.
+  - Los iconos del clima dejan de ser PNG de un tercero y pasan a SVG en linea de
+    `src/ui/icons.js` (trazos de Lucide, ISC), coloreados por un token segun la
+    familia de la condicion. `wno.js` deja de fabricar `url()` y devuelve etiqueta
+    en espanol con variante de dia y noche; la ficha gana la condicion escrita, que
+    antes no existia.
+  - La ficha gana el pronostico de cinco dias en una tira de cinco celdas iguales,
+    con maxima, minima, icono y etiqueta accesible por dia. Llega en la misma
+    peticion que el tiempo actual, asi que no cuesta una llamada extra.
+  - Un fallo de red deja de vaciar la ficha: con una lectura buena en pantalla, el
+    refresco fallido se queda en la consola y el reintento va por detras. El aviso
+    naranja y el boton quedan para cuando no hay nada que enseñar.
+  - Se anaden dos velos de esquina en vez de un velo plano, el boton de reintentar
+    gana objetivo de 44px y foco visible para el mando, y la entrada del contenido y
+    el cruce del fondo respetan `prefers-reduced-motion`. Se quita la animacion de
+    entrada con `filter: blur()`, que rasterizaba el lienzo entero en el Chromecast.
+  - Se verifico: 178 pruebas en Node; los estilos finales de los 22 estados del HTML
+    resueltos con la cascada real; la geometria evaluada en 390x640, 390x844,
+    844x390, 1440x900 y 1920x1080, sin desbordes y con la columna del pronostico
+    nunca por debajo de 45px; el servicio contra la API real devolviendo cinco dias;
+    `npm run verify` da 0 fallos.
+
 ### Descartado
 
 - [ ] ~~Wallpaper segun la hora del dia~~ — el usuario edita la lista de imagenes a
@@ -155,6 +185,11 @@ se manejan con el mando del Chromecast sin raton.
 - Los iconos del clima son SVG en linea de `src/ui/icons.js`, con trazos de Lucide
   (ISC). No se descarga ninguno: `src/data/wno.js` solo dice el nombre del dibujo y el
   color sale de un token por familia de condicion.
+- La fecha del pronostico se formatea en UTC, no en la zona de la ciudad: la API ya
+  la devuelve como fecha local del sitio y pasarla por una zona la mueve de dia (en
+  Auckland, UTC+13, un jueves salia viernes). Lo detecto una prueba, no una captura.
+- La rejilla del dashboard reserva la fila `cities` desde la Fase 3. En la Fase 4
+  los chips solo tienen que entrar en su area, sin tocar la composicion.
 - La escala tipografica va por roles y el primer valor de cada `clamp()` es el minimo
   absoluto de ese rol. `npm run verify` resuelve las variables y falla si algun
   `font-size` baja de 13px, asi que la promesa no depende de mirar capturas.

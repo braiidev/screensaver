@@ -157,19 +157,26 @@
   display: none;
 }
 
-/* El boton de reintentar, que solo aparece cuando algo ha fallado. */
+/* El boton de reintentar, que solo aparece cuando algo ha fallado. Se maneja
+ * con el mando a distancia, asi que necesita un objetivo grande y un foco que
+ * se vea desde el sofa. */
 .retry {
   justify-self: start;
-  padding: 0.45em 0.9em;
+  min-height: 2.75rem;
+  padding: 0.45em 1.1em;
   border: 1px solid var(--color-line);
   border-radius: 999px;
   font-size: var(--fs-retry);
   color: var(--color-text);
 }
 
-.retry:hover,
-.retry:focus-visible {
+.retry:hover {
   border-color: var(--color-text);
+}
+
+.retry:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
 }
 
 /* Sin esto, cualquier `display` de arriba pisaria al atributo `hidden`. */

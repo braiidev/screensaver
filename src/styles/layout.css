@@ -67,3 +67,11 @@ body {
     opacity: 1;
   }
 }
+
+/* Quien pide menos movimiento en su sistema no ve la entrada del contenido.
+ * El fondo tambien lo respeta, en su propia hoja. */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard {
+    animation: none;
+  }
+}

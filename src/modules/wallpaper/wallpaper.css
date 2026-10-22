@@ -41,3 +41,12 @@
 .wallpaper__tape.no-transition {
   transition: none;
 }
+
+/* El cruce y el leve zoom son decorativos: si el aparato pide menos movimiento,
+ * el fondo cambia sin animacion. La precarga se mantiene, asi que sigue sin
+ * haber destello. */
+@media (prefers-reduced-motion: reduce) {
+  .wallpaper__tape {
+    transition: none;
+  }
+}
