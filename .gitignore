@@ -1,0 +1,13 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Build
+dist/
+build/
+.cache/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
