@@ -1,0 +1,13 @@
+/* index.css - Hoja de entrada del proyecto.
+ *
+ * El orden importa y no es libre:
+ *   1. reset   - estado conocido antes de aplicar nada.
+ *   2. tokens  - las variables, antes de que las hojas que las usan.
+ *   3. layout  - la composicion de la pantalla.
+ *   4. states  - los avisos, al final para que ganen al contenido normal.
+ */
+
+@import "./reset.css";
+@import "./tokens.css";
+@import "./layout.css";
+@import "./states.css";

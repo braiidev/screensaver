@@ -36,11 +36,12 @@ src/
 │   ├── dom.js       Helpers del DOM
 │   └── format.js    Formato de numeros, fechas y unidades
 │
-├── styles/          Lo transversal: reset, tokens, base y layout
+├── styles/          Lo transversal: reset, tokens, layout y estados
+│   ├── index.css    Hoja de entrada: importa las cuatro en orden
 │   ├── reset.css
 │   ├── tokens.css   Color, espaciado, escala tipografica, z-index
-│   ├── base.css
-│   └── layout.css
+│   ├── layout.css   La composicion de la pantalla
+│   └── states.css   Los avisos, que se importan al final
 │
 └── utils/           Funciones puras, sin estado
     ├── time.js
@@ -57,3 +58,6 @@ src/
 5. **El CSS de un modulo va en su carpeta.** En `styles/` solo lo transversal.
 6. **Las constantes van en `config.js`.** Ningun numero magico en el codigo.
 7. **Un modulo no importa de otro modulo.** Si hace falta, se comunican por el store.
+8. **El orden de los `@import` de `styles/index.css` no es libre.** `states.css`
+   va al final a proposito: sus avisos compiten en `font-size` con el contenido
+   normal y, a igual especificidad, gana la regla que aparece despues.

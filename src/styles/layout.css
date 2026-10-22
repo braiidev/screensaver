@@ -1,19 +1,22 @@
-@import "../../src/styles/tokens.css";
-@import "../../src/styles/reset.css";
+/* layout.css - La composicion de la pantalla.
+ *
+ * Donde cae cada pieza y cuanto mide. El lienzo es un solo bloque a pantalla
+ * completa con el fondo detras y el contenido encima, alineado a la derecha.
+ */
 
 .board {
   width: var(--board-width);
   height: var(--board-height);
   font-size: var(--font-size-hero);
+  font-family: var(--font-family);
+  color: var(--color-text);
   position: relative;
   z-index: var(--z-board);
-  font-family: var(--font-family);
   overflow: hidden;
-  color: var(--color-text);
   animation: var(--duration-screen) fadeScreen;
 }
 
-.fullscreen div{
+.fullscreen div {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -25,7 +28,6 @@
   background-size: cover;
   transition: opacity var(--duration-fade);
 }
-
 
 .item1 {
   position: absolute;
@@ -58,6 +60,7 @@
   font-size: var(--fs-day);
   padding-right: var(--space-inline-end);
 }
+
 .item2-1 {
   font-size: var(--fs-hero);
 }
@@ -102,9 +105,4 @@
   to {
     filter: opacity(100%) blur(0);
   }
-}
-
-.warning{
-  color: var(--color-warning);
-  font-size: var(--fs-warning);
 }
