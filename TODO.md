@@ -14,17 +14,15 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Ultima version cerrada: `v0.8.5`
-- Version en curso: `v0.8.6` - Pulido móvil estrecho
+- Ultima version cerrada: `v0.8.6`
+- Version en curso: ninguna
 - Siguiente version reservada: `v0.9.0`
 
 ## Tablero
 
 ### En curso
 
-- [ ] **v0.8.6** - Fase 8 - Bloque 3 - Pulido móvil estrecho
-  - [ ] 3.5 Revisar 320x568, 360x640 y apaisado; ajustar rejilla, extras y panel
-    de ajustes sin bajar ningún texto de 13px.
+Ninguna. La `v0.8.6` cerró el pulido móvil estrecho; el siguiente es `v0.9.0`.
 
 ### Siguiente
 
@@ -35,6 +33,21 @@ se manejan con el mando del Chromecast sin raton.
   `verify.mjs`.
 
 ### Terminado
+
+- [x] **v0.8.6** - Fase 8 - Bloque 3 - Pulido móvil estrecho
+  - 3.5 En 320x568 y 360x640 la tira horaria cabe en una sola fila
+    (`minmax(2.75rem, 1fr)`, `gap: var(--space-1)`) y la ficha deja de empujar
+    el reloj fuera de pantalla. El gap del tablero y el relleno de la tarjeta se
+    limitan en `max-width: 30em`.
+  - En apaisado bajo (`max-height: 30em`) el tablero pasa a dos columnas:
+    ciudades y reloj a la izquierda, tarjeta a la derecha. Dentro de la tarjeta
+    el pronóstico va junto al bloque actual y las horas cruzan por debajo.
+  - El panel recupera los 14px que el límite nativo del `<dialog>` comía en
+    320px (`max-width: none`), sin desbordes y con scroll solo en
+    `.settings__body`.
+  - Verificado sin solapes ni desbordes en 320x568, 360x640, 568x320, 640x360,
+    844x390, 390x844 y 1440x900, con mínimo de 13px y bloques ocultos en
+    apaisado. `62bdce9`.
 
 - [x] **v0.8.5** - Corrección del scroll del panel de ajustes
   - `.switch` y `.segmented__item` pasan a `position: relative`: los `input`
