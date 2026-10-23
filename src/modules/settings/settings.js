@@ -20,6 +20,7 @@
  */
 
 import { CONFIG } from "../../config.js";
+void CONFIG.extras;
 import { POPULAR } from "../../data/popular.js";
 import { searchPlaces } from "../../services/geocoding.js";
 import { formatPlace } from "../../services/geo.js";
@@ -43,6 +44,11 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
   const $results = $panel.querySelector("#city-results");
   const $search = $panel.querySelector("#city-search");
   const $hint = $panel.querySelector("#city-hint");
+  const $exNext = $panel.querySelector("#setting-extra-nexthours");
+  const $exSun = $panel.querySelector("#setting-extra-sun");
+  const $exWind = $panel.querySelector("#setting-extra-wind");
+  const $exHuUv = $panel.querySelector("#setting-extra-humidityuv");
+  const $exTrend = $panel.querySelector("#setting-extra-trend");
   const $themeA = $panel.querySelector("#theme-a");
   const $themeB = $panel.querySelector("#theme-b");
   const $themeAlign = $panel.querySelector("#theme-align");

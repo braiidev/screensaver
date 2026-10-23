@@ -199,3 +199,70 @@
 .retry[hidden] {
   display: none;
 }
+
+/* Extras Grupo 1 */
+.card__extras {
+  margin-top: var(--space-2);
+}
+.card__extras-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--fs-chip);
+}
+.card__sun,
+.card__wind,
+.card__huuv,
+.card__trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.card__trend.up::before {
+  content: "↑";
+}
+.card__trend.down::before {
+  content: "↓";
+}
+.card__trend.eq::before {
+  content: "→";
+}
+
+/* Próximas horas */
+.hourly {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+  padding-bottom: var(--space-1);
+  scrollbar-width: thin;
+}
+.hourly__item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3em;
+  min-width: 4.2rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+}
+.hourly__time {
+  font-size: var(--fs-chip);
+}
+.hourly__temp {
+  font-size: var(--fs-chip);
+  font-weight: 600;
+}
+.hourly__pop {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hourly {
+    scroll-behavior: auto;
+  }
+}

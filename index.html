@@ -69,6 +69,17 @@
 
           <p class="card__feels" id="feels" hidden></p>
 
+          <div class="card__extras" id="card-extras">
+            <div class="card__extras-row">
+              <span id="sunrise-sunset" class="card__sun"></span>
+              <span id="wind" class="card__wind"></span>
+              <span id="humidity-uv" class="card__huuv"></span>
+              <span id="trend" class="card__trend"></span>
+            </div>
+          </div>
+
+          <div class="hourly" id="hourly" aria-label="Próximas horas"></div>
+
           <ol
             class="forecast"
             id="forecast"
@@ -234,6 +245,40 @@
               <input class="switch__input" id="setting-wallpaper" type="checkbox" />
               <span class="switch__track" aria-hidden="true"></span>
               <span>Fondo fotográfico</span>
+            </label>
+          </fieldset>
+
+          <fieldset class="settings__group">
+            <legend class="settings__legend">Información extra</legend>
+
+            <label class="switch">
+              <input class="switch__input" id="setting-extra-nexthours" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Próximas horas</span>
+            </label>
+
+            <label class="switch">
+              <input class="switch__input" id="setting-extra-sun" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Amanecer / Atardecer</span>
+            </label>
+
+            <label class="switch">
+              <input class="switch__input" id="setting-extra-wind" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Viento</span>
+            </label>
+
+            <label class="switch">
+              <input class="switch__input" id="setting-extra-humidityuv" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Humedad / UV</span>
+            </label>
+
+            <label class="switch">
+              <input class="switch__input" id="setting-extra-trend" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Tendencia vs hace 1h</span>
             </label>
           </fieldset>
 

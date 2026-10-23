@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const PORT = Number(process.argv[2] ?? process.env.PORT ?? 8080);
+const HOST = process.argv[3] ?? process.env.HOST ?? "127.0.0.1";
 
 const MIME = {
   ".html": "text/html; charset=utf-8",

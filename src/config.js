@@ -115,6 +115,23 @@ export const CONFIG = {
     reverseGeocode: "https://api.bigdatacloud.net/data/reverse-geocode-client",
   },
 
+  /** Configurables desde ajustes (Grupo 1). */
+  extras: {
+    /** Mostrar próximas horas */
+    nextHours: true,
+    /** Mostrar amanecer/atardecer */
+    sun: true,
+    /** Mostrar viento */
+    wind: true,
+    /** Mostrar humedad / índice UV */
+    humidityUv: true,
+    /** Mostrar tendencia vs hace 1h */
+    trend: true,
+  },
+
+  /** Grupo 1 extras - usados por el módulo de extras */
+  extrasKeys: ['nextHours','sun','wind','humidityUv','trend'],
+
   messages: {
     locationError: "No se pudo cargar la localización",
     weatherError: "No se pudo cargar el clima",

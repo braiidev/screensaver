@@ -56,7 +56,9 @@ function save(data) {
 }
 
 function apply(state) {
+  if (typeof document === "undefined") return;
   const root = document.documentElement;
+  if (!root) return;
   root.setAttribute("data-theme-a", state.themeA);
   root.setAttribute("data-theme-b", state.themeB);
   root.setAttribute("data-align", state.align);
