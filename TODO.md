@@ -14,22 +14,27 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.8.2`
-- Fase en curso: Fase 8 - Apariencia y más información (Bloque 3 pendiente)
-- Siguiente version reservada: `v0.9.0`
+- Ultima version cerrada: `v0.8.2`
+- Version en curso: `v0.8.3` - Fase 8, Bloque 3: presets completos
+- Siguiente version reservada: `v0.8.4`
 
 ## Tablero
 
 ### En curso
 
-Ninguna. La `v0.8.2` cerró el Bloque 2; el Bloque 3 está pendiente de
-replantear y asignar versión.
+- [ ] **v0.8.3** - Fase 8 - Bloque 3 - Presets completos
+  - [ ] 3.1 Guardar y restaurar en cada preset los cinco extras y los ajustes de
+    pantalla (`forecast`, `feelsLike`), migrando los presets existentes sin
+    romperlos.
 
 ### Siguiente
 
-- [ ] **Bloque 3 de la Fase 8** - replantear y asignar versión: integración con
-  presets, ocultar elementos y pulido móvil estrecho. Descartados 3.2 (mover
-  widgets libremente) y 3.4 (reordenar la ficha con drag&drop).
+- [ ] **v0.8.4** - Fase 8 - Bloque 3 - Ocultar elementos
+  - [ ] 3.3 Sección de visibilidad con interruptores para reloj, ficha del
+    clima y chips de ciudades. El fondo no se oculta.
+- [ ] **v0.8.5** - Fase 8 - Bloque 3 - Pulido móvil estrecho
+  - [ ] 3.5 Revisar 320x568, 360x640 y apaisado; ajustar rejilla, extras y panel
+    de ajustes sin bajar ningún texto de 13px.
 - [ ] **v0.9.0** - Fase 9 - Extras
   - Funcionalidades adicionales según necesidades.
 - [ ] **Suite de pruebas reproducible** - recuperar y commitear las pruebas en
@@ -214,6 +219,10 @@ replantear y asignar versión.
 
 ### Descartado
 
+- [ ] ~~3.2 Mover widgets libremente~~ — rompe la rejilla fija y el manejo con el
+  mando del Chromecast.
+- [ ] ~~3.4 Reordenar la ficha con drag&drop~~ — mismo motivo: en TV no hay raton
+  y el orden fijo ya funciona.
 - [ ] ~~Wallpaper segun la hora del dia~~ — el usuario edita la lista de imagenes a
   mano, asi que no compensa anadir clasificacion por mood.
 - [ ] ~~Modo idle con ocultacion de la interfaz~~ — requiere un mando que el
@@ -228,7 +237,8 @@ replantear y asignar versión.
   `/home/anto/Proyectos/Weatherapp`, con su propio historial. Nada se publica hasta
   que se decida lo contrario.
 - El Bloque 2 se cerro en `fase8-bloque2`, se fusiono en `main` con la `v0.8.2` y la
-  rama se borro. El Bloque 3 sigue pendiente de replantear.
+  rama se borro. El Bloque 3 quedo atomizado en `v0.8.3` (presets completos),
+  `v0.8.4` (ocultar reloj, ficha y ciudades) y `v0.8.5` (pulido movil estrecho).
 - `main` solo se tagea cuando el arbol pasa `npm run verify`. La `v0.8.1` cierra el
   Bloque 1, la `v0.8.2` el Bloque 2; el commit `v0.8.0` queda sin tag porque solo
   marca el inicio de la fase.
