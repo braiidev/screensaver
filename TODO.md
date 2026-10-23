@@ -22,15 +22,15 @@ se manejan con el mando del Chromecast sin raton.
 
 ### En curso
 
-Ninguna. La `v0.8.6` cerró el pulido móvil estrecho; el siguiente es `v0.9.0`.
+- [ ] **v0.8.7** - Suite de pruebas reproducible
+  - Añadir tests en Node nativo (`node:test`) para utils, config y datos.
+  - Integrar con `npm test`.
+  - Sin dependencias externas.
 
 ### Siguiente
 
 - [ ] **v0.9.0** - Fase 9 - Extras
   - Funcionalidades adicionales según necesidades.
-- [ ] **Suite de pruebas reproducible** - recuperar y commitear las pruebas en
-  Node que se citan en el historial; hoy `tools/` solo tiene `serve.mjs` y
-  `verify.mjs`.
 
 ### Terminado
 
