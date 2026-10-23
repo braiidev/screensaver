@@ -14,18 +14,16 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Ultima version cerrada: `v0.8.4`
-- Version en curso: `v0.8.5` - Corrección del scroll del panel
+- Ultima version cerrada: `v0.8.5`
+- Version en curso: ninguna
 - Siguiente version reservada: `v0.8.6`
 
 ## Tablero
 
 ### En curso
 
-- [ ] **v0.8.5** - Corrección del scroll del panel de ajustes
-  - [ ] 3.6 El foco de los interruptores y radios ocultos arrastraba el
-    `<dialog>` en vez de desplazar `.settings__body`, dejando el contenido
-    fuera de la caja visible.
+Ninguna. La `v0.8.5` corrigió el scroll del panel; el siguiente es `v0.8.6`
+(pulido móvil estrecho).
 
 ### Siguiente
 
@@ -39,6 +37,13 @@ se manejan con el mando del Chromecast sin raton.
   `verify.mjs`.
 
 ### Terminado
+
+- [x] **v0.8.5** - Corrección del scroll del panel de ajustes
+  - `.switch` y `.segmented__item` pasan a `position: relative`: los `input`
+    ocultos se anclan a su etiqueta y no al `<dialog>`.
+  - Al enfocar el último interruptor solo se desplaza `.settings__body`; la
+    cabecera y el contenido dejan de salir de la caja visible.
+  - Verificado a 1440x900 y ventana estrecha. `bd9ad89`.
 
 - [x] **v0.8.4** - Fase 8 - Bloque 3 - Ocultar elementos
   - Sección **Visibilidad** con interruptores para reloj, ficha del clima y
@@ -257,8 +262,9 @@ se manejan con el mando del Chromecast sin raton.
   `v0.8.4` (ocultar reloj, ficha y ciudades), `v0.8.5` (scroll del panel) y
   `v0.8.6` (pulido movil estrecho).
 - `main` solo se tagea cuando el arbol pasa `npm run verify`. La `v0.8.1` cierra el
-  Bloque 1, la `v0.8.2` el Bloque 2, la `v0.8.3` el 3.1 y la `v0.8.4` el 3.3; el
-  commit `v0.8.0` queda sin tag porque solo marca el inicio de la fase.
+  Bloque 1, la `v0.8.2` el Bloque 2, la `v0.8.3` el 3.1 y la `v0.8.4` el 3.3; la
+  `v0.8.5` corrige el scroll del panel y el commit `v0.8.0` queda sin tag porque
+  solo marca el inicio de la fase.
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
