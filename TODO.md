@@ -27,7 +27,7 @@ se manejan con el mando del Chromecast sin raton.
     amanecer/atardecer, viento, humedad/UV y tendencia frente a hace 1 h.
   - [x] 2.2 Claves de extras en `preferences.js`: `DEFAULTS`, `SWITCHES` y
     `SETTING_KEYS`, para que los interruptores se guarden.
-  - [ ] 2.3 Bindings reales en `settings.js` con `bindSwitch` y ocultación de
+  - [x] 2.3 Bindings reales en `settings.js` con `bindSwitch` y ocultación de
     los grupos apagados.
   - [ ] 2.4 Render de extras y tira horaria en `weather.js`, respetando cada
     ON/OFF.

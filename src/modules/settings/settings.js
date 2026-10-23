@@ -466,6 +466,11 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       bindSwitch($panel.querySelector("#setting-forecast"), "forecast");
       bindSwitch($panel.querySelector("#setting-feels"), "feelsLike");
       bindSwitch($panel.querySelector("#setting-wallpaper"), "wallpaper");
+      bindSwitch($exNext, "nextHours");
+      bindSwitch($exSun, "sun");
+      bindSwitch($exWind, "wind");
+      bindSwitch($exHuUv, "humidityUv");
+      bindSwitch($exTrend, "trend");
       buildIntervals();
 
       offs.push(store.subscribe("cities", renderCities));
