@@ -16,25 +16,44 @@ se manejan con el mando del Chromecast sin raton.
 
 - Version actual: `v0.8.1`
 - Fase en curso: Fase 8 - Apariencia y más información
-- Siguiente version reservada: `v0.6.0`
+- Siguiente version reservada: `v0.9.0`
 
 ## Tablero
 
 ### En curso
 
-- [ ] **v0.8.0** - Fase 8 - Apariencia y más información
-  - Bloque 1: Sistema de temas combinables A+B, alineación Left/Center/Right, color de acento manual, Custom renombrable con slots.
-  - Bloque 2: Grupo 1 ON/OFF (próximas horas, amanecer/atardecer, viento, humedad/UV, tendencia vs 1h).
-  - Bloque 3: Integración con presets, ocultar elementos y pulido móvil estrecho.
-  - Descarta 3.2 (mover widgets libremente) y 3.4 (reordenar ficha con drag&drop).
+- [ ] **v0.8.2** - Fase 8 - Apariencia y más información (Bloque 2)
+  - [ ] 2.1 Datos nuevos en `weatherApi.js`/`config.js`: próximas horas,
+    amanecer/atardecer, viento, humedad/UV y tendencia frente a hace 1 h.
+  - [ ] 2.2 Claves de extras en `preferences.js`: `DEFAULTS`, `SWITCHES` y
+    `SETTING_KEYS`, para que los interruptores se guarden.
+  - [ ] 2.3 Bindings reales en `settings.js` con `bindSwitch` y ocultación de
+    los grupos apagados.
+  - [ ] 2.4 Render de extras y tira horaria en `weather.js`, respetando cada
+    ON/OFF.
+  - [ ] 2.5 Pulido móvil estrecho y accesibilidad de los bloques nuevos.
+  - [ ] 2.6 Corregir los 12px de `.hourly__pop` y retirar el `RESERVED` de
+    `verify.mjs`.
+  - [ ] 2.7 Decidir `tools/serve.mjs`: usar `HOST` en `server.listen` o
+    revertir el cambio.
+  - Bloque 3 pendiente de replantear: integración con presets, ocultar
+    elementos y pulido móvil estrecho.
+  - Descarta 3.2 (mover widgets libremente) y 3.4 (reordenar ficha con
+    drag&drop).
 
 ### Siguiente
 
 - [ ] **v0.9.0** - Fase 9 - Extras
   - Funcionalidades adicionales según necesidades.
+- [ ] **Suite de pruebas reproducible** - recuperar y commitear las pruebas en
+  Node que se citan en el historial; hoy `tools/` solo tiene `serve.mjs` y
+  `verify.mjs`.
 
 ### Terminado
 
+- [x] **v0.8.1** - Fase 8 - Bloque 1 - Sistema de temas
+  - Temas combinables A+B, alineación Left/Center/Right, color de acento manual
+    y Custom renombrable con slots. `fdc27bc`, `1d35f54`.
 - [x] **v0.7.0** - Fase 7 - Pulido y mejoras
   - PWA completa: manifest.json, service worker con cache, registro y
     meta tags para iOS/Android.
@@ -45,8 +64,6 @@ se manejan con el mando del Chromecast sin raton.
   - Indicador offline/online con estilos accesibles.
   - Mejoras UX: transiciones suaves, SW actualizado con cache v1.1.0.
   - Sitemap.xml añadido.
-
-### Terminado
 
 - [x] **v0.6.0** - Fase 5 - Infraestructura y despliegue
   - `netlify.toml` publica la raiz y añade cabeceras de seguridad. `_headers`
@@ -206,8 +223,12 @@ se manejan con el mando del Chromecast sin raton.
 
 - El repositorio remoto `braiidev/weatherapp` es privado. Por decision del usuario,
   de momento todo el trabajo vive solo en local, en
-  `/data/data/com.termux/files/home/weatherapp`, con su propio historial. Nada se
-  publica hasta que se decida lo contrario.
+  `/home/anto/Proyectos/Weatherapp`, con su propio historial. Nada se publica hasta
+  que se decida lo contrario.
+- El trabajo a medias del Bloque 2 vive en la rama `wip/fase8-bloque2` hasta que se
+  retome; no pasa `npm run verify`, por eso no esta en `main`.
+- `main` solo se tagea cuando el arbol pasa `npm run verify`. La `v0.8.1` cierra el
+  Bloque 1; el commit `v0.8.0` queda sin tag porque solo marca el inicio de la fase.
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
