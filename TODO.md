@@ -14,18 +14,15 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Ultima version cerrada: `v0.8.2`
-- Version en curso: `v0.8.3` - Fase 8, Bloque 3: presets completos
+- Ultima version cerrada: `v0.8.3`
+- Version en curso: ninguna
 - Siguiente version reservada: `v0.8.4`
 
 ## Tablero
 
 ### En curso
 
-- [ ] **v0.8.3** - Fase 8 - Bloque 3 - Presets completos
-  - [ ] 3.1 Guardar y restaurar en cada preset los cinco extras y los ajustes de
-    pantalla (`forecast`, `feelsLike`), migrando los presets existentes sin
-    romperlos.
+Ninguna. La `v0.8.3` cerró 3.1; el siguiente es `v0.8.4` (ocultar elementos).
 
 ### Siguiente
 
@@ -42,6 +39,16 @@ se manejan con el mando del Chromecast sin raton.
   `verify.mjs`.
 
 ### Terminado
+
+- [x] **v0.8.3** - Fase 8 - Bloque 3 - Presets completos
+  - Cada preset guarda `forecast`, `feelsLike` y los cinco extras, y al
+    cambiarlo se restaura su visibilidad. El preset activo se actualiza solo al
+    tocar un interruptor; los de fábrica no se mutan, nace un Custom.
+  - Los presets anteriores se migran con los ajustes actuales. Se corrige la
+    clave de `localStorage`: hasta la `v0.8.2` se guardaba con el prefijo
+    repetido y ahora se lee y se migra a `weatherapp:v1:themes`.
+  - `Guardar como` y `Renombrar` usan un campo de texto dentro del panel, sin
+    `prompt()`, y los botones recuperan 44px de alto. `4e2ccd7`, `7f6a781`.
 
 - [x] **v0.8.2** - Fase 8 - Bloque 2 - Más información en la ficha
   - `weatherApi.js` pide en la misma llamada las próximas horas (con la hora
@@ -240,8 +247,8 @@ se manejan con el mando del Chromecast sin raton.
   rama se borro. El Bloque 3 quedo atomizado en `v0.8.3` (presets completos),
   `v0.8.4` (ocultar reloj, ficha y ciudades) y `v0.8.5` (pulido movil estrecho).
 - `main` solo se tagea cuando el arbol pasa `npm run verify`. La `v0.8.1` cierra el
-  Bloque 1, la `v0.8.2` el Bloque 2; el commit `v0.8.0` queda sin tag porque solo
-  marca el inicio de la fase.
+  Bloque 1, la `v0.8.2` el Bloque 2 y la `v0.8.3` el 3.1; el commit `v0.8.0` queda
+  sin tag porque solo marca el inicio de la fase.
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
