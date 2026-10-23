@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "node tools/serve.mjs",
     "verify": "node tools/verify.mjs",
+    "test": "node --test tests/*.test.mjs",
     "lint": "node tools/verify.mjs",
     "format": "node --check src/main.js && node --check src/config.js"
   },
