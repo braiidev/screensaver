@@ -51,6 +51,24 @@ const ICONS = {
   fog: `<path d="M4 14.9A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.24"/>
     <path d="M16 17H7M16 21H9"/>`,
 
+  /** Amanecer, para el extra del sol. */
+  sunrise: `<path d="M12 2v8"/>
+    <path d="m4.93 10.93 1.41 1.41M2 18h2M20 18h2m-2.07-5.66-1.41 1.41"/>
+    <path d="M22 22H2M8 6l4-4 4 4"/>`,
+
+  /** Atardecer, para el extra del sol. */
+  sunset: `<path d="M12 10V2"/>
+    <path d="m4.93 10.93 1.41 1.41M2 18h2M20 18h2m-2.07-5.66-1.41 1.41"/>
+    <path d="M22 22H2m14-16-4 4-4-4"/>`,
+
+  /** Viento, para el extra de la velocidad. */
+  wind: `<path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/>
+    <path d="M9.6 4.6A2 2 0 1 1 11 8H2"/>
+    <path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>`,
+
+  /** Gota, para el extra de humedad. */
+  droplet: `<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z"/>`,
+
   /** Ajustes. No es un icono del clima: es el del engranaje de la esquina. */
   settings: `<path d="M20 7h-9M14 17H5"/>
     <circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>`,

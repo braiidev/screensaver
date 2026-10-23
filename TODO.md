@@ -29,7 +29,7 @@ se manejan con el mando del Chromecast sin raton.
     `SETTING_KEYS`, para que los interruptores se guarden.
   - [x] 2.3 Bindings reales en `settings.js` con `bindSwitch` y ocultación de
     los grupos apagados.
-  - [ ] 2.4 Render de extras y tira horaria en `weather.js`, respetando cada
+  - [x] 2.4 Render de extras y tira horaria en `weather.js`, respetando cada
     ON/OFF.
   - [ ] 2.5 Pulido móvil estrecho y accesibilidad de los bloques nuevos.
   - [x] 2.6 Corregir los 12px de `.hourly__pop` y retirar el `RESERVED` de

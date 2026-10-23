@@ -95,8 +95,11 @@ export const CONFIG = {
     ],
     /** Horas pasadas que se piden: una, para calcular la tendencia. */
     hourlyPastHours: 1,
-    /** Horas futuras que se piden y se muestran en la tira. */
-    hourlyForecastHours: 12,
+    /** Horas futuras que se piden y se muestran en la tira. Se puede subir a
+     * 8 o 12: la rejilla envuelve sola y no necesita scroll. */
+    hourlyForecastHours: 5,
+    /** Probabilidad de lluvia, en porcentaje, a partir de la cual se muestra. */
+    rainChanceThreshold: 20,
     /** Dias de pronostico que se piden y se muestran. */
     forecastDays: 5,
     /** Zona horaria: `auto` hace que la API use la de las coordenadas. */
@@ -181,6 +184,18 @@ export const CONFIG = {
     remove: "Quitar",
     /** Aviso de una ciudad que ya esta guardada. */
     alreadySaved: "ya está",
+    /** Extras de la ficha. */
+    sunrise: "Amanecer",
+    sunset: "Atardecer",
+    wind: "Viento",
+    humidity: "Humedad",
+    uv: "UV",
+    nextHours: "Próximas horas",
+    rainChance: "lluvia",
+    trendUp: "Sube",
+    trendDown: "Baja",
+    trendSame: "Sin cambios",
+    trendAgo: "respecto a hace 1 hora",
   },
 
   storage: {

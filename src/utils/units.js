@@ -27,6 +27,22 @@ export function convertTemperature(celsius, units) {
 }
 
 /**
+ * De una diferencia en celsius a la unidad elegida.
+ *
+ * Una diferencia no lleva el desplazamiento del cero: entre 10 y 11 grados hay
+ * un grado, no 33. Por eso no vale `convertTemperature` para la tendencia.
+ *
+ * @param {number} celsius
+ * @param {string} units
+ * @returns {number | null} null si no hay un numero
+ */
+export function convertTemperatureDelta(celsius, units) {
+  if (!Number.isFinite(celsius)) return null;
+  if (units !== "fahrenheit") return celsius;
+  return celsius * FAHRENHEIT.scale;
+}
+
+/**
  * "21°", redondeado y con su simbolo. "--" si no hay dato.
  *
  * @param {number} celsius

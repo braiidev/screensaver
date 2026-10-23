@@ -200,14 +200,17 @@
   display: none;
 }
 
-/* Extras Grupo 1 */
+/* Extras: sol, viento, humedad/UV y tendencia. */
 .card__extras {
   margin-top: var(--space-2);
+}
+.card__extras[hidden] {
+  display: none;
 }
 .card__extras-row {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-1) var(--space-2);
   align-items: center;
   font-size: var(--fs-chip);
 }
@@ -219,6 +222,15 @@
   align-items: center;
   gap: 0.4em;
 }
+.card__sun[hidden],
+.card__wind[hidden],
+.card__huuv[hidden],
+.card__trend[hidden] {
+  display: none;
+}
+.extra__sep {
+  color: var(--color-muted);
+}
 .card__trend.up::before {
   content: "↑";
 }
@@ -229,40 +241,40 @@
   content: "→";
 }
 
-/* Próximas horas */
+/* Proximas horas: rejilla que envuelve, sin scroll, para que quepa en el
+ * movil y se pueda mirar entera con el mando en la TV. */
 .hourly {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(3.5rem, 1fr));
   gap: var(--space-2);
-  overflow-x: auto;
   margin-top: var(--space-2);
-  padding-bottom: var(--space-1);
-  scrollbar-width: thin;
+}
+.hourly[hidden] {
+  display: none;
 }
 .hourly__item {
-  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.3em;
-  min-width: 4.2rem;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1);
   border: 1px solid var(--color-line);
   border-radius: 999px;
 }
-.hourly__time {
+.hourly__icon {
+  font-size: 1.25rem;
+}
+.hourly__time,
+.hourly__temp,
+.hourly__pop {
   font-size: var(--fs-chip);
 }
 .hourly__temp {
-  font-size: var(--fs-chip);
   font-weight: 600;
 }
 .hourly__pop {
-  font-size: var(--fs-chip);
   color: var(--color-muted);
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .hourly {
-    scroll-behavior: auto;
-  }
+.hourly__pop[hidden] {
+  display: none;
 }

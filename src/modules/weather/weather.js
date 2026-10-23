@@ -33,7 +33,10 @@ import { formatPlace, locate } from "../../services/geo.js";
 import { fetchWeather } from "../../services/weatherApi.js";
 import { toCity } from "../../utils/city.js";
 import { createDayFormat } from "../../utils/time.js";
-import { formatTemperature } from "../../utils/units.js";
+import {
+  convertTemperatureDelta,
+  formatTemperature,
+} from "../../utils/units.js";
 
 /**
  * @param {Object} elements
@@ -42,6 +45,12 @@ import { formatTemperature } from "../../utils/units.js";
  * @param {HTMLElement} elements.$location donde va la localizacion
  * @param {HTMLElement} elements.$condition donde va la condicion del cielo
  * @param {HTMLElement} elements.$feels donde va la sensacion termica
+ * @param {HTMLElement} elements.$extras la fila de extras
+ * @param {HTMLElement} elements.$sun amanecer y atardecer
+ * @param {HTMLElement} elements.$wind viento
+ * @param {HTMLElement} elements.$huUv humedad y UV
+ * @param {HTMLElement} elements.$trend tendencia frente a hace una hora
+ * @param {HTMLElement} elements.$hourly tira de proximas horas
  * @param {HTMLElement} elements.$forecast donde va la tira del pronostico
  * @param {HTMLElement} elements.$retry boton de reintentar
  * @param {Object} deps
@@ -49,7 +58,21 @@ import { formatTemperature } from "../../utils/units.js";
  * @param {import("../../core/scheduler.js")} deps.scheduler
  */
 export function createWeather(
-  { $weather, $icon, $location, $condition, $feels, $forecast, $retry },
+  {
+    $weather,
+    $icon,
+    $location,
+    $condition,
+    $feels,
+    $extras,
+    $sun,
+    $wind,
+    $huUv,
+    $trend,
+    $hourly,
+    $forecast,
+    $retry,
+  },
   { store, scheduler },
 ) {
   const refreshMs = CONFIG.weather.refreshInterval * CONFIG.time.minute;
@@ -70,6 +93,11 @@ export function createWeather(
 
   /** El formateador de dias. La fecha del pronostico no depende de la zona. */
   const dayFormat = createDayFormat();
+
+  /** El UV, con un decimal solo cuando hace falta. */
+  const uvFormat = new Intl.NumberFormat(CONFIG.app.locale, {
+    maximumFractionDigits: 1,
+  });
 
   /** Puntos suspensivos mientras se espera una respuesta. */
   function dots($element) {
@@ -157,6 +185,14 @@ export function createWeather(
       $icon.innerHTML = "";
       $icon.removeAttribute("data-tone");
       $forecast.textContent = "";
+      $hourly.textContent = "";
+      $hourly.hidden = true;
+      resetExtra($sun);
+      resetExtra($wind);
+      resetExtra($huUv);
+      resetExtra($trend);
+      $trend.className = "card__trend";
+      $extras.hidden = true;
     }
 
     console.error(error?.message ?? error);
@@ -171,6 +207,60 @@ export function createWeather(
   function dayLabel(isoDate) {
     const label = dayFormat(isoDate);
     return label.charAt(0).toUpperCase() + label.slice(1);
+  }
+
+  /** "2026-10-22T06:02" -> "06:02". La API ya la manda en hora local. */
+  function clockTime(value) {
+    return typeof value === "string" && value.length >= 16
+      ? value.slice(11, 16)
+      : null;
+  }
+
+  /**
+   * Si una hora cae entre el amanecer y el atardecer de su dia. Asi la tira
+   * horaria no pinta un sol a medianoche. Sin datos del dia, se asume de dia.
+   */
+  function isDayAt(time, daily) {
+    const date = time?.slice(0, 10);
+    const day = daily.find((item) => item.date === date);
+    const sunrise = clockTime(day?.sunrise);
+    const sunset = clockTime(day?.sunset);
+    const hour = clockTime(time);
+
+    if (!sunrise || !sunset || !hour) return true;
+    return hour >= sunrise && hour < sunset;
+  }
+
+  /** Un `<span>` de texto, sin pasar por `innerHTML`. */
+  function textSpan(className, text) {
+    const $span = document.createElement("span");
+    $span.className = className;
+    $span.textContent = text;
+    return $span;
+  }
+
+  /** Un icono de `ui/icons.js` dentro de un extra. */
+  function extraIcon(icon, tone) {
+    const $icon = document.createElement("span");
+    $icon.className = "meteo-icon";
+    $icon.dataset.tone = tone;
+    $icon.innerHTML = iconFor(icon);
+    $icon.setAttribute("aria-hidden", "true");
+    return $icon;
+  }
+
+  /** Deja un extra vacio y oculto antes de decidir si se pinta. */
+  function resetExtra($element) {
+    $element.textContent = "";
+    $element.hidden = true;
+    $element.removeAttribute("aria-label");
+  }
+
+  /** El separador entre las dos mitades de un extra (sol, humedad/UV). */
+  function extraSeparator($element) {
+    const $separator = textSpan("extra__sep", "·");
+    $separator.setAttribute("aria-hidden", "true");
+    $element.append($separator);
   }
 
   /**
@@ -221,6 +311,156 @@ export function createWeather(
   }
 
   /**
+   * La fila de extras: sol, viento, humedad/UV y tendencia.
+   *
+   * Cada bloque se apaga por su interruptor y tambien cuando la API no manda
+   * el dato. La fila entera se oculta si no queda ninguno, para no dejar un
+   * hueco con margen. El UV solo se pinta de dia: de noche siempre es cero.
+   */
+  function renderExtras({ current, daily, uvIndex, previousTemperature }) {
+    const units = store.get("units");
+    const today = daily?.[0];
+
+    const sunrise = clockTime(today?.sunrise);
+    const sunset = clockTime(today?.sunset);
+    resetExtra($sun);
+    if (store.get("sun") !== false && (sunrise || sunset)) {
+      $sun.hidden = false;
+      if (sunrise) $sun.append(extraIcon("sunrise", "sun"), textSpan("", sunrise));
+      if (sunrise && sunset) extraSeparator($sun);
+      if (sunset) $sun.append(extraIcon("sunset", "sun"), textSpan("", sunset));
+      $sun.setAttribute(
+        "aria-label",
+        [
+          sunrise ? `${CONFIG.messages.sunrise} ${sunrise}` : "",
+          sunset ? `${CONFIG.messages.sunset} ${sunset}` : "",
+        ]
+          .filter(Boolean)
+          .join(", "),
+      );
+    }
+
+    const wind = Number.isFinite(current.windSpeed)
+      ? Math.round(current.windSpeed)
+      : null;
+    resetExtra($wind);
+    if (store.get("wind") !== false && wind !== null) {
+      $wind.hidden = false;
+      $wind.append(
+        extraIcon("wind", "cloud"),
+        textSpan("", `${wind} km/h`),
+      );
+      $wind.setAttribute("aria-label", `${CONFIG.messages.wind} ${wind} km/h`);
+    }
+
+    const humidity = Number.isFinite(current.humidity)
+      ? Math.round(current.humidity)
+      : null;
+    const uv = current.isDay && Number.isFinite(uvIndex) ? uvIndex : null;
+    resetExtra($huUv);
+    if (store.get("humidityUv") !== false && (humidity !== null || uv !== null)) {
+      $huUv.hidden = false;
+
+      const label = [];
+      if (humidity !== null) {
+        $huUv.append(
+          extraIcon("droplet", "rain"),
+          textSpan("", `${humidity}%`),
+        );
+        label.push(`${CONFIG.messages.humidity} ${humidity}%`);
+      }
+      if (humidity !== null && uv !== null) extraSeparator($huUv);
+      if (uv !== null) {
+        const text = uvFormat.format(uv);
+        $huUv.append(
+          extraIcon("sun", "sun"),
+          textSpan("", `${CONFIG.messages.uv} ${text}`),
+        );
+        label.push(`${CONFIG.messages.uv} ${text}`);
+      }
+
+      $huUv.setAttribute("aria-label", label.join(", "));
+    }
+
+    const delta = Number.isFinite(previousTemperature)
+      ? current.temperature - previousTemperature
+      : null;
+    resetExtra($trend);
+    $trend.className = "card__trend";
+    if (store.get("trend") !== false && delta !== null && Number.isFinite(delta)) {
+      const value = Math.round(convertTemperatureDelta(delta, units));
+      $trend.hidden = false;
+      $trend.classList.add(value > 0 ? "up" : value < 0 ? "down" : "eq");
+
+      if (value === 0) {
+        $trend.setAttribute(
+          "aria-label",
+          `${CONFIG.messages.trendSame} ${CONFIG.messages.trendAgo}`,
+        );
+      } else {
+        const amount = `${Math.abs(value)}°`;
+        const verb =
+          value > 0 ? CONFIG.messages.trendUp : CONFIG.messages.trendDown;
+        $trend.textContent = amount;
+        $trend.setAttribute(
+          "aria-label",
+          `${verb} ${amount} ${CONFIG.messages.trendAgo}`,
+        );
+      }
+    }
+
+    $extras.hidden =
+      $sun.hidden && $wind.hidden && $huUv.hidden && $trend.hidden;
+  }
+
+  /**
+   * La tira de proximas horas.
+   *
+   * Cada celda lleva la hora, el icono, la temperatura y, solo cuando supera
+   * el umbral, la probabilidad de lluvia. La rejilla envuelve sola: con 5
+   * horas entra en una fila en el movil y en la TV, y con 8 o 12 pasa a dos.
+   */
+  function renderHourly(hours, daily) {
+    $hourly.textContent = "";
+    $hourly.setAttribute("aria-label", CONFIG.messages.nextHours);
+    const visible = store.get("nextHours") !== false && hours.length > 0;
+    $hourly.hidden = !visible;
+    if (!visible) return;
+
+    hours.forEach((hour) => {
+      const time = clockTime(hour.time) ?? "--:--";
+      const { label, icon } = identify(hour.code, isDayAt(hour.time, daily));
+      const temperature = degrees(hour.temperature);
+      const pop = Math.round(hour.precipitationProbability ?? 0);
+      const hasPop =
+        Number.isFinite(hour.precipitationProbability) &&
+        pop >= CONFIG.weather.rainChanceThreshold;
+
+      const $item = document.createElement("li");
+      $item.className = "hourly__item";
+      $item.setAttribute(
+        "aria-label",
+        `${time}: ${label}, ${temperature}` +
+          (hasPop ? `, ${CONFIG.messages.rainChance} ${pop}%` : ""),
+      );
+
+      const $icon = extraIcon(icon, icon);
+      $icon.classList.add("hourly__icon");
+
+      const $pop = textSpan("hourly__pop", hasPop ? `${pop}%` : "");
+      $pop.hidden = !hasPop;
+
+      $item.append(
+        textSpan("hourly__time", time),
+        $icon,
+        textSpan("hourly__temp", temperature),
+        $pop,
+      );
+      $hourly.append($item);
+    });
+  }
+
+  /**
    * La zona horaria que devuelve la API se guarda en el store y tambien en la
    * ciudad: asi el reloj cambia de hora al instante la proxima vez que se
    * elija, sin esperar a que responda el clima.
@@ -241,7 +481,7 @@ export function createWeather(
   }
 
   function render(weather) {
-    const { current, daily, timezone } = weather;
+    const { current, daily, hourly, timezone } = weather;
     last = weather;
 
     $weather.classList.remove("warning");
@@ -263,6 +503,8 @@ export function createWeather(
 
     $forecast.hidden = store.get("forecast") === false;
     renderForecast(daily ?? []);
+    renderExtras(weather);
+    renderHourly(hourly ?? [], daily ?? []);
 
     hasData = true;
     rememberTimezone(timezone);
@@ -292,6 +534,14 @@ export function createWeather(
     $icon.innerHTML = "";
     $icon.removeAttribute("data-tone");
     $forecast.textContent = "";
+    resetExtra($sun);
+    resetExtra($wind);
+    resetExtra($huUv);
+    resetExtra($trend);
+    $trend.className = "card__trend";
+    $extras.hidden = true;
+    $hourly.textContent = "";
+    $hourly.hidden = true;
     $retry.hidden = true;
     $location.textContent = next ? formatPlace(next) : "";
 
@@ -379,6 +629,11 @@ export function createWeather(
   const offUnits = store.subscribe("units", repaint);
   const offForecast = store.subscribe("forecast", repaint);
   const offFeels = store.subscribe("feelsLike", repaint);
+  const offNextHours = store.subscribe("nextHours", repaint);
+  const offSun = store.subscribe("sun", repaint);
+  const offWind = store.subscribe("wind", repaint);
+  const offHuUv = store.subscribe("humidityUv", repaint);
+  const offTrend = store.subscribe("trend", repaint);
 
   return {
     /** Arranca y devuelve la promesa del primer intento, como el fondo. */
@@ -407,6 +662,11 @@ export function createWeather(
       offUnits();
       offForecast();
       offFeels();
+      offNextHours();
+      offSun();
+      offWind();
+      offHuUv();
+      offTrend();
     },
 
     retry,
