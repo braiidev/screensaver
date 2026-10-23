@@ -14,18 +14,15 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Ultima version cerrada: `v0.8.3`
-- Version en curso: `v0.8.4` - Fase 8, Bloque 3: ocultar elementos
+- Ultima version cerrada: `v0.8.4`
+- Version en curso: ninguna
 - Siguiente version reservada: `v0.8.5`
 
 ## Tablero
 
 ### En curso
 
-- [ ] **v0.8.4** - Fase 8 - Bloque 3 - Ocultar elementos
-  - [ ] 3.3 Sección de visibilidad con interruptores para reloj, ficha del
-    clima y chips de ciudades. El fondo y el engranaje no se ocultan. Al
-    ocultar un bloque, los demás mantienen su ancla; no se recentra nada.
+Ninguna. La `v0.8.4` cerró 3.3; el siguiente es `v0.8.5` (pulido móvil estrecho).
 
 ### Siguiente
 
@@ -39,6 +36,15 @@ se manejan con el mando del Chromecast sin raton.
   `verify.mjs`.
 
 ### Terminado
+
+- [x] **v0.8.4** - Fase 8 - Bloque 3 - Ocultar elementos
+  - Sección **Visibilidad** con interruptores para reloj, ficha del clima y
+    ciudades. El fondo y el engranaje siguen siempre visibles.
+  - Cada bloque se oculta desde su módulo y conserva su ancla: ni la ficha ni
+    el reloj se recentran. Al ocultar las ciudades su fila se colapsa.
+  - `showClock`, `showCard` y `showCities` se persisten y viajan dentro de los
+    presets, así que un preset puede ser “solo reloj” o “solo clima”.
+    `019a121`, `19ea99b`.
 
 - [x] **v0.8.3** - Fase 8 - Bloque 3 - Presets completos
   - Cada preset guarda `forecast`, `feelsLike` y los cinco extras, y al
@@ -247,8 +253,8 @@ se manejan con el mando del Chromecast sin raton.
   rama se borro. El Bloque 3 quedo atomizado en `v0.8.3` (presets completos),
   `v0.8.4` (ocultar reloj, ficha y ciudades) y `v0.8.5` (pulido movil estrecho).
 - `main` solo se tagea cuando el arbol pasa `npm run verify`. La `v0.8.1` cierra el
-  Bloque 1, la `v0.8.2` el Bloque 2 y la `v0.8.3` el 3.1; el commit `v0.8.0` queda
-  sin tag porque solo marca el inicio de la fase.
+  Bloque 1, la `v0.8.2` el Bloque 2, la `v0.8.3` el 3.1 y la `v0.8.4` el 3.3; el
+  commit `v0.8.0` queda sin tag porque solo marca el inicio de la fase.
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
