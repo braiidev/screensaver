@@ -31,7 +31,7 @@ se manejan con el mando del Chromecast sin raton.
     los grupos apagados.
   - [x] 2.4 Render de extras y tira horaria en `weather.js`, respetando cada
     ON/OFF.
-  - [ ] 2.5 Pulido móvil estrecho y accesibilidad de los bloques nuevos.
+  - [x] 2.5 Pulido móvil estrecho y accesibilidad de los bloques nuevos.
   - [x] 2.6 Corregir los 12px de `.hourly__pop` y retirar el `RESERVED` de
     `verify.mjs`.
   - [ ] 2.7 Decidir `tools/serve.mjs`: usar `HOST` en `server.listen` o

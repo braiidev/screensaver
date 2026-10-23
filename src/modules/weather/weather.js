@@ -217,6 +217,33 @@ export function createWeather(
   }
 
   /**
+   * Una hora local de la API, en el formato 12/24 elegido.
+   *
+   * La cadena no lleva zona: se interpreta como UTC y se formatea en UTC para
+   * que salga el mismo reloj de pared que manda la API. En 12 horas la tira
+   * horaria omite los minutos (siempre son :00); el sol los conserva.
+   *
+   * @param {string} value "2026-10-22T06:02"
+   * @param {{ short?: boolean }} [options]
+   */
+  function formatHour(value, { short = false } = {}) {
+    if (typeof value !== "string" || value.length < 16) return null;
+
+    const date = new Date(`${value.slice(0, 16)}Z`);
+    if (Number.isNaN(date.getTime())) return null;
+
+    const hourCycle = store.get("hourCycle") ?? "h23";
+    const formatter = new Intl.DateTimeFormat(CONFIG.app.locale, {
+      timeZone: "UTC",
+      hour: "2-digit",
+      ...(short && hourCycle === "h12" ? {} : { minute: "2-digit" }),
+      hourCycle,
+    });
+
+    return formatter.format(date);
+  }
+
+  /**
    * Si una hora cae entre el amanecer y el atardecer de su dia. Asi la tira
    * horaria no pinta un sol a medianoche. Sin datos del dia, se asume de dia.
    */
@@ -321,8 +348,8 @@ export function createWeather(
     const units = store.get("units");
     const today = daily?.[0];
 
-    const sunrise = clockTime(today?.sunrise);
-    const sunset = clockTime(today?.sunset);
+    const sunrise = formatHour(today?.sunrise);
+    const sunset = formatHour(today?.sunset);
     resetExtra($sun);
     if (store.get("sun") !== false && (sunrise || sunset)) {
       $sun.hidden = false;
@@ -423,12 +450,16 @@ export function createWeather(
   function renderHourly(hours, daily) {
     $hourly.textContent = "";
     $hourly.setAttribute("aria-label", CONFIG.messages.nextHours);
+    // Con mas de cinco horas la rejilla pasa a varias filas: las celdas se
+    // aprietan para que la ficha no crezca de mas en el movil.
+    $hourly.setAttribute("data-compact", hours.length > 5 ? "true" : "false");
+
     const visible = store.get("nextHours") !== false && hours.length > 0;
     $hourly.hidden = !visible;
     if (!visible) return;
 
     hours.forEach((hour) => {
-      const time = clockTime(hour.time) ?? "--:--";
+      const time = formatHour(hour.time, { short: true }) ?? "--:--";
       const { label, icon } = identify(hour.code, isDayAt(hour.time, daily));
       const temperature = degrees(hour.temperature);
       const pop = Math.round(hour.precipitationProbability ?? 0);
@@ -627,6 +658,7 @@ export function createWeather(
   const offCity = store.subscribe("activeCityId", onCityChange);
   const offCities = store.subscribe("cities", onCityChange);
   const offUnits = store.subscribe("units", repaint);
+  const offHourCycle = store.subscribe("hourCycle", repaint);
   const offForecast = store.subscribe("forecast", repaint);
   const offFeels = store.subscribe("feelsLike", repaint);
   const offNextHours = store.subscribe("nextHours", repaint);
@@ -660,6 +692,7 @@ export function createWeather(
       offCity();
       offCities();
       offUnits();
+      offHourCycle();
       offForecast();
       offFeels();
       offNextHours();

@@ -264,10 +264,22 @@
 .hourly__icon {
   font-size: 1.25rem;
 }
+/* Con 8 o 12 horas hay varias filas: celdas mas bajas para no estirar la
+ * ficha. El 5 por defecto se queda con el tamano holgado. */
+.hourly[data-compact="true"] .hourly__item {
+  gap: 0.15em;
+  padding-block: calc(var(--space-1) / 2);
+}
+.hourly[data-compact="true"] .hourly__icon {
+  font-size: 1rem;
+}
 .hourly__time,
 .hourly__temp,
 .hourly__pop {
   font-size: var(--fs-chip);
+}
+.hourly__time {
+  white-space: nowrap;
 }
 .hourly__temp {
   font-weight: 600;
