@@ -49,7 +49,12 @@ function bootstrap() {
   const scheduler = createScheduler({ onError: (error) => console.error(error) });
 
   const clock = createClock(
-    { $clock: $("#time"), $period: $("#period"), $day: $("#day") },
+    {
+      $root: $(".clock"),
+      $clock: $("#time"),
+      $period: $("#period"),
+      $day: $("#day"),
+    },
     { store, scheduler },
   );
 
@@ -60,6 +65,7 @@ function bootstrap() {
 
   const weather = createWeather(
     {
+      $card: $(".card"),
       $weather: $("#weather"),
       $icon: $("#icon"),
       $location: $("#location"),

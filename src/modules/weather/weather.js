@@ -40,6 +40,7 @@ import {
 
 /**
  * @param {Object} elements
+ * @param {HTMLElement} elements.$card la ficha entera
  * @param {HTMLElement} elements.$weather donde va la temperatura
  * @param {HTMLElement} elements.$icon donde va el icono
  * @param {HTMLElement} elements.$location donde va la localizacion
@@ -59,6 +60,7 @@ import {
  */
 export function createWeather(
   {
+    $card,
     $weather,
     $icon,
     $location,
@@ -655,6 +657,11 @@ export function createWeather(
     refresh();
   }
 
+  /** La ficha se oculta sin tocar sus datos: al volver, aparece al dia. */
+  function paintVisibility() {
+    $card.hidden = store.get("showCard") === false;
+  }
+
   const offCity = store.subscribe("activeCityId", onCityChange);
   const offCities = store.subscribe("cities", onCityChange);
   const offUnits = store.subscribe("units", repaint);
@@ -666,12 +673,14 @@ export function createWeather(
   const offWind = store.subscribe("wind", repaint);
   const offHuUv = store.subscribe("humidityUv", repaint);
   const offTrend = store.subscribe("trend", repaint);
+  const offVisibility = store.subscribe("showCard", paintVisibility);
 
   return {
     /** Arranca y devuelve la promesa del primer intento, como el fondo. */
     start() {
       running = true;
 
+      paintVisibility();
       $retry.textContent = CONFIG.messages.retry;
       $retry.addEventListener("click", retry);
 
@@ -700,6 +709,7 @@ export function createWeather(
       offWind();
       offHuUv();
       offTrend();
+      offVisibility();
     },
 
     retry,

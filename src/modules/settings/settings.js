@@ -533,6 +533,9 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       bindSwitch($panel.querySelector("#setting-forecast"), "forecast");
       bindSwitch($panel.querySelector("#setting-feels"), "feelsLike");
       bindSwitch($panel.querySelector("#setting-wallpaper"), "wallpaper");
+      bindSwitch($panel.querySelector("#setting-show-clock"), "showClock");
+      bindSwitch($panel.querySelector("#setting-show-card"), "showCard");
+      bindSwitch($panel.querySelector("#setting-show-cities"), "showCities");
       bindSwitch($exNext, "nextHours");
       bindSwitch($exSun, "sun");
       bindSwitch($exWind, "wind");

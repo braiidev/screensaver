@@ -13,6 +13,11 @@
   justify-self: start;
 }
 
+/* Por si algun dia el reloj necesita `display`: el ajuste manda. */
+.clock[hidden] {
+  display: none;
+}
+
 .clock__date {
   font-size: var(--fs-date);
   color: var(--color-muted);

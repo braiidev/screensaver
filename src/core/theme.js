@@ -17,11 +17,24 @@ const OLD_THEME_KEY = "weatherapp:v1:themes";
 const LEGACY_KEY = "weatherapp:v1:theme";
 
 /** Los ajustes de visibilidad que se guardan dentro de un preset. */
-export const VISIBILITY_KEYS = ["forecast", "feelsLike", ...CONFIG.extrasKeys];
+export const VISIBILITY_KEYS = [
+  "forecast",
+  "feelsLike",
+  "showClock",
+  "showCard",
+  "showCities",
+  ...CONFIG.extrasKeys,
+];
 
 /** Los valores de fábrica de esa visibilidad. */
 function defaultVisibility() {
-  const out = { forecast: true, feelsLike: true };
+  const out = {
+    forecast: true,
+    feelsLike: true,
+    showClock: true,
+    showCard: true,
+    showCities: true,
+  };
   for (const key of CONFIG.extrasKeys) out[key] = CONFIG.extras[key] !== false;
   return out;
 }

@@ -18,6 +18,7 @@ import { createClockFormat } from "../../utils/time.js";
 
 /**
  * @param {Object} elements
+ * @param {HTMLElement} elements.$root el bloque entero del reloj
  * @param {HTMLElement} elements.$clock donde va la hora
  * @param {HTMLElement} elements.$period donde va el periodo (solo en 12 h)
  * @param {HTMLElement} elements.$day donde va la fecha
@@ -25,7 +26,7 @@ import { createClockFormat } from "../../utils/time.js";
  * @param {import("../../core/store.js")} deps.store
  * @param {import("../../core/scheduler.js")} deps.scheduler
  */
-export function createClock({ $clock, $period, $day }, { store, scheduler }) {
+export function createClock({ $root, $clock, $period, $day }, { store, scheduler }) {
   let format = null;
   let lastTime = null;
   let lastPeriod = null;
@@ -66,11 +67,18 @@ export function createClock({ $clock, $period, $day }, { store, scheduler }) {
     }
   }
 
+  /** El reloj se oculta, pero sigue en su ancla y no mueve la ficha. */
+  function paintVisibility() {
+    $root.hidden = store.get("showClock") === false;
+  }
+
   const offZone = store.subscribe("timezone", rebuild);
   const offCycle = store.subscribe("hourCycle", rebuild);
+  const offVisibility = store.subscribe("showClock", paintVisibility);
 
   return {
     start() {
+      paintVisibility();
       rebuild();
       stopTicking = scheduler.every(CONFIG.clock.tickInterval, render);
     },
@@ -80,6 +88,7 @@ export function createClock({ $clock, $period, $day }, { store, scheduler }) {
       stopTicking = null;
       offZone();
       offCycle();
+      offVisibility();
     },
   };
 }

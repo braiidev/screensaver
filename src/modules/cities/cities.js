@@ -49,6 +49,11 @@ export function createCities({ $cities, $list }, { store }) {
     }
   }
 
+  /** La fila se oculta por ajuste o porque con una sola ciudad sobra. */
+  function paintVisibility(count = list().length) {
+    $cities.hidden = count < 2 || store.get("showCities") === false;
+  }
+
   /** Reconstruye la fila entera, que solo cambia al anadir o quitar ciudades. */
   function render() {
     const cities = list();
@@ -71,7 +76,7 @@ export function createCities({ $cities, $list }, { store }) {
     }
 
     // Con una sola ciudad la fila sobra: el nombre ya esta en la ficha.
-    $cities.hidden = cities.length < 2;
+    paintVisibility(cities.length);
     paint();
   }
 
@@ -110,6 +115,7 @@ export function createCities({ $cities, $list }, { store }) {
 
   const offCities = store.subscribe("cities", render);
   const offActive = store.subscribe("activeCityId", paint);
+  const offVisibility = store.subscribe("showCities", () => paintVisibility());
 
   return {
     start() {
@@ -121,6 +127,7 @@ export function createCities({ $cities, $list }, { store }) {
       $list.removeEventListener("keydown", move);
       offCities();
       offActive();
+      offVisibility();
       $list.textContent = "";
       buttons = new Map();
     },

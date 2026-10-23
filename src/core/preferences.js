@@ -17,6 +17,9 @@ export const DEFAULTS = {
   hourCycle: "h23",
   forecast: true,
   feelsLike: true,
+  showClock: true,
+  showCard: true,
+  showCities: true,
   wallpaper: true,
   wallpaperInterval: CONFIG.wallpaper.interval,
   activeCityId: null,
@@ -30,7 +33,15 @@ export const DEFAULTS = {
 /** Valores admitidos por los ajustes que no son booleanos. */
 const UNITS = ["celsius", "fahrenheit"];
 const HOUR_CYCLES = ["h23", "h12"];
-const SWITCHES = ["forecast", "feelsLike", "wallpaper", ...CONFIG.extrasKeys];
+const SWITCHES = [
+  "forecast",
+  "feelsLike",
+  "showClock",
+  "showCard",
+  "showCities",
+  "wallpaper",
+  ...CONFIG.extrasKeys,
+];
 
 /** Claves del store que forman el bloque de ajustes. */
 const SETTING_KEYS = [
@@ -38,6 +49,9 @@ const SETTING_KEYS = [
   "hourCycle",
   "forecast",
   "feelsLike",
+  "showClock",
+  "showCard",
+  "showCities",
   "wallpaper",
   "wallpaperInterval",
   ...CONFIG.extrasKeys,

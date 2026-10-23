@@ -25,6 +25,11 @@
   background: var(--color-surface);
 }
 
+/* El ajuste de visibilidad gana al `display: grid` de arriba. */
+.card[hidden] {
+  display: none;
+}
+
 .card__city {
   font-size: var(--fs-city);
   font-weight: 600;
