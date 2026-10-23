@@ -14,7 +14,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Ultima version cerrada: `v0.8.6`
+- Ultima version cerrada: `v0.8.7`
 - Version en curso: ninguna
 - Siguiente version reservada: `v0.9.0`
 
@@ -22,10 +22,10 @@ se manejan con el mando del Chromecast sin raton.
 
 ### En curso
 
-- [ ] **v0.8.7** - Suite de pruebas reproducible
-  - Añadir tests en Node nativo (`node:test`) para utils, config y datos.
-  - Integrar con `npm test`.
-  - Sin dependencias externas.
+- [x] **v0.8.7** - Suite de pruebas reproducible
+  - Tests en Node nativo (`node:test`) para utils, config y datos.
+  - Integrado con `npm test`.
+  - Sin dependencias externas. `76d70dd`.
 
 ### Siguiente
 
