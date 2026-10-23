@@ -2,7 +2,7 @@
  * theme.js - Sistema de temas combinables A+B + alineación + color + Custom
  */
 
-import { storage } from "./storage.js";
+import { readJSON, writeJSON } from "./storage.js";
 
 const THEME_KEY = "weatherapp:v1:themes";
 const LEGACY_KEY = "weatherapp:v1:theme";
@@ -25,12 +25,10 @@ function uid() {
 }
 
 function load() {
+  const data = readJSON(THEME_KEY);
+  if (data) return data;
   try {
-    const raw = storage.get(THEME_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {}
-  try {
-    const raw = storage.get(LEGACY_KEY);
+    const raw = localStorage.getItem("weatherapp:v1:theme");
     if (raw) {
       const p = JSON.parse(raw);
       const data = {
@@ -46,7 +44,7 @@ function load() {
         }],
       };
       save(data);
-      storage.remove?.(LEGACY_KEY);
+      try { localStorage.removeItem("weatherapp:v1:theme"); } catch {}
       return data;
     }
   } catch {}
@@ -54,7 +52,7 @@ function load() {
 }
 
 function save(data) {
-  storage.set(THEME_KEY, JSON.stringify(data));
+  writeJSON(THEME_KEY, data);
 }
 
 function apply(state) {
