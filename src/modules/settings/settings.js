@@ -20,7 +20,6 @@
  */
 
 import { CONFIG } from "../../config.js";
-void CONFIG.extras;
 import { POPULAR } from "../../data/popular.js";
 import { searchPlaces } from "../../services/geocoding.js";
 import { formatPlace } from "../../services/geo.js";

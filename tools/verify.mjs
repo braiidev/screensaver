@@ -197,7 +197,7 @@ console.log("\n7. Constantes del config sin usar");
 // Reservado para una fase que aun no ha llegado. Cada entrada de aqui deberia
 // desaparecer en cuanto la constante empiece a usarse. Ahora mismo no queda
 // ninguna: la ultima era el geocoding, que ya usa el buscador de ciudades.
-const RESERVED = new Set(["extrasKeys"]);
+const RESERVED = new Set();
 {
   const configSource = readFileSync(join(ROOT, "src/config.js"), "utf8");
   const codeSource = jsFiles

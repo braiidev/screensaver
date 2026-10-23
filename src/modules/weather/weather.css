@@ -257,7 +257,7 @@
   font-weight: 600;
 }
 .hourly__pop {
-  font-size: 0.75rem;
+  font-size: var(--fs-chip);
   color: var(--color-muted);
 }
 

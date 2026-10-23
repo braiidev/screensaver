@@ -70,9 +70,33 @@ export const CONFIG = {
     /** Reintentos por peticion antes de darse por vencido. */
     retries: 2,
     /** Campos del bloque `current` que se piden a la API. */
-    currentFields: ["temperature_2m", "apparent_temperature", "weather_code", "is_day"],
+    currentFields: [
+      "temperature_2m",
+      "apparent_temperature",
+      "weather_code",
+      "is_day",
+      "relative_humidity_2m",
+      "wind_speed_10m",
+    ],
     /** Campos del bloque `daily` que se piden a la API. */
-    dailyFields: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
+    dailyFields: [
+      "weather_code",
+      "temperature_2m_max",
+      "temperature_2m_min",
+      "sunrise",
+      "sunset",
+    ],
+    /** Campos del bloque `hourly` que se piden a la API. */
+    hourlyFields: [
+      "temperature_2m",
+      "weather_code",
+      "precipitation_probability",
+      "uv_index",
+    ],
+    /** Horas pasadas que se piden: una, para calcular la tendencia. */
+    hourlyPastHours: 1,
+    /** Horas futuras que se piden y se muestran en la tira. */
+    hourlyForecastHours: 12,
     /** Dias de pronostico que se piden y se muestran. */
     forecastDays: 5,
     /** Zona horaria: `auto` hace que la API use la de las coordenadas. */

@@ -20,12 +20,17 @@ export const DEFAULTS = {
   wallpaper: true,
   wallpaperInterval: CONFIG.wallpaper.interval,
   activeCityId: null,
+  nextHours: CONFIG.extras.nextHours,
+  sun: CONFIG.extras.sun,
+  wind: CONFIG.extras.wind,
+  humidityUv: CONFIG.extras.humidityUv,
+  trend: CONFIG.extras.trend,
 };
 
 /** Valores admitidos por los ajustes que no son booleanos. */
 const UNITS = ["celsius", "fahrenheit"];
 const HOUR_CYCLES = ["h23", "h12"];
-const SWITCHES = ["forecast", "feelsLike", "wallpaper"];
+const SWITCHES = ["forecast", "feelsLike", "wallpaper", ...CONFIG.extrasKeys];
 
 /** Claves del store que forman el bloque de ajustes. */
 const SETTING_KEYS = [
@@ -35,6 +40,7 @@ const SETTING_KEYS = [
   "feelsLike",
   "wallpaper",
   "wallpaperInterval",
+  ...CONFIG.extrasKeys,
 ];
 
 /**

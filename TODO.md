@@ -14,7 +14,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Version actual: `v0.8.1`
+- Version actual: `v0.8.2`
 - Fase en curso: Fase 8 - Apariencia y más información
 - Siguiente version reservada: `v0.9.0`
 
@@ -23,16 +23,16 @@ se manejan con el mando del Chromecast sin raton.
 ### En curso
 
 - [ ] **v0.8.2** - Fase 8 - Apariencia y más información (Bloque 2)
-  - [ ] 2.1 Datos nuevos en `weatherApi.js`/`config.js`: próximas horas,
+  - [x] 2.1 Datos nuevos en `weatherApi.js`/`config.js`: próximas horas,
     amanecer/atardecer, viento, humedad/UV y tendencia frente a hace 1 h.
-  - [ ] 2.2 Claves de extras en `preferences.js`: `DEFAULTS`, `SWITCHES` y
+  - [x] 2.2 Claves de extras en `preferences.js`: `DEFAULTS`, `SWITCHES` y
     `SETTING_KEYS`, para que los interruptores se guarden.
   - [ ] 2.3 Bindings reales en `settings.js` con `bindSwitch` y ocultación de
     los grupos apagados.
   - [ ] 2.4 Render de extras y tira horaria en `weather.js`, respetando cada
     ON/OFF.
   - [ ] 2.5 Pulido móvil estrecho y accesibilidad de los bloques nuevos.
-  - [ ] 2.6 Corregir los 12px de `.hourly__pop` y retirar el `RESERVED` de
+  - [x] 2.6 Corregir los 12px de `.hourly__pop` y retirar el `RESERVED` de
     `verify.mjs`.
   - [ ] 2.7 Decidir `tools/serve.mjs`: usar `HOST` en `server.listen` o
     revertir el cambio.
