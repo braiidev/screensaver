@@ -15,34 +15,21 @@ se manejan con el mando del Chromecast sin raton.
 ## Estado
 
 - Version actual: `v0.8.2`
-- Fase en curso: Fase 8 - Apariencia y más información
+- Fase en curso: Fase 8 - Apariencia y más información (Bloque 3 pendiente)
 - Siguiente version reservada: `v0.9.0`
 
 ## Tablero
 
 ### En curso
 
-- [ ] **v0.8.2** - Fase 8 - Apariencia y más información (Bloque 2)
-  - [x] 2.1 Datos nuevos en `weatherApi.js`/`config.js`: próximas horas,
-    amanecer/atardecer, viento, humedad/UV y tendencia frente a hace 1 h.
-  - [x] 2.2 Claves de extras en `preferences.js`: `DEFAULTS`, `SWITCHES` y
-    `SETTING_KEYS`, para que los interruptores se guarden.
-  - [x] 2.3 Bindings reales en `settings.js` con `bindSwitch` y ocultación de
-    los grupos apagados.
-  - [x] 2.4 Render de extras y tira horaria en `weather.js`, respetando cada
-    ON/OFF.
-  - [x] 2.5 Pulido móvil estrecho y accesibilidad de los bloques nuevos.
-  - [x] 2.6 Corregir los 12px de `.hourly__pop` y retirar el `RESERVED` de
-    `verify.mjs`.
-  - [x] 2.7 Decidir `tools/serve.mjs`: usar `HOST` en `server.listen` o
-    revertir el cambio.
-  - Bloque 3 pendiente de replantear: integración con presets, ocultar
-    elementos y pulido móvil estrecho.
-  - Descarta 3.2 (mover widgets libremente) y 3.4 (reordenar ficha con
-    drag&drop).
+Ninguna. La `v0.8.2` cerró el Bloque 2; el Bloque 3 está pendiente de
+replantear y asignar versión.
 
 ### Siguiente
 
+- [ ] **Bloque 3 de la Fase 8** - replantear y asignar versión: integración con
+  presets, ocultar elementos y pulido móvil estrecho. Descartados 3.2 (mover
+  widgets libremente) y 3.4 (reordenar la ficha con drag&drop).
 - [ ] **v0.9.0** - Fase 9 - Extras
   - Funcionalidades adicionales según necesidades.
 - [ ] **Suite de pruebas reproducible** - recuperar y commitear las pruebas en
@@ -50,6 +37,21 @@ se manejan con el mando del Chromecast sin raton.
   `verify.mjs`.
 
 ### Terminado
+
+- [x] **v0.8.2** - Fase 8 - Bloque 2 - Más información en la ficha
+  - `weatherApi.js` pide en la misma llamada las próximas horas (con la hora
+    anterior para la tendencia), amanecer/atardecer, viento y humedad; el UV
+    sale de `hourly` porque `current` no lo trae.
+  - Cinco extras con interruptor propio y persistencia: próximas horas, sol,
+    viento, humedad/UV y tendencia frente a hace 1 h. El UV se oculta de noche
+    y la tendencia convierte diferencias, no valores, para no sumar 32 en
+    Fahrenheit.
+  - Tira horaria en rejilla sin scroll, 5 horas por defecto y configurable a 8
+    o 12 en `CONFIG.weather.hourlyForecastHours`; con más de cinco las celdas
+    se compactan. Iconos de día/noche por hora y lluvia solo desde el 20 %.
+  - Horas de sol y tira respetan el formato 12/24 del panel. `serve.mjs` pasa a
+    respetar `HOST` (127.0.0.1 por defecto) y se retira el último `RESERVED` de
+    `verify.mjs`. `838dbf2`…`9ee37e1`.
 
 - [x] **v0.8.1** - Fase 8 - Bloque 1 - Sistema de temas
   - Temas combinables A+B, alineación Left/Center/Right, color de acento manual
@@ -225,10 +227,11 @@ se manejan con el mando del Chromecast sin raton.
   de momento todo el trabajo vive solo en local, en
   `/home/anto/Proyectos/Weatherapp`, con su propio historial. Nada se publica hasta
   que se decida lo contrario.
-- El trabajo a medias del Bloque 2 vive en la rama `wip/fase8-bloque2` hasta que se
-  retome; no pasa `npm run verify`, por eso no esta en `main`.
+- El Bloque 2 se cerro en `fase8-bloque2`, se fusiono en `main` con la `v0.8.2` y la
+  rama se borro. El Bloque 3 sigue pendiente de replantear.
 - `main` solo se tagea cuando el arbol pasa `npm run verify`. La `v0.8.1` cierra el
-  Bloque 1; el commit `v0.8.0` queda sin tag porque solo marca el inicio de la fase.
+  Bloque 1, la `v0.8.2` el Bloque 2; el commit `v0.8.0` queda sin tag porque solo
+  marca el inicio de la fase.
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
@@ -265,6 +268,10 @@ se manejan con el mando del Chromecast sin raton.
   aplica sobre `#location` y `#weather`, que fijan `font-size` en `.card__city` y
   `.card__temp` con la misma especificidad. Si el aviso se importara antes, el mensaje
   de error saldria al tamano de la temperatura (hasta 64px) y desbordaria la tarjeta.
+- La tira de proximas horas pide 5 por defecto; con 8 o 12 en
+  `CONFIG.weather.hourlyForecastHours` la rejilla envuelve en varias filas y las
+  celdas se compactan, sin scroll. El formato 12/24 se aplica tambien al sol y a
+  la tira, y en 12 h la tira omite los minutos porque siempre son `:00`.
 - Los iconos del clima son SVG en linea de `src/ui/icons.js`, con trazos de Lucide
   (ISC). No se descarga ninguno: `src/data/wno.js` solo dice el nombre del dibujo y el
   color sale de un token por familia de condicion.
