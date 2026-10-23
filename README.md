@@ -1,11 +1,13 @@
 # WeatherApp
 
 Screensaver web que muestra el reloj y el clima de una ciudad sobre un fondo de
-pantalla rotativo. Pensado para dejar un Chromecast en la pared.
+pantalla rotativo. Pensado para dejar un Chromecast en la pared. Se adapta a móvil
+estrecho (320x568), apaisado, tablet y escritorio.
 
 - **Cero build.** Modulos ES nativos que el navegador carga directamente.
 - **Cero dependencias.** Ni `node_modules`, ni paso de compilación.
 - **Sitio estatico.** Se publica tal cual en Netlify.
+- **Sin texto menor de 13px.** Todos los tamaños tipográficos respetan el suelo definido en tokens y el verificador lo comprueba.
 
 ## Arrancar
 
@@ -58,8 +60,9 @@ suya. El numero de fondos se deduce solo de la longitud del array.
 
 ## Estado
 
-El trabajo sigue el metodo de fases de Project Flow: cada fase se cierra con
-un tag y el estado vive en [`TODO.md`](TODO.md) y en el historial de commits.
+El trabajo sigue el metodo SemVer Kanban: cada version cerrada se mueve a Terminado
+con su tag SemVer, el estado vive en [`TODO.md`](TODO.md) y en el historial de
+commits.
 
 ## Créditos
 

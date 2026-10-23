@@ -274,8 +274,8 @@ Ninguna. La `v0.8.6` cerró el pulido móvil estrecho; el siguiente es `v0.9.0`.
   `v0.8.6` (pulido movil estrecho).
 - `main` solo se tagea cuando el arbol pasa `npm run verify`. La `v0.8.1` cierra el
   Bloque 1, la `v0.8.2` el Bloque 2, la `v0.8.3` el 3.1 y la `v0.8.4` el 3.3; la
-  `v0.8.5` corrige el scroll del panel y el commit `v0.8.0` queda sin tag porque
-  solo marca el inicio de la fase.
+  `v0.8.5` corrige el scroll del panel, la `v0.8.6` cierra el 3.5 y el commit `v0.8.0`
+  queda sin tag porque solo marca el inicio de la fase.
 - La `v0.0.0` es la linea base: el commit que importa el codigo que ya estaba en
   produccion. Por eso la Fase 0 se cierra en `v0.1.0` y las siguientes fases siguen
   `Fase N -> v0.(N+1).0`.
