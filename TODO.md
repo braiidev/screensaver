@@ -34,7 +34,7 @@ se manejan con el mando del Chromecast sin raton.
   - [x] 2.5 Pulido móvil estrecho y accesibilidad de los bloques nuevos.
   - [x] 2.6 Corregir los 12px de `.hourly__pop` y retirar el `RESERVED` de
     `verify.mjs`.
-  - [ ] 2.7 Decidir `tools/serve.mjs`: usar `HOST` en `server.listen` o
+  - [x] 2.7 Decidir `tools/serve.mjs`: usar `HOST` en `server.listen` o
     revertir el cambio.
   - Bloque 3 pendiente de replantear: integración con presets, ocultar
     elementos y pulido móvil estrecho.

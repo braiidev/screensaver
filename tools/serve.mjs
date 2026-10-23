@@ -5,7 +5,10 @@
  * local con el mismo reparto de rutas que en Netlify, que publica la raiz
  * del repositorio.
  *
- *   node tools/serve.mjs [puerto]
+ *   node tools/serve.mjs [puerto] [host]
+ *
+ * El host por defecto es 127.0.0.1, asi que el servidor no sale a la red local
+ * salvo que se pida con `node tools/serve.mjs 8080 0.0.0.0`.
  */
 
 import { createServer } from "node:http";
@@ -66,7 +69,7 @@ const server = createServer((req, res) => {
   createReadStream(path).pipe(res);
 });
 
-server.listen(PORT, () => {
-  console.log(`WeatherApp en http://localhost:${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`WeatherApp en http://${HOST}:${PORT}`);
   console.log(`Sirviendo ${ROOT}`);
 });
