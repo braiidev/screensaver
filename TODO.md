@@ -15,20 +15,20 @@ se manejan con el mando del Chromecast sin raton.
 ## Estado
 
 - Ultima version cerrada: `v0.8.3`
-- Version en curso: ninguna
-- Siguiente version reservada: `v0.8.4`
+- Version en curso: `v0.8.4` - Fase 8, Bloque 3: ocultar elementos
+- Siguiente version reservada: `v0.8.5`
 
 ## Tablero
 
 ### En curso
 
-Ninguna. La `v0.8.3` cerró 3.1; el siguiente es `v0.8.4` (ocultar elementos).
+- [ ] **v0.8.4** - Fase 8 - Bloque 3 - Ocultar elementos
+  - [ ] 3.3 Sección de visibilidad con interruptores para reloj, ficha del
+    clima y chips de ciudades. El fondo y el engranaje no se ocultan. Al
+    ocultar un bloque, los demás mantienen su ancla; no se recentra nada.
 
 ### Siguiente
 
-- [ ] **v0.8.4** - Fase 8 - Bloque 3 - Ocultar elementos
-  - [ ] 3.3 Sección de visibilidad con interruptores para reloj, ficha del
-    clima y chips de ciudades. El fondo no se oculta.
 - [ ] **v0.8.5** - Fase 8 - Bloque 3 - Pulido móvil estrecho
   - [ ] 3.5 Revisar 320x568, 360x640 y apaisado; ajustar rejilla, extras y panel
     de ajustes sin bajar ningún texto de 13px.
