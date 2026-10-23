@@ -250,8 +250,10 @@
  * movil y se pueda mirar entera con el mando en la TV. */
 .hourly {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(3.5rem, 1fr));
-  gap: var(--space-2);
+  /* En 320px caben las cinco horas en una sola fila: con 3.5rem el ultimo
+   * hueco se caia a una segunda fila y la ficha empujaba al reloj fuera. */
+  grid-template-columns: repeat(auto-fit, minmax(2.75rem, 1fr));
+  gap: var(--space-1);
   margin-top: var(--space-2);
 }
 .hourly[hidden] {
@@ -294,4 +296,63 @@
 }
 .hourly__pop[hidden] {
   display: none;
+}
+
+/* Apaisado bajo: la tarjeta se recompone en dos columnas. El bloque actual
+ * queda a la izquierda, el pronostico a la derecha y las proximas horas
+ * cruzan por debajo. Asi todo cabe sin scroll y sin tapar el engranaje. */
+@media (orientation: landscape) and (max-height: 30em) {
+  .dashboard .card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "city city"
+      "now forecast"
+      "condition forecast"
+      "feels forecast"
+      "extras extras"
+      "hourly hourly";
+    column-gap: var(--space-2);
+    row-gap: var(--space-1);
+    align-content: start;
+    padding: min(var(--theme-pad-card), var(--space-3));
+  }
+
+  .card__city {
+    grid-area: city;
+  }
+  .card__now {
+    grid-area: now;
+  }
+  .card__condition {
+    grid-area: condition;
+  }
+  .card__feels {
+    grid-area: feels;
+  }
+  .card__extras {
+    grid-area: extras;
+    margin-top: 0;
+  }
+  .hourly {
+    grid-area: hourly;
+    margin-top: 0;
+  }
+  .hourly__item {
+    gap: 0.15em;
+    padding-block: calc(var(--space-1) / 2);
+  }
+  .hourly__icon {
+    font-size: 1rem;
+  }
+  .hourly__time,
+  .hourly__temp,
+  .hourly__pop {
+    line-height: 1.1;
+  }
+  .forecast {
+    grid-area: forecast;
+    align-self: start;
+    padding-top: 0;
+    border-top: 0;
+  }
 }

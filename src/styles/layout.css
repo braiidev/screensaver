@@ -107,3 +107,32 @@ body {
     transition: none;
   }
 }
+
+/* En un movil estrecho el tema no puede permitirse su aire de escritorio: con
+ * 20px de relleno y 16px entre filas, la tarjeta empujaba al reloj fuera. */
+@media (max-width: 30em) {
+  .board .dashboard {
+    gap: min(var(--theme-gap), var(--space-2));
+  }
+
+  .dashboard .card {
+    padding: min(var(--theme-pad-card), var(--space-3));
+  }
+}
+
+/* En apaisado y con poca altura no hay sitio para apilar los tres bloques.
+ * Ciudades y reloj se quedan a la izquierda; la tarjeta ocupa la derecha. */
+@media (orientation: landscape) and (max-height: 30em) {
+  .board .dashboard {
+    grid-template-areas:
+      "cities card"
+      "clock card";
+    grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 2fr);
+    grid-template-rows: auto 1fr;
+    gap: min(var(--theme-gap), var(--space-2));
+  }
+
+  .cities {
+    margin-bottom: 0;
+  }
+}

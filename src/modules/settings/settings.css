@@ -72,6 +72,10 @@
   position: fixed;
   inset: 0;
   width: min(34rem, calc(100vw - 2 * var(--space-3)));
+  /* El navegador limita el ancho nativo del `<dialog>` a `100% - 2em - 6px`
+   * y se comia 14px del margen previsto en 320px. El ancho ya lo fija la
+   * linea de arriba, asi que se anula ese limite. */
+  max-width: none;
   max-height: min(85vh, 48rem);
   margin: auto;
   padding: 0;
