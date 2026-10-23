@@ -163,12 +163,24 @@
             </div>
 
             <div class="settings__row">
-              <label class="settings__label" for="theme-slot">Tema guardado</label>
+              <label class="settings__label" for="theme-slot">Preset guardado</label>
               <select class="settings__select" id="theme-slot"></select>
             </div>
 
+            <div class="settings__row">
+              <label class="settings__label" for="theme-name">Nombre</label>
+              <input
+                class="settings__input"
+                id="theme-name"
+                type="text"
+                maxlength="30"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+
             <div class="settings__actions">
-              <button class="settings__btn" id="theme-save" type="button">Guardar como...</button>
+              <button class="settings__btn" id="theme-save" type="button">Guardar como</button>
               <button class="settings__btn" id="theme-rename" type="button">Renombrar</button>
               <button class="settings__btn" id="theme-duplicate" type="button">Duplicar</button>
               <button class="settings__btn" id="theme-delete" type="button">Borrar</button>

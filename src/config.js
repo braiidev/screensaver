@@ -206,6 +206,8 @@ export const CONFIG = {
       cities: "cities",
       /** Un solo bloque con los ajustes y la ciudad activa. */
       settings: "settings",
+      /** Los presets de apariencia y visibilidad. */
+      themes: "themes",
     },
   },
 };

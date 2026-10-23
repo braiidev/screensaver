@@ -17,7 +17,7 @@ if (typeof navigator !== "undefined" && "onLine" in navigator) {
 import { loadPreferences, persist } from "./core/preferences.js";
 import { createScheduler } from "./core/scheduler.js";
 import { deviceTimeZone } from "./utils/time.js";
-import { initTheme } from "./core/theme.js";
+import { initTheme, VISIBILITY_KEYS } from "./core/theme.js";
 import { createClock } from "./modules/clock/clock.js";
 import { createCities } from "./modules/cities/cities.js";
 import { createWeather } from "./modules/weather/weather.js";
@@ -27,10 +27,17 @@ import { createSettings } from "./modules/settings/settings.js";
 const $ = (selector) => document.querySelector(selector);
 
 function bootstrap() {
-  initTheme();
   // Lo que se recuerda de la visita anterior. Si no hay nada, los valores de
   // fabrica y la zona horaria del aparato.
   const { cities: storedCities, settings } = loadPreferences();
+
+  // El preset activo manda sobre la visibilidad guardada: si se guardo una
+  // ficha sin viento, al recargar sigue sin viento. Los presets viejos se
+  // migran con los ajustes que hay ahora.
+  const theme = initTheme(settings);
+  for (const key of VISIBILITY_KEYS) {
+    if (typeof theme?.state?.[key] === "boolean") settings[key] = theme.state[key];
+  }
 
   const store = initStore({
     timezone: deviceTimeZone(),

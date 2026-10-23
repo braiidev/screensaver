@@ -25,7 +25,18 @@ import { searchPlaces } from "../../services/geocoding.js";
 import { formatPlace } from "../../services/geo.js";
 import { iconFor } from "../../ui/icons.js";
 import { toCity } from "../../utils/city.js";
-import { applySlot, duplicateSlot, initTheme, PRESETS_A, PRESETS_B, removeSlot, renameSlot, saveTheme, setTheme } from "../../core/theme.js";
+import {
+  applySlot,
+  duplicateSlot,
+  initTheme,
+  PRESETS_A,
+  PRESETS_B,
+  removeSlot,
+  renameSlot,
+  saveTheme,
+  setTheme,
+  VISIBILITY_KEYS,
+} from "../../core/theme.js";
 
 /**
  * @param {Object} elements
@@ -53,6 +64,7 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
   const $themeAlign = $panel.querySelector("#theme-align");
   const $themeAccent = $panel.querySelector("#theme-accent");
   const $themeSlot = $panel.querySelector("#theme-slot");
+  const $themeName = $panel.querySelector("#theme-name");
   const $themeSave = $panel.querySelector("#theme-save");
   const $themeRename = $panel.querySelector("#theme-rename");
   const $themeDuplicate = $panel.querySelector("#theme-duplicate");
@@ -345,15 +357,45 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
 
   let themeState = null;
   let themeData = null;
+  /** Preset cuyo nombre ya se volco en el campo, para no pisar lo que se escribe. */
+  let namedThemeId = null;
+  /** Mientras se aplica un preset no se copia de vuelta al preset. */
+  let applyingPreset = false;
+
+  /** La visibilidad tal como esta ahora en el store. */
+  function currentVisibility() {
+    const out = {};
+    for (const key of VISIBILITY_KEYS) out[key] = store.get(key) !== false;
+    return out;
+  }
+
+  /** Lleva al store la visibilidad de un preset, sin reescribirlo. */
+  function applyPresetVisibility(state) {
+    if (!state) return;
+
+    applyingPreset = true;
+    try {
+      for (const key of VISIBILITY_KEYS) {
+        if (typeof state[key] === "boolean") store.set(key, state[key]);
+      }
+    } finally {
+      applyingPreset = false;
+    }
+  }
 
   function refreshThemeUI() {
     if (!$themeA) return;
-    themeState = initTheme();
+    themeState = initTheme(currentVisibility());
     themeData = themeState.all;
     $themeA.value = themeState.state.themeA;
     $themeB.value = themeState.state.themeB;
     $themeAlign.value = themeState.state.align;
     $themeAccent.value = themeState.state.accent;
+
+    if ($themeName && namedThemeId !== themeState.state.id) {
+      $themeName.value = themeState.state.name;
+      namedThemeId = themeState.state.id;
+    }
 
     if ($themeSlot) {
       $themeSlot.innerHTML = "";
@@ -367,9 +409,34 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
     }
   }
 
+  /**
+   * El preset activo se actualiza solo. Si era de fabrica, `setTheme` crea un
+   * Custom con lo que habia y con el cambio; igual que al tocar A/B/color.
+   */
+  function syncPreset() {
+    if (applyingPreset || !$themeA) return;
+
+    const res = setTheme(
+      $themeA.value,
+      $themeB.value,
+      $themeAlign.value,
+      $themeAccent.value,
+      currentVisibility(),
+    );
+    themeState = res;
+    themeData = res.all;
+    refreshThemeUI();
+  }
+
   function applyCurrent() {
     if (!$themeA) return;
-    const res = setTheme($themeA.value, $themeB.value, $themeAlign.value, $themeAccent.value);
+    const res = setTheme(
+      $themeA.value,
+      $themeB.value,
+      $themeAlign.value,
+      $themeAccent.value,
+      currentVisibility(),
+    );
     themeState = res;
     themeData = res.all;
     refreshThemeUI();
@@ -479,6 +546,15 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       $search.addEventListener("input", onSearchInput);
 
       refreshThemeUI();
+      applyPresetVisibility(themeState?.state);
+
+      // Cualquier cambio de visibilidad se copia al preset activo. Se hace por
+      // suscripcion y no dentro de cada switch: asi tambien cuenta si el store
+      // cambia desde otro sitio.
+      for (const key of VISIBILITY_KEYS) {
+        offs.push(store.subscribe(key, syncPreset));
+      }
+
       $themeA?.addEventListener("change", applyCurrent);
       $themeB?.addEventListener("change", applyCurrent);
       $themeAlign?.addEventListener("change", applyCurrent);
@@ -487,6 +563,7 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       $themeSlot?.addEventListener("change", () => {
         const res = applySlot($themeSlot.value);
         if (res) {
+          applyPresetVisibility(res.state);
           themeState = res;
           themeData = res.all;
           $themeA.value = res.state.themeA;
@@ -498,32 +575,61 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       });
 
       $themeSave?.addEventListener("click", () => {
-        const name = prompt("Nombre del tema guardado:", "Mi tema");
-        if (!name) return;
-        const res = saveTheme({ ...themeState?.state, themeA: $themeA.value, themeB: $themeB.value, align: $themeAlign.value, accent: $themeAccent.value, name });
+        const name = $themeName?.value.trim() || "Mi preset";
+        const base = { ...themeState?.state };
+        delete base.id;
+        const res = saveTheme({
+          ...base,
+          themeA: $themeA.value,
+          themeB: $themeB.value,
+          align: $themeAlign.value,
+          accent: $themeAccent.value,
+          ...currentVisibility(),
+          name,
+        });
         themeState = res;
         themeData = res.all;
         refreshThemeUI();
+        if ($themeName) $themeName.value = res.state.name;
       });
 
       $themeRename?.addEventListener("click", () => {
         if (!themeData?.activeId) return;
-        const name = prompt("Nuevo nombre:", themeData.slots.find(s=>s.id===themeData.activeId)?.name || "Tema");
+        const name = $themeName?.value.trim();
         if (!name) return;
         const res = renameSlot(themeData.activeId, name);
-        if (res) { themeState = res; themeData = res.all; refreshThemeUI(); }
+        if (res) {
+          themeState = res;
+          themeData = res.all;
+          refreshThemeUI();
+          if ($themeName) $themeName.value = res.state.name;
+        }
       });
 
       $themeDuplicate?.addEventListener("click", () => {
         if (!themeData?.activeId) return;
         const res = duplicateSlot(themeData.activeId);
-        if (res) { themeState = res; themeData = res.all; refreshThemeUI(); }
+        if (res) {
+          applyPresetVisibility(res.state);
+          themeState = res;
+          themeData = res.all;
+          refreshThemeUI();
+        }
       });
 
       $themeDelete?.addEventListener("click", () => {
         if (!themeData?.activeId) return;
-        const res = removeSlot(themeData.activeId);
-        if (res) { themeState = res; themeData = res.all; $themeA.value = res.state.themeA; $themeB.value = res.state.themeB; $themeAlign.value = res.state.align; $themeAccent.value = res.state.accent; refreshThemeUI(); }
+        const res = removeSlot(themeData.activeId, currentVisibility());
+        if (res) {
+          applyPresetVisibility(res.state);
+          themeState = res;
+          themeData = res.all;
+          $themeA.value = res.state.themeA;
+          $themeB.value = res.state.themeB;
+          $themeAlign.value = res.state.align;
+          $themeAccent.value = res.state.accent;
+          refreshThemeUI();
+        }
       });
 
       $toggle.addEventListener("click", showPanel);
