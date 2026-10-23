@@ -15,18 +15,21 @@ se manejan con el mando del Chromecast sin raton.
 ## Estado
 
 - Ultima version cerrada: `v0.8.4`
-- Version en curso: ninguna
-- Siguiente version reservada: `v0.8.5`
+- Version en curso: `v0.8.5` - Corrección del scroll del panel
+- Siguiente version reservada: `v0.8.6`
 
 ## Tablero
 
 ### En curso
 
-Ninguna. La `v0.8.4` cerró 3.3; el siguiente es `v0.8.5` (pulido móvil estrecho).
+- [ ] **v0.8.5** - Corrección del scroll del panel de ajustes
+  - [ ] 3.6 El foco de los interruptores y radios ocultos arrastraba el
+    `<dialog>` en vez de desplazar `.settings__body`, dejando el contenido
+    fuera de la caja visible.
 
 ### Siguiente
 
-- [ ] **v0.8.5** - Fase 8 - Bloque 3 - Pulido móvil estrecho
+- [ ] **v0.8.6** - Fase 8 - Bloque 3 - Pulido móvil estrecho
   - [ ] 3.5 Revisar 320x568, 360x640 y apaisado; ajustar rejilla, extras y panel
     de ajustes sin bajar ningún texto de 13px.
 - [ ] **v0.9.0** - Fase 9 - Extras
@@ -251,7 +254,8 @@ Ninguna. La `v0.8.4` cerró 3.3; el siguiente es `v0.8.5` (pulido móvil estrech
   que se decida lo contrario.
 - El Bloque 2 se cerro en `fase8-bloque2`, se fusiono en `main` con la `v0.8.2` y la
   rama se borro. El Bloque 3 quedo atomizado en `v0.8.3` (presets completos),
-  `v0.8.4` (ocultar reloj, ficha y ciudades) y `v0.8.5` (pulido movil estrecho).
+  `v0.8.4` (ocultar reloj, ficha y ciudades), `v0.8.5` (scroll del panel) y
+  `v0.8.6` (pulido movil estrecho).
 - `main` solo se tagea cuando el arbol pasa `npm run verify`. La `v0.8.1` cierra el
   Bloque 1, la `v0.8.2` el Bloque 2, la `v0.8.3` el 3.1 y la `v0.8.4` el 3.3; el
   commit `v0.8.0` queda sin tag porque solo marca el inicio de la fase.

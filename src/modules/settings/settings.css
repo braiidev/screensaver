@@ -167,6 +167,12 @@
   gap: var(--space-1);
 }
 
+/* El input oculto se posiciona respecto a su etiqueta, no al dialogo. Si no,
+ * el foco lo busca fuera del cuerpo scrolleable y arrastra todo el panel. */
+.segmented__item {
+  position: relative;
+}
+
 /* El radio se ve por su etiqueta, pero sigue ahi para el teclado. */
 .segmented__input,
 .switch__input {
@@ -209,6 +215,7 @@
 /* ----------------------------------------------------------- Interruptores */
 
 .switch {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-2);
