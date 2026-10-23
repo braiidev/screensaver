@@ -15,21 +15,19 @@ se manejan con el mando del Chromecast sin raton.
 ## Estado
 
 - Ultima version cerrada: `v0.8.5`
-- Version en curso: ninguna
-- Siguiente version reservada: `v0.8.6`
+- Version en curso: `v0.8.6` - Pulido móvil estrecho
+- Siguiente version reservada: `v0.9.0`
 
 ## Tablero
 
 ### En curso
 
-Ninguna. La `v0.8.5` corrigió el scroll del panel; el siguiente es `v0.8.6`
-(pulido móvil estrecho).
-
-### Siguiente
-
 - [ ] **v0.8.6** - Fase 8 - Bloque 3 - Pulido móvil estrecho
   - [ ] 3.5 Revisar 320x568, 360x640 y apaisado; ajustar rejilla, extras y panel
     de ajustes sin bajar ningún texto de 13px.
+
+### Siguiente
+
 - [ ] **v0.9.0** - Fase 9 - Extras
   - Funcionalidades adicionales según necesidades.
 - [ ] **Suite de pruebas reproducible** - recuperar y commitear las pruebas en
