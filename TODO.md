@@ -22,11 +22,6 @@ se manejan con el mando del Chromecast sin raton.
 
 ### NEXT
 
-- [ ] **v0.9.0-step4** - Añadir selector de fecha (Desactivado/Compacta/Completa)
-  - Unificar fecha junto al reloj
-  - Usar Intl.DateTimeFormat en español
-  - Persistir ajuste
-
 - [ ] **v0.9.0-step5** - Añadir Calidad del Aire (AQI)
   - Integrar Open-Meteo Air Quality API
   - Mostrar badge con valor/categoría/semáforo
@@ -34,9 +29,18 @@ se manejan con el mando del Chromecast sin raton.
 
 ### DOING
 
-Ninguna.
+- [ ] **v0.9.0-step5** - Añadir Calidad del Aire (AQI)
+  - Integrar Open-Meteo Air Quality API
+  - Mostrar badge con valor/categoría/semáforo
+  - Configurable desde ajustes
 
 ### DONE
+
+- [x] **v0.9.0-step4** - Añadir selector de fecha (Desactivado/Compacta/Completa)
+  - Unificar fecha junto al reloj
+  - Usar Intl.DateTimeFormat en español
+  - Persistir ajuste
+  - `e470bf5`.
 
 - [x] **v0.9.0-step2** - Reestructurar panel de Temas con predefinidos
   - Añadir selector "Tema" con predefinidos
