@@ -14,7 +14,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Ultima version cerrada: `v0.8.7`
+- Ultima version cerrada: `v0.8.8`
 - Version en curso: ninguna
 - Siguiente version reservada: `v0.9.0`
 
@@ -22,10 +22,7 @@ se manejan con el mando del Chromecast sin raton.
 
 ### En curso
 
-- [x] **v0.8.7** - Suite de pruebas reproducible
-  - Tests en Node nativo (`node:test`) para utils, config y datos.
-  - Integrado con `npm test`.
-  - Sin dependencias externas. `76d70dd`.
+Ninguna.
 
 ### Siguiente
 
@@ -33,6 +30,20 @@ se manejan con el mando del Chromecast sin raton.
   - Funcionalidades adicionales según necesidades.
 
 ### Terminado
+
+- [x] **v0.8.8** - Panel de ajustes renovado
+  - Pestañas horizontales (Temas/Ciudades/Clima/Pantalla/General).
+  - Color de acento funcional en foco/switches/chips.
+  - Color de fondo configurable siempre.
+  - Botón pantalla completa en ajustes (sin forzado al primer click).
+  - Filas normalizadas (label a izquierda, control a derecha).
+  - `Elegante` con fuente cursiva `Caveat`. `Clásico` sin cambios.
+  - `12a3e98`, `2a06406`, `1792c20`.
+
+- [x] **v0.8.7** - Suite de pruebas reproducible
+  - Tests en Node nativo (`node:test`) para utils, config y datos.
+  - Integrado con `npm test`.
+  - Sin dependencias externas. `76d70dd`.
 
 - [x] **v0.8.6** - Fase 8 - Bloque 3 - Pulido móvil estrecho
   - 3.5 En 320x568 y 360x640 la tira horaria cabe en una sola fila
