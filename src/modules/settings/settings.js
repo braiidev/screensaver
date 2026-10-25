@@ -64,6 +64,8 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
   const $themeAlign = $panel.querySelector("#theme-align");
   const $themeAccent = $panel.querySelector("#theme-accent");
   const $bgColor = $panel.querySelector("#bg-color");
+  const $themePreset = $panel.querySelector("#theme-preset");
+  const $themeAdvanced = $panel.querySelector("#theme-advanced");
   const $themeSlot = $panel.querySelector("#theme-slot");
   const $themeName = $panel.querySelector("#theme-name");
   const $themeSave = $panel.querySelector("#theme-save");
@@ -393,6 +395,7 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
     $themeB.value = themeState.state.themeB;
     $themeAlign.value = themeState.state.align;
     $themeAccent.value = themeState.state.accent;
+    try { syncPresetSelect(); } catch {}
 
     if ($themeName && namedThemeId !== themeState.state.id) {
       $themeName.value = themeState.state.name;
@@ -442,6 +445,7 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
     themeState = res;
     themeData = res.all;
     refreshThemeUI();
+    try { syncPresetSelect(); } catch {}
   }
 
   /* ------------------------------------------------------- El engranaje */
@@ -560,9 +564,56 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
         offs.push(store.subscribe(key, syncPreset));
       }
 
-      $themeA?.addEventListener("change", applyCurrent);
-      $themeB?.addEventListener("change", applyCurrent);
-      $themeAlign?.addEventListener("change", applyCurrent);
+      const THEME_PRESETS = {
+        "minimal-neutro": { a: "minimal", b: "clasico", align: "left" },
+        "clasico-equilibrado": { a: "clasico", b: "clasico", align: "left" },
+        "compacto-limpio": { a: "compacto", b: "clasico", align: "left" },
+        "tv-comodo": { a: "tv", b: "clasico", align: "center" },
+        "elegante-noche": { a: "minimal", b: "elegante", align: "left" },
+        "dev-tecnico": { a: "compacto", b: "dev", align: "left" },
+      };
+
+      function findPresetKey(a, b, align) {
+        for (const [k, v] of Object.entries(THEME_PRESETS)) {
+          if (v.a === a && v.b === b && v.align === align) return k;
+        }
+        return null;
+      }
+
+      function syncPresetSelect() {
+        if (!$themePreset) return;
+        const key = findPresetKey($themeA?.value, $themeB?.value, $themeAlign?.value);
+        if (key && THEME_PRESETS[key]) {
+          $themePreset.value = key;
+        } else {
+          $themePreset.value = "personalizado";
+        }
+      }
+
+      $themePreset?.addEventListener("change", () => {
+        const key = $themePreset.value;
+        if (key === "personalizado") return;
+        const pset = THEME_PRESETS[key];
+        if (!pset) return;
+        if ($themeA) $themeA.value = pset.a;
+        if ($themeB) $themeB.value = pset.b;
+        if ($themeAlign) $themeAlign.value = pset.align;
+        applyCurrent();
+        $themeAdvanced?.removeAttribute("open");
+      });
+
+      $themeA?.addEventListener("change", () => {
+        if ($themePreset) $themePreset.value = "personalizado";
+        applyCurrent();
+      });
+      $themeB?.addEventListener("change", () => {
+        if ($themePreset) $themePreset.value = "personalizado";
+        applyCurrent();
+      });
+      $themeAlign?.addEventListener("change", () => {
+        if ($themePreset) $themePreset.value = "personalizado";
+        applyCurrent();
+      });
       $themeAccent?.addEventListener("input", () => {
         if (typeof document !== "undefined") {
           document.documentElement.style.setProperty("--color-accent", $themeAccent.value);

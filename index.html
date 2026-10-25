@@ -141,33 +141,51 @@
               <h3 class="settings__legend" id="settings-appearance">Temas</h3>
 
               <div class="settings__row">
-                <label class="settings__label" for="theme-a">Estructura</label>
-                <select class="settings__select" id="theme-a">
-                  <option value="minimal">Minimal</option>
-                  <option value="clasico">Clásico</option>
-                  <option value="compacto">Compacto</option>
-                  <option value="tv">TV</option>
+                <label class="settings__label" for="theme-preset">Tema</label>
+                <select class="settings__select" id="theme-preset">
+                  <option value="minimal-neutro">Minimal Neutro</option>
+                  <option value="clasico-equilibrado">Clásico Equilibrado</option>
+                  <option value="compacto-limpio">Compacto Limpio</option>
+                  <option value="tv-comodo">TV Cómodo</option>
+                  <option value="elegante-noche">Elegante Noche</option>
+                  <option value="dev-tecnico">Dev Técnico</option>
+                  <option value="personalizado">Personalizado</option>
                 </select>
               </div>
 
-              <div class="settings__row">
-                <label class="settings__label" for="theme-b">Estilo y tipografía</label>
-                <select class="settings__select" id="theme-b">
-                  <option value="elegante">Elegante</option>
-                  <option value="dev">Dev</option>
-                  <option value="clasico">Clásico</option>
-                  <option value="arial">Arial</option>
-                </select>
-              </div>
+              <details class="settings__advanced" id="theme-advanced">
+                <summary class="settings__summary">Personalizar</summary>
+                <div class="settings__advanced-body">
+                  <div class="settings__row">
+                    <label class="settings__label" for="theme-a">Estructura</label>
+                    <select class="settings__select" id="theme-a">
+                      <option value="minimal">Minimal</option>
+                      <option value="clasico">Clásico</option>
+                      <option value="compacto">Compacto</option>
+                      <option value="tv">TV</option>
+                    </select>
+                  </div>
 
-              <div class="settings__row">
-                <label class="settings__label" for="theme-align">Alineación</label>
-                <select class="settings__select" id="theme-align">
-                  <option value="left">Izquierda</option>
-                  <option value="center">Centro</option>
-                  <option value="right">Derecha</option>
-                </select>
-              </div>
+                  <div class="settings__row">
+                    <label class="settings__label" for="theme-b">Estilo y tipografía</label>
+                    <select class="settings__select" id="theme-b">
+                      <option value="elegante">Elegante</option>
+                      <option value="dev">Dev</option>
+                      <option value="clasico">Clásico</option>
+                      <option value="arial">Arial</option>
+                    </select>
+                  </div>
+
+                  <div class="settings__row">
+                    <label class="settings__label" for="theme-align">Alineación</label>
+                    <select class="settings__select" id="theme-align">
+                      <option value="left">Izquierda</option>
+                      <option value="center">Centro</option>
+                      <option value="right">Derecha</option>
+                    </select>
+                  </div>
+                </div>
+              </details>
 
               <div class="settings__row">
                 <label class="settings__label" for="theme-accent">Color de acento</label>
@@ -197,6 +215,7 @@
               </div>
             </div>
           </section>
+
 
           <section class="settings__panel" role="tabpanel" data-panel="cities">
             <div class="settings__group" aria-labelledby="settings-cities">
