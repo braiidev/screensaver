@@ -670,20 +670,59 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       updateFullscreenBtn();
 
       // Pestañas horizontales
-      $panel.querySelectorAll(".settings__tab").forEach((tab) => {
-        tab.addEventListener("click", () => {
-          $panel.querySelectorAll(".settings__tab").forEach((t) => {
-            t.classList.remove("is-active");
-            t.setAttribute("aria-selected", "false");
-          });
-          tab.classList.add("is-active");
-          tab.setAttribute("aria-selected", "true");
-          const name = tab.dataset.tab;
-          $panel.querySelectorAll(".settings__panel").forEach((p) => {
-            p.classList.toggle("is-active", p.dataset.panel === name);
-          });
+      const $tabs = Array.from($panel.querySelectorAll(".settings__tab"));
+      const $panels = Array.from($panel.querySelectorAll(".settings__panel"));
+
+      const activateTab = (target) => {
+        $tabs.forEach((t) => {
+          t.classList.remove("is-active");
+          t.setAttribute("aria-selected", "false");
+        });
+        target.classList.add("is-active");
+        target.setAttribute("aria-selected", "true");
+        const name = target.dataset.tab;
+        $panels.forEach((p) => {
+          p.classList.toggle("is-active", p.dataset.panel === name);
+        });
+        try {
+          localStorage.setItem("weatherapp:v1:settings-tab", name);
+        } catch {}
+      };
+
+      $tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateTab(tab));
+        tab.addEventListener("keydown", (event) => {
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+            const next = $tabs[(index + 1) % $tabs.length];
+            next.focus();
+            activateTab(next);
+          } else if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            const prev = $tabs[(index - 1 + $tabs.length) % $tabs.length];
+            prev.focus();
+            activateTab(prev);
+          } else if (event.key === "Home") {
+            event.preventDefault();
+            $tabs[0].focus();
+            activateTab($tabs[0]);
+          } else if (event.key === "End") {
+            event.preventDefault();
+            $tabs[$tabs.length - 1].focus();
+            activateTab($tabs[$tabs.length - 1]);
+          }
         });
       });
+
+      try {
+        const saved = localStorage.getItem("weatherapp:v1:settings-tab");
+        if (saved) {
+          const tab = $panel.querySelector(`.settings__tab[data-tab="${saved}"]`);
+          if (tab) {
+            activateTab(tab);
+          }
+        }
+      } catch {}
 
       $toggle.addEventListener("click", showPanel);
       $close.addEventListener("click", hidePanel);
