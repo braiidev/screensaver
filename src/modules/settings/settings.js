@@ -673,6 +673,16 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       const $tabs = Array.from($panel.querySelectorAll(".settings__tab"));
       const $panels = Array.from($panel.querySelectorAll(".settings__panel"));
 
+      const setTabindex = () => {
+        $tabs.forEach((t) => {
+          if (t.classList.contains("is-active")) {
+            t.setAttribute("tabindex", "0");
+          } else {
+            t.setAttribute("tabindex", "-1");
+          }
+        });
+      };
+
       const activateTab = (target) => {
         $tabs.forEach((t) => {
           t.classList.remove("is-active");
@@ -680,6 +690,7 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
         });
         target.classList.add("is-active");
         target.setAttribute("aria-selected", "true");
+        setTabindex();
         const name = target.dataset.tab;
         $panels.forEach((p) => {
           p.classList.toggle("is-active", p.dataset.panel === name);
@@ -690,29 +701,40 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       };
 
       $tabs.forEach((tab, index) => {
-        tab.addEventListener("click", () => activateTab(tab));
+        tab.setAttribute("tabindex", tab.classList.contains("is-active") ? "0" : "-1");
+        tab.addEventListener("click", () => {
+          activateTab(tab);
+          tab.focus();
+        });
         tab.addEventListener("keydown", (event) => {
           if (event.key === "ArrowRight") {
             event.preventDefault();
             const next = $tabs[(index + 1) % $tabs.length];
-            next.focus();
             activateTab(next);
+            next.focus();
           } else if (event.key === "ArrowLeft") {
             event.preventDefault();
             const prev = $tabs[(index - 1 + $tabs.length) % $tabs.length];
-            prev.focus();
             activateTab(prev);
+            prev.focus();
           } else if (event.key === "Home") {
             event.preventDefault();
-            $tabs[0].focus();
             activateTab($tabs[0]);
+            $tabs[0].focus();
           } else if (event.key === "End") {
             event.preventDefault();
-            $tabs[$tabs.length - 1].focus();
-            activateTab($tabs[$tabs.length - 1]);
+            const last = $tabs[$tabs.length - 1];
+            activateTab(last);
+            last.focus();
+          } else if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            activateTab(tab);
+            tab.focus();
           }
         });
       });
+
+      setTabindex();
 
       try {
         const saved = localStorage.getItem("weatherapp:v1:settings-tab");
