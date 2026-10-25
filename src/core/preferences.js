@@ -113,11 +113,15 @@ function cleanCities(raw) {
  */
 export function loadPreferences() {
   const settings = cleanSettings(readJSON(CONFIG.storage.keys.settings));
-  const cities = cleanCities(readJSON(CONFIG.storage.keys.cities));
+  let cities = cleanCities(readJSON(CONFIG.storage.keys.cities));
 
   // Una ciudad activa que ya no esta en la lista no puede seguir activa.
-  if (!cities.some((city) => city.id === settings.activeCityId)) {
-    settings.activeCityId = cities[0]?.id ?? null;
+  if (Array.isArray(cities) && cities.length > 0) {
+    if (!cities.some((city) => city.id === settings.activeCityId)) {
+      settings.activeCityId = cities[0]?.id ?? null;
+    }
+  } else {
+    cities = [];
   }
 
   return { cities, settings };

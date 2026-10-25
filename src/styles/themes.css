@@ -114,8 +114,13 @@ body[data-align="right"] {
 .settings__close:focus-visible,
 .place__name:focus-visible,
 .place__add:focus-visible,
-.place__remove:focus-visible {
-  outline-color: var(--color-accent);
+.place__remove:focus-visible,
+.settings__btn:focus-visible,
+.settings__select:focus-visible,
+.settings__input:focus-visible,
+.settings__search:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

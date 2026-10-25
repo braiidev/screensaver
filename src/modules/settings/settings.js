@@ -63,12 +63,14 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
   const $themeB = $panel.querySelector("#theme-b");
   const $themeAlign = $panel.querySelector("#theme-align");
   const $themeAccent = $panel.querySelector("#theme-accent");
+  const $bgColor = $panel.querySelector("#bg-color");
   const $themeSlot = $panel.querySelector("#theme-slot");
   const $themeName = $panel.querySelector("#theme-name");
   const $themeSave = $panel.querySelector("#theme-save");
   const $themeRename = $panel.querySelector("#theme-rename");
   const $themeDuplicate = $panel.querySelector("#theme-duplicate");
   const $themeDelete = $panel.querySelector("#theme-delete");
+  const $fullscreenToggle = $panel.querySelector("#fullscreen-toggle");
 
   /** Las bajas de todo lo que se suscribe, para el `stop()`. */
   const offs = [];
@@ -562,6 +564,14 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       $themeB?.addEventListener("change", applyCurrent);
       $themeAlign?.addEventListener("change", applyCurrent);
       $themeAccent?.addEventListener("input", applyCurrent);
+      $bgColor?.addEventListener("input", () => {
+        const c = $bgColor.value;
+        if (typeof document !== "undefined") {
+          document.documentElement.style.setProperty("--bg-color", c);
+          document.body?.style.setProperty("--bg-color", c);
+          try { localStorage.setItem("weatherapp:v1:bgcolor", c); } catch {}
+        }
+      });
 
       $themeSlot?.addEventListener("change", () => {
         const res = applySlot($themeSlot.value);
@@ -633,6 +643,40 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
           $themeAccent.value = res.state.accent;
           refreshThemeUI();
         }
+      });
+
+      const updateFullscreenBtn = () => {
+        if (!$fullscreenToggle) return;
+        if (document.fullscreenElement) {
+          $fullscreenToggle.textContent = "Salir de pantalla completa";
+        } else {
+          $fullscreenToggle.textContent = "Activar pantalla completa";
+        }
+      };
+      $fullscreenToggle?.addEventListener("click", () => {
+        if (document.fullscreenElement) {
+          document.exitFullscreen?.().catch(() => {});
+        } else {
+          document.documentElement.requestFullscreen?.().catch(() => {});
+        }
+      });
+      document.addEventListener("fullscreenchange", updateFullscreenBtn);
+      updateFullscreenBtn();
+
+      // Pestañas horizontales
+      $panel.querySelectorAll(".settings__tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          $panel.querySelectorAll(".settings__tab").forEach((t) => {
+            t.classList.remove("is-active");
+            t.setAttribute("aria-selected", "false");
+          });
+          tab.classList.add("is-active");
+          tab.setAttribute("aria-selected", "true");
+          const name = tab.dataset.tab;
+          $panel.querySelectorAll(".settings__panel").forEach((p) => {
+            p.classList.toggle("is-active", p.dataset.panel === name);
+          });
+        });
       });
 
       $toggle.addEventListener("click", showPanel);

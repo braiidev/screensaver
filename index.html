@@ -124,204 +124,214 @@
           </button>
         </header>
 
+                <nav class="settings__tabs" role="tablist" aria-label="Secciones de ajustes">
+          <button class="settings__tab is-active" role="tab" aria-selected="true" data-tab="themes">Temas</button>
+          <button class="settings__tab" role="tab" aria-selected="false" data-tab="cities">Ciudades</button>
+          <button class="settings__tab" role="tab" aria-selected="false" data-tab="weather">Clima</button>
+          <button class="settings__tab" role="tab" aria-selected="false" data-tab="screen">Pantalla</button>
+          <button class="settings__tab" role="tab" aria-selected="false" data-tab="general">General</button>
+        </nav>
+
         <div class="settings__body">
-          <section class="settings__group" aria-labelledby="settings-appearance">
-            <h3 class="settings__legend" id="settings-appearance">Apariencia</h3>
+          <section class="settings__panel is-active" role="tabpanel" data-panel="themes">
+            <div class="settings__group" aria-labelledby="settings-appearance">
+              <h3 class="settings__legend" id="settings-appearance">Temas</h3>
 
-            <div class="settings__row">
-              <label class="settings__label" for="theme-a">Estructura (A)</label>
-              <select class="settings__select" id="theme-a">
-                <option value="minimal">Minimal</option>
-                <option value="clasico">Clásico</option>
-                <option value="compacto">Compacto</option>
-                <option value="tv">TV</option>
-              </select>
-            </div>
+              <div class="settings__row">
+                <label class="settings__label" for="theme-a">Estructura</label>
+                <select class="settings__select" id="theme-a">
+                  <option value="minimal">Minimal</option>
+                  <option value="clasico">Clásico</option>
+                  <option value="compacto">Compacto</option>
+                  <option value="tv">TV</option>
+                </select>
+              </div>
 
-            <div class="settings__row">
-              <label class="settings__label" for="theme-b">Tipografía/Estilo (B)</label>
-              <select class="settings__select" id="theme-b">
-                <option value="elegante">Elegante</option>
-                <option value="dev">Dev</option>
-                <option value="clasico">Clásico</option>
-                <option value="arial">Arial</option>
-              </select>
-            </div>
+              <div class="settings__row">
+                <label class="settings__label" for="theme-b">Estilo y tipografía</label>
+                <select class="settings__select" id="theme-b">
+                  <option value="elegante">Elegante</option>
+                  <option value="dev">Dev</option>
+                  <option value="clasico">Clásico</option>
+                  <option value="arial">Arial</option>
+                </select>
+              </div>
 
-            <div class="settings__row">
-              <label class="settings__label" for="theme-align">Alineación</label>
-              <select class="settings__select" id="theme-align">
-                <option value="left">Izquierda</option>
-                <option value="center">Centro</option>
-                <option value="right">Derecha</option>
-              </select>
-            </div>
+              <div class="settings__row">
+                <label class="settings__label" for="theme-align">Alineación</label>
+                <select class="settings__select" id="theme-align">
+                  <option value="left">Izquierda</option>
+                  <option value="center">Centro</option>
+                  <option value="right">Derecha</option>
+                </select>
+              </div>
 
-            <div class="settings__row">
-              <label class="settings__label" for="theme-accent">Color de acento</label>
-              <input class="settings__color" id="theme-accent" type="color" value="#4f9bff" />
-            </div>
+              <div class="settings__row">
+                <label class="settings__label" for="theme-accent">Color de acento</label>
+                <input class="settings__color" id="theme-accent" type="color" value="#4f9bff" />
+              </div>
 
-            <div class="settings__row">
-              <label class="settings__label" for="theme-slot">Preset guardado</label>
-              <select class="settings__select" id="theme-slot"></select>
-            </div>
+              <div class="settings__row">
+                <label class="settings__label" for="bg-color">Color de fondo</label>
+                <input class="settings__color" id="bg-color" type="color" value="#0b0e14" />
+              </div>
 
-            <div class="settings__row">
-              <label class="settings__label" for="theme-name">Nombre</label>
-              <input
-                class="settings__input"
-                id="theme-name"
-                type="text"
-                maxlength="30"
-                autocomplete="off"
-                spellcheck="false"
-              />
-            </div>
+              <div class="settings__row">
+                <label class="settings__label" for="theme-slot">Temas guardados</label>
+                <select class="settings__select" id="theme-slot"></select>
+              </div>
 
-            <div class="settings__actions">
-              <button class="settings__btn" id="theme-save" type="button">Guardar como</button>
-              <button class="settings__btn" id="theme-rename" type="button">Renombrar</button>
-              <button class="settings__btn" id="theme-duplicate" type="button">Duplicar</button>
-              <button class="settings__btn" id="theme-delete" type="button">Borrar</button>
+              <div class="settings__row">
+                <label class="settings__label" for="theme-name">Nombre del tema</label>
+                <input class="settings__input" id="theme-name" type="text" maxlength="30" autocomplete="off" spellcheck="false" />
+              </div>
+
+              <div class="settings__actions">
+                <button class="settings__btn" id="theme-save" type="button">Guardar tema</button>
+                <button class="settings__btn" id="theme-rename" type="button">Renombrar</button>
+                <button class="settings__btn" id="theme-duplicate" type="button">Duplicar</button>
+                <button class="settings__btn" id="theme-delete" type="button">Eliminar</button>
+              </div>
             </div>
           </section>
 
-          <section class="settings__group" aria-labelledby="settings-cities">
-            <h3 class="settings__legend" id="settings-cities">Ciudades</h3>
+          <section class="settings__panel" role="tabpanel" data-panel="cities">
+            <div class="settings__group" aria-labelledby="settings-cities">
+              <h3 class="settings__legend" id="settings-cities">Ciudades</h3>
 
-            <ul class="places" id="city-list" aria-label="Ciudades guardadas"></ul>
+              <ul class="places" id="city-list" aria-label="Ciudades guardadas"></ul>
 
-            <label class="settings__label" for="city-search">Buscar y añadir</label>
-            <input
-              class="settings__search"
-              id="city-search"
-              type="search"
-              placeholder="Nombre de la ciudad"
-              autocomplete="off"
-              spellcheck="false"
-            />
-            <p class="settings__hint" id="city-hint" role="status"></p>
+              <label class="settings__label" for="city-search">Buscar y añadir</label>
+              <input class="settings__search" id="city-search" type="search" placeholder="Nombre de la ciudad" autocomplete="off" spellcheck="false" />
+              <p class="settings__hint" id="city-hint" role="status"></p>
 
-            <ul
-              class="places places--results"
-              id="city-results"
-              aria-label="Ciudades para añadir"
-            ></ul>
+              <ul class="places places--results" id="city-results" aria-label="Ciudades para añadir"></ul>
+            </div>
           </section>
 
-          <fieldset class="settings__group">
-            <legend class="settings__legend">Unidades</legend>
-            <div class="segmented">
-              <label class="segmented__item">
-                <input class="segmented__input" type="radio" name="units" value="celsius" />
-                <span class="segmented__text">°C</span>
+          <section class="settings__panel" role="tabpanel" data-panel="weather">
+            <fieldset class="settings__group">
+              <legend class="settings__legend">Clima</legend>
+
+              <label class="switch">
+                <input class="switch__input" id="setting-forecast" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Pronóstico de 5 días</span>
               </label>
-              <label class="segmented__item">
-                <input class="segmented__input" type="radio" name="units" value="fahrenheit" />
-                <span class="segmented__text">°F</span>
+
+              <label class="switch">
+                <input class="switch__input" id="setting-feels" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Sensación térmica</span>
               </label>
-            </div>
-          </fieldset>
 
-          <fieldset class="settings__group">
-            <legend class="settings__legend">Formato de hora</legend>
-            <div class="segmented">
-              <label class="segmented__item">
-                <input class="segmented__input" type="radio" name="hourCycle" value="h23" />
-                <span class="segmented__text">24 h</span>
+              <label class="switch">
+                <input class="switch__input" id="setting-extra-nexthours" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Próximas horas</span>
               </label>
-              <label class="segmented__item">
-                <input class="segmented__input" type="radio" name="hourCycle" value="h12" />
-                <span class="segmented__text">12 h</span>
+
+              <label class="switch">
+                <input class="switch__input" id="setting-extra-sun" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Amanecer / Atardecer</span>
               </label>
-            </div>
-          </fieldset>
 
-          <fieldset class="settings__group">
-            <legend class="settings__legend">Pantalla</legend>
+              <label class="switch">
+                <input class="switch__input" id="setting-extra-wind" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Viento</span>
+              </label>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-forecast" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Pronóstico de 5 días</span>
-            </label>
+              <label class="switch">
+                <input class="switch__input" id="setting-extra-humidityuv" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Humedad / UV</span>
+              </label>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-feels" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Sensación térmica</span>
-            </label>
+              <label class="switch">
+                <input class="switch__input" id="setting-extra-trend" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Tendencia vs hace 1h</span>
+              </label>
+            </fieldset>
+          </section>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-wallpaper" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Fondo fotográfico</span>
-            </label>
-          </fieldset>
+          <section class="settings__panel" role="tabpanel" data-panel="screen">
+            <fieldset class="settings__group">
+              <legend class="settings__legend">Pantalla</legend>
 
-          <fieldset class="settings__group">
-            <legend class="settings__legend">Visibilidad</legend>
+              <div class="settings__row">
+                <span class="settings__label">Pantalla completa</span>
+                <button class="settings__btn" id="fullscreen-toggle" type="button">Activar pantalla completa</button>
+              </div>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-show-clock" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Reloj</span>
-            </label>
+              <label class="switch">
+                <input class="switch__input" id="setting-wallpaper" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Fondo fotográfico</span>
+              </label>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-show-card" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Ficha del clima</span>
-            </label>
+              <div class="settings__row">
+                <label class="settings__label" for="setting-interval">Cambiar el fondo cada</label>
+                <select class="settings__select" id="setting-interval"></select>
+              </div>
+            </fieldset>
+          </section>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-show-cities" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Ciudades</span>
-            </label>
-          </fieldset>
+          <section class="settings__panel" role="tabpanel" data-panel="general">
+            <fieldset class="settings__group">
+              <legend class="settings__legend">Visibilidad</legend>
 
-          <fieldset class="settings__group">
-            <legend class="settings__legend">Información extra</legend>
+              <label class="switch">
+                <input class="switch__input" id="setting-show-clock" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Reloj</span>
+              </label>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-extra-nexthours" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Próximas horas</span>
-            </label>
+              <label class="switch">
+                <input class="switch__input" id="setting-show-card" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Ficha del clima</span>
+              </label>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-extra-sun" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Amanecer / Atardecer</span>
-            </label>
+              <label class="switch">
+                <input class="switch__input" id="setting-show-cities" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Ciudades</span>
+              </label>
+            </fieldset>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-extra-wind" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Viento</span>
-            </label>
+            <fieldset class="settings__group">
+              <legend class="settings__legend">Unidades</legend>
+              <div class="segmented">
+                <label class="segmented__item">
+                  <input class="segmented__input" type="radio" name="units" value="celsius" />
+                  <span class="segmented__text">°C</span>
+                </label>
+                <label class="segmented__item">
+                  <input class="segmented__input" type="radio" name="units" value="fahrenheit" />
+                  <span class="segmented__text">°F</span>
+                </label>
+              </div>
+            </fieldset>
 
-            <label class="switch">
-              <input class="switch__input" id="setting-extra-humidityuv" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Humedad / UV</span>
-            </label>
-
-            <label class="switch">
-              <input class="switch__input" id="setting-extra-trend" type="checkbox" />
-              <span class="switch__track" aria-hidden="true"></span>
-              <span>Tendencia vs hace 1h</span>
-            </label>
-          </fieldset>
-
-          <div class="settings__group">
-            <label class="settings__label" for="setting-interval">Cambiar el fondo cada</label>
-            <select class="settings__select" id="setting-interval"></select>
-          </div>
+            <fieldset class="settings__group">
+              <legend class="settings__legend">Formato de hora</legend>
+              <div class="segmented">
+                <label class="segmented__item">
+                  <input class="segmented__input" type="radio" name="hourCycle" value="h23" />
+                  <span class="segmented__text">24 h</span>
+                </label>
+                <label class="segmented__item">
+                  <input class="segmented__input" type="radio" name="hourCycle" value="h12" />
+                  <span class="segmented__text">12 h</span>
+                </label>
+              </div>
+            </fieldset>
+          </section>
         </div>
-      </dialog>
+      </dialog>      </dialog>
     </div>
     <script type="module" src="src/main.js"></script>
   </body>

@@ -46,6 +46,14 @@ function bootstrap() {
   });
   persist(store);
 
+  try {
+    const bg = localStorage.getItem("weatherapp:v1:bgcolor");
+    if (bg) {
+      document.documentElement.style.setProperty("--bg-color", bg);
+      document.body?.style.setProperty("--bg-color", bg);
+    }
+  } catch {}
+
   const scheduler = createScheduler({ onError: (error) => console.error(error) });
 
   const clock = createClock(
@@ -99,16 +107,7 @@ function bootstrap() {
   wallpaper.start().catch((error) => console.error(error));
   weather.start().catch((error) => console.error(error));
 
-  // La pantalla completa solo se concede si lo pide el usuario. Antes habia
-  // tambien una llamada suelta en el HTML, fuera de ningun clic, que el
-  // navegador rechazaba siempre.
-  document.addEventListener(
-    "click",
-    () => {
-      document.documentElement.requestFullscreen?.().catch(() => {});
-    },
-    { once: true },
-  );
+  // La pantalla completa ahora se controla desde el panel de ajustes.
 }
 
 bootstrap();
