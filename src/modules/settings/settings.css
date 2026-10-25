@@ -146,6 +146,15 @@
   border: 0;
 }
 
+.settings__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--size-tap);
+  justify-items: start;
+}
+
 .settings__legend {
   padding: 0;
   font-size: var(--fs-panel);
@@ -161,6 +170,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-muted);
+  justify-self: start;
 }
 
 /* ------------------------------------------------- Controles segmentados */
@@ -438,4 +448,33 @@
 .place__add:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+.settings__color {
+  width: 44px;
+  height: 44px;
+  padding: 2px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: transparent;
+  justify-self: end;
+}
+
+.settings__color::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.settings__color::-webkit-color-swatch {
+  border: 0;
+  border-radius: 999px;
+}
+
+.settings__color::-moz-color-swatch {
+  border: 0;
+  border-radius: 999px;
+}
+
+.settings__select,
+.settings__input {
+  justify-self: end;
 }

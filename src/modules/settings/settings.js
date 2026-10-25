@@ -563,7 +563,13 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       $themeA?.addEventListener("change", applyCurrent);
       $themeB?.addEventListener("change", applyCurrent);
       $themeAlign?.addEventListener("change", applyCurrent);
-      $themeAccent?.addEventListener("input", applyCurrent);
+      $themeAccent?.addEventListener("input", () => {
+        if (typeof document !== "undefined") {
+          document.documentElement.style.setProperty("--color-accent", $themeAccent.value);
+          document.body?.style.setProperty("--color-accent", $themeAccent.value);
+        }
+        applyCurrent();
+      });
       $bgColor?.addEventListener("input", () => {
         const c = $bgColor.value;
         if (typeof document !== "undefined") {

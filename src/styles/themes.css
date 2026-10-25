@@ -48,11 +48,11 @@ body[data-theme-a="tv"] {
 /* Eje B - Tipografía/Estilo */
 html[data-theme-b="elegante"],
 body[data-theme-b="elegante"] {
-  --font-family: "Inter", "Jost", "Satoshi", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  --theme-tracking: 0.01em;
-  --theme-lh: 1.18;
-  --theme-fw: 400;
-  --theme-fw-bold: 600;
+  --font-family: "Jost", "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --theme-tracking: 0.015em;
+  --theme-lh: 1.22;
+  --theme-fw: 500;
+  --theme-fw-bold: 700;
 }
 html[data-theme-b="dev"],
 body[data-theme-b="dev"] {
@@ -65,8 +65,8 @@ body[data-theme-b="dev"] {
 html[data-theme-b="clasico"],
 body[data-theme-b="clasico"] {
   --font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  --theme-tracking: 0;
-  --theme-lh: 1.15;
+  --theme-tracking: -0.01em;
+  --theme-lh: 1.16;
   --theme-fw: 400;
   --theme-fw-bold: 600;
 }
