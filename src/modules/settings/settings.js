@@ -536,6 +536,7 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
 
       bindSegments("units", "units");
       bindSegments("hourCycle", "hourCycle");
+      bindSegments("dateFormat", "dateFormat");
       bindSwitch($panel.querySelector("#setting-forecast"), "forecast");
       bindSwitch($panel.querySelector("#setting-feels"), "feelsLike");
       bindSwitch($panel.querySelector("#setting-wallpaper"), "wallpaper");

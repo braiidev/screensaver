@@ -40,7 +40,22 @@ export function createClockFormat(timeZone, hourCycle = "h23") {
     hourCycle,
   });
 
-  const date = new Intl.DateTimeFormat(CONFIG.app.locale, {
+  const dateFull = new Intl.DateTimeFormat(CONFIG.app.locale, {
+    timeZone,
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const dateCompact = new Intl.DateTimeFormat(CONFIG.app.locale, {
+    timeZone,
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+
+  const dateLong = new Intl.DateTimeFormat(CONFIG.app.locale, {
     timeZone,
     weekday: "long",
     day: "numeric",
@@ -67,7 +82,11 @@ export function createClockFormat(timeZone, hourCycle = "h23") {
     /** "a. m." o "" */
     period: (moment = new Date()) => read(moment).period,
     /** "jueves, 22 de octubre" */
-    date: (moment = new Date()) => date.format(moment),
+    date: (moment = new Date()) => dateLong.format(moment),
+    /** "vie., 24 oct." */
+    dateCompact: (moment = new Date()) => dateCompact.format(moment),
+    /** "viernes, 24 de octubre de 2026" */
+    dateFull: (moment = new Date()) => dateFull.format(moment),
     /** La zona horaria que usa este formateador. */
     timeZone,
     hourCycle,

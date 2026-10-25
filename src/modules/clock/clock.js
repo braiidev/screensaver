@@ -60,10 +60,24 @@ export function createClock({ $root, $clock, $period, $day }, { store, scheduler
       lastPeriod = period;
     }
 
-    const date = format.date(now);
-    if (date !== lastDate) {
-      $day.textContent = date;
-      lastDate = date;
+    const dateFormat = store.get("dateFormat") ?? "off";
+    if (dateFormat === "off") {
+      if (lastDate !== "") {
+        $day.textContent = "";
+        lastDate = "";
+      }
+    } else if (dateFormat === "compact") {
+      const date = format.dateCompact(now);
+      if (date !== lastDate) {
+        $day.textContent = date;
+        lastDate = date;
+      }
+    } else if (dateFormat === "full") {
+      const date = format.dateFull(now);
+      if (date !== lastDate) {
+        $day.textContent = date;
+        lastDate = date;
+      }
     }
   }
 
@@ -74,6 +88,10 @@ export function createClock({ $root, $clock, $period, $day }, { store, scheduler
 
   const offZone = store.subscribe("timezone", rebuild);
   const offCycle = store.subscribe("hourCycle", rebuild);
+  const offDate = store.subscribe("dateFormat", () => {
+    lastDate = null;
+    render();
+  });
   const offVisibility = store.subscribe("showClock", paintVisibility);
 
   return {
@@ -88,6 +106,7 @@ export function createClock({ $root, $clock, $period, $day }, { store, scheduler
       stopTicking = null;
       offZone();
       offCycle();
+      offDate();
       offVisibility();
     },
   };

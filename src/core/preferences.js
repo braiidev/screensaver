@@ -39,6 +39,7 @@ const SWITCHES = [
   "showClock",
   "showCard",
   "showCities",
+  "dateFormat",
   "wallpaper",
   ...CONFIG.extrasKeys,
 ];
@@ -52,6 +53,7 @@ const SETTING_KEYS = [
   "showClock",
   "showCard",
   "showCities",
+  "dateFormat",
   "wallpaper",
   "wallpaperInterval",
   ...CONFIG.extrasKeys,
@@ -73,6 +75,7 @@ function cleanSettings(raw) {
   for (const key of SWITCHES) {
     if (typeof raw[key] === "boolean") out[key] = raw[key];
   }
+  if (["off", "compact", "full"].includes(raw.dateFormat)) out.dateFormat = raw.dateFormat;
 
   if (CONFIG.wallpaper.intervals.includes(raw.wallpaperInterval)) {
     out.wallpaperInterval = raw.wallpaperInterval;
