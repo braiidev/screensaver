@@ -48,11 +48,11 @@ body[data-theme-a="tv"] {
 /* Eje B - Tipografía/Estilo */
 html[data-theme-b="elegante"],
 body[data-theme-b="elegante"] {
-  --font-family: "Jost", "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  --theme-tracking: 0.015em;
-  --theme-lh: 1.22;
-  --theme-fw: 500;
-  --theme-fw-bold: 700;
+  --font-family: "Caveat", "Comic Sans MS", cursive, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --theme-tracking: 0.01em;
+  --theme-lh: 1.25;
+  --theme-fw: 400;
+  --theme-fw-bold: 600;
 }
 html[data-theme-b="dev"],
 body[data-theme-b="dev"] {
