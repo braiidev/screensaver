@@ -22,10 +22,6 @@ se manejan con el mando del Chromecast sin raton.
 
 ### NEXT
 
-- [ ] **v0.9.0-step3** - Pulir guardado/restaurado de temas
-  - Asegurar guardado/restaurado correcto con nuevos predefinidos
-  - Compatibilidad con temas guardados antiguos
-
 - [ ] **v0.9.0-step4** - Añadir selector de fecha (Desactivado/Compacta/Completa)
   - Unificar fecha junto al reloj
   - Usar Intl.DateTimeFormat en español
@@ -38,12 +34,15 @@ se manejan con el mando del Chromecast sin raton.
 
 ### DOING
 
-- [ ] **v0.9.0-step2** - Reestructurar panel de Temas con predefinidos
+Ninguna.
+
+### DONE
+
+- [x] **v0.9.0-step2** - Reestructurar panel de Temas con predefinidos
   - Añadir selector "Tema" con predefinidos
   - Añadir <details> "Personalizar" para ejes A/B/align
   - Mapeo de combinaciones + pasar a "Personalizado" al tocar avanzado
-
-### DONE
+  - `76e2be6`.
 
 - [x] **v0.9.0-step1** - Diferenciar estructuras (A) y estilos (B)
   - Agrandar diferencias entre minimal/clasico/compacto/tv en themes.css
