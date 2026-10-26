@@ -14,27 +14,27 @@ se manejan con el mando del Chromecast sin raton.
 
 ## Estado
 
-- Ultima version cerrada: `v0.8.9`
+- Ultima version cerrada: `v0.9.0`
 - Version en curso: ninguna
-- Siguiente version reservada: `v0.9.0`
+- Siguiente version reservada: ninguna
 
 ## Tablero
 
 ### NEXT
 
-- [ ] **v0.9.0-step5** - Añadir Calidad del Aire (AQI)
-  - Integrar Open-Meteo Air Quality API
-  - Mostrar badge con valor/categoría/semáforo
-  - Configurable desde ajustes
+Ninguna.
 
 ### DOING
 
-- [ ] **v0.9.0-step5** - Añadir Calidad del Aire (AQI)
+Ninguna.
+
+### DONE
+
+- [x] **v0.9.0-step5** - Añadir Calidad del Aire (AQI)
   - Integrar Open-Meteo Air Quality API
   - Mostrar badge con valor/categoría/semáforo
   - Configurable desde ajustes
-
-### DONE
+  - `1ecdd4f`, `1298de9`.
 
 - [x] **v0.9.0-step4** - Añadir selector de fecha (Desactivado/Compacta/Completa)
   - Unificar fecha junto al reloj
