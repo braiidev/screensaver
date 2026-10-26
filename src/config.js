@@ -140,6 +140,7 @@ export const CONFIG = {
     forecast: "https://api.open-meteo.com/v1/forecast",
     geocoding: "https://geocoding-api.open-meteo.com/v1/search",
     reverseGeocode: "https://api.bigdatacloud.net/data/reverse-geocode-client",
+    airQuality: "https://air-quality-api.open-meteo.com/v1/air-quality",
   },
 
   /** Configurables desde ajustes (Grupo 1). */
@@ -154,10 +155,12 @@ export const CONFIG = {
     humidityUv: true,
     /** Mostrar tendencia vs hace 1h */
     trend: true,
+    /** Mostrar calidad del aire */
+    airQuality: true,
   },
 
   /** Grupo 1 extras - usados por el módulo de extras */
-  extrasKeys: ['nextHours','sun','wind','humidityUv','trend'],
+  extrasKeys: ['nextHours','sun','wind','humidityUv','trend','airQuality'],
 
   messages: {
     locationError: "No se pudo cargar la localización",
@@ -196,6 +199,14 @@ export const CONFIG = {
     trendDown: "Baja",
     trendSame: "Sin cambios",
     trendAgo: "respecto a hace 1 hora",
+    /** Calidad del aire */
+    airQuality: "Calidad del aire",
+    aqGood: "Buena",
+    aqModerate: "Aceptable",
+    aqUnhealthySensitive: "Dañina para grupos sensibles",
+    aqUnhealthy: "Dañina",
+    aqVeryUnhealthy: "Muy dañina",
+    aqHazardous: "Peligrosa",
   },
 
   storage: {
