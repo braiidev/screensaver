@@ -59,6 +59,7 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
   const $exWind = $panel.querySelector("#setting-extra-wind");
   const $exHuUv = $panel.querySelector("#setting-extra-humidityuv");
   const $exTrend = $panel.querySelector("#setting-extra-trend");
+  const $exAir = $panel.querySelector("#setting-extra-airQuality");
   const $themeA = $panel.querySelector("#theme-a");
   const $themeB = $panel.querySelector("#theme-b");
   const $themeAlign = $panel.querySelector("#theme-align");
@@ -548,6 +549,7 @@ export function createSettings({ $toggle, $panel }, { store, scheduler }) {
       bindSwitch($exWind, "wind");
       bindSwitch($exHuUv, "humidityUv");
       bindSwitch($exTrend, "trend");
+      if ($exAir) bindSwitch($exAir, "airQuality");
       buildIntervals();
 
       offs.push(store.subscribe("cities", renderCities));

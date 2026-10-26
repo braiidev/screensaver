@@ -28,6 +28,7 @@ export const DEFAULTS = {
   wind: CONFIG.extras.wind,
   humidityUv: CONFIG.extras.humidityUv,
   trend: CONFIG.extras.trend,
+  airQuality: CONFIG.extras.airQuality,
 };
 
 /** Valores admitidos por los ajustes que no son booleanos. */

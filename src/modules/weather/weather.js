@@ -33,6 +33,7 @@ import { formatPlace, locate } from "../../services/geo.js";
 import { fetchWeather } from "../../services/weatherApi.js";
 import { toCity } from "../../utils/city.js";
 import { createDayFormat } from "../../utils/time.js";
+import { createAirQuality } from "./airQuality.js";
 import {
   convertTemperatureDelta,
   formatTemperature,

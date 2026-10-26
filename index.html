@@ -78,6 +78,10 @@
               <span id="wind" class="card__wind"></span>
               <span id="humidity-uv" class="card__huuv"></span>
               <span id="trend" class="card__trend"></span>
+              <span id="air-quality" class="extras__item extras__item--air" hidden>
+                <span class="extras__label" id="air-quality-label"></span>
+                <span class="extras__value" id="air-quality-value"></span>
+              </span>
             </div>
           </div>
 
@@ -275,6 +279,12 @@
                 <input class="switch__input" id="setting-extra-trend" type="checkbox" />
                 <span class="switch__track" aria-hidden="true"></span>
                 <span>Tendencia vs hace 1h</span>
+              </label>
+
+              <label class="switch">
+                <input class="switch__input" id="setting-extra-airQuality" type="checkbox" />
+                <span class="switch__track" aria-hidden="true"></span>
+                <span>Calidad del aire (AQI)</span>
               </label>
             </fieldset>
           </section>
