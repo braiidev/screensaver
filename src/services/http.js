@@ -177,3 +177,5 @@ export async function getJSON(
 
   throw lastError;
 }
+
+export const fetchJson = getJSON;
